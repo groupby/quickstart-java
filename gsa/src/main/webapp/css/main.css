@@ -1,0 +1,204 @@
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video
+	{
+	margin: 0px;
+	padding: 0;
+	border: 0;
+	font: inherit;
+	font-family: Arial;
+}
+
+body {
+	margin: 10px;
+}
+/* HTML5 display-role reset for older browsers */
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section
+	{
+	display: block;
+}
+
+.transparent {
+	width: 100%;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	filter: alpha(opacity = 50);
+	-moz-opacity: 0.5;
+	-khtml-opacity: 0.5;
+	opacity: 0.5;
+}
+
+body {
+}
+
+ol,ul {
+	list-style: none;
+}
+
+blockquote,q {
+	quotes: none;
+}
+
+blockquote:before,blockquote:after,q:before,q:after {
+	content: '';
+	content: none;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.record {
+	margin-left: 20px;
+	font-size: 13px;
+}
+
+.record .details {
+	margin-left: 20px;
+}
+
+.record .details b {
+	color: #005500;
+}
+
+h2 {
+	background-color: #008800;
+	padding: 4px;
+	color: white;
+	font-size: 18px;
+	margin-bottom: 10px;
+}
+
+select {
+	display: block;
+	margin-bottom: 4px;
+}
+
+.navigation b {
+	display: block;
+	margin-bottom: 10px;
+}
+
+.navigation {
+	background-color: #007700;
+	padding: 4px;
+	color: white;
+}
+
+.page {
+	float: right
+}
+
+form {
+	padding: 4px;
+	color: white;
+	background-color: #007700;
+	margin-bottom: 10px;
+}
+#refinementsDiv {
+    margin-bottom:10px;
+}
+
+.key,#refinementsDiv b {
+	color: #005500;
+	font-weight: bold;
+}
+
+form a {
+	color: white;
+}
+
+#famous {
+	margin-left: 20px;
+	margin-bottom: 20px;
+}
+label {
+	cursor:pointer;	
+}
+#refinementsDiv label {
+	margin-right: 15px;
+}
+
+.navigationMetadataTitle {
+	margin-left: 5px; 
+	font-size: 12px;
+}
+
+.navigationMetadata {
+	margin-left: 15px; 
+	font-size: 10px;
+}
+
+.sitewideMetadata {
+	margin-left: 15px; 
+	font-size: 12px;
+}
+
+.deleteCheckbox:hover {
+	background-color:#229922;
+}
+.deleteCheckbox {
+	padding-left:3px;
+	padding-right:3px;
+	padding-bottom:3px;
+	border-radius:3px;
+	background-color:#007700;
+	color:white;
+	text-decoration:none;
+	font-weight:bold;
+}
+.navLink {
+	max-height:200px;
+	overflow:auto;
+	padding-top:10px;
+	padding-bottom:10px;
+	border-top:10px solid #007700;
+	line-height:12px;
+	font-size:11px;
+}
+.navLink b{
+	font-weight:bolder;
+}
+.navLink a:hover {
+	text-decoration: underline;
+}
+.navigation a {
+	display:inline-block;
+	font-size:11px;
+	margin-left:4px;
+	text-decoration:none;
+	color:white;
+}
+#raw pre {
+	margin-bottom:10px;
+}
+#raw {
+    background-color: #EEEEEE;
+    padding:3px;
+    border-bottom:1px solid #BBBBBB;
+    margin-bottom:10px;
+	font-size:12px;
+}
+
+#commandCenterLink {
+	margin-left:20px;
+	background-image: url(../images/externalLink.png);
+	background-repeat:no-repeat;
+	padding-left:19px;
+
+}
+
+.largeResponse {
+	background-color: red;
+	padding-left:4px;
+	padding-right:4px;
+}
+.mediumResponse{
+	background-color: orange;
+	padding-left:4px;
+	padding-right:4px;
+}
+.smallResponse {
+	color:green;
+}
+#cookieForm {
+	font-size:12px;
+}
