@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.groupbyinc</groupId>
+    <artifactId>quickstart-java</artifactId>
+    <version>2.0.160-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>quickstart-java-gsa</artifactId>
+
+  <packaging>war</packaging>
+
+  <name>GroupBy - QuickStart - Java - GSA</name>
+  <description>${project.name}</description>
+
+  <properties>
+    <quickstart.api.type>${engine.type.gsa}</quickstart.api.type>
+  </properties>
+
+  <build>
+
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <webResources>
+            <resource>
+              <directory>${project.build.sourceDirectory}</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>
+
+    </plugins>
+
+  </build>
+
+  <dependencies>
+
+    <!-- ### GroupBy -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>api-java-gsa</artifactId>
+      <version>${groupbyinc.api.version}</version>
+      <classifier>uber</classifier>
+    </dependency>
+    <dependency>
+      <groupId>com.groupbyinc</groupId>
+      <artifactId>common-utils</artifactId>
+      <version>${groupbyinc.common.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- ### Spring -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${quickstart.spring.version}</version>
+    </dependency>
+
+  </dependencies>
+
+</project>
