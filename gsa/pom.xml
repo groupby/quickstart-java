@@ -16,6 +16,13 @@
   <name>GroupBy - QuickStart - Java - GSA</name>
   <description>${project.name}</description>
 
+  <scm>
+    <url>https://github.com/groupby/quickstart-java</url>
+    <connection>scm:git:git@github.com:groupby/quickstart-java.git</connection>
+    <developerConnection>scm:git:git@github.com:groupby/quickstart-java.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
   <properties>
     <quickstart.api.type>${engine.type.gsa}</quickstart.api.type>
   </properties>
@@ -35,6 +42,23 @@
             </resource>
           </webResources>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>de.jutzig</groupId>
+        <artifactId>github-release-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>github-deploy</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>release</goal>
+            </goals>
+            <configuration>
+              <artifact>${project.build.directory}/${project.artifactId}-${project.version}.war</artifact>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
     </plugins>
