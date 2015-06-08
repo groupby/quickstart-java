@@ -24,6 +24,7 @@
   <properties>
     <project.build.jdkVersion>1.6</project.build.jdkVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.build.locale>en_US</project.build.locale>
     <repo.upload.retryAttempts>3</repo.upload.retryAttempts>
     <tomcat.embed.port>8080</tomcat.embed.port>
     <quickstart.api.type />
