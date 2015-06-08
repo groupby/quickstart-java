@@ -21,6 +21,13 @@
     <module>gsa</module>
   </modules>
 
+  <scm>
+    <url>https://github.com/groupby/quickstart-java</url>
+    <connection>scm:git:git@github.com:groupby/quickstart-java.git</connection>
+    <developerConnection>scm:git:git@github.com:groupby/quickstart-java.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
   <properties>
     <project.build.jdkVersion>1.6</project.build.jdkVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
