@@ -78,7 +78,6 @@
       <groupId>com.groupbyinc</groupId>
       <artifactId>common-utils</artifactId>
       <version>${groupbyinc.common.version}</version>
-      <scope>provided</scope>
     </dependency>
 
     <!-- ### Spring -->
