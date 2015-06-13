@@ -1,4 +1,4 @@
-GroupBy Quckstart Webapp
+GroupBy Quickstart Webapp
 =========
 
 ![build](https://build.groupbyinc.com/app/rest/builds/buildType:id:JavaQuickStart_CommonReleaseDevelop/statusIcon)
