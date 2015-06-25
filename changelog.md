@@ -1,2 +1,1 @@
-Changelog
-===
+- <a href="https://github.com/groupby/issues/issues/954">iss2</a> Cloud Quickstart breaks with redirects

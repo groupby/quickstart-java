@@ -11,7 +11,7 @@
 <%@include file="includes/form.jsp"%>
 
   <c:if test="${!empty results.redirect}">
-    <c:redirect url="${results.redirect}"/> 
+    Found redirect: <c:out value="${results.redirect}"/>
   </c:if>
   
   
