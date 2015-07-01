@@ -38,7 +38,7 @@
     <engine.type.flux>flux</engine.type.flux>
     <engine.type.gsa>gsa</engine.type.gsa>
 
-    <groupbyinc.api.version>2.0.168</groupbyinc.api.version>
+    <groupbyinc.api.version>2.0.169</groupbyinc.api.version>
     <groupbyinc.common.version>26</groupbyinc.common.version>
     <api.servlet.version>2.5</api.servlet.version>
     <api.jsp.version>2.1</api.jsp.version>
