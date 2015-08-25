@@ -38,8 +38,8 @@
     <engine.type.flux>flux</engine.type.flux>
     <engine.type.gsa>gsa</engine.type.gsa>
 
-    <groupbyinc.api.version>2.0.187</groupbyinc.api.version>
-    <groupbyinc.common.version>27</groupbyinc.common.version>
+    <groupbyinc.api.version>2.0.188</groupbyinc.api.version>
+    <groupbyinc.common.version>28</groupbyinc.common.version>
     <api.servlet.version>2.5</api.servlet.version>
     <api.jsp.version>2.1</api.jsp.version>
     <quickstart.spring.version>4.1.6.RELEASE</quickstart.spring.version>
