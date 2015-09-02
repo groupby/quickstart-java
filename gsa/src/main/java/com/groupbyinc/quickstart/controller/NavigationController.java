@@ -3,10 +3,10 @@ package com.groupbyinc.quickstart.controller;
 import com.groupbyinc.api.Bridge;
 import com.groupbyinc.api.Query;
 import com.groupbyinc.api.model.Results;
-import com.groupbyinc.api.parser.Mappers;
 import com.groupbyinc.common.util.io.IOUtils;
 import com.groupbyinc.common.util.lang3.StringUtils;
 import com.groupbyinc.util.UrlBeautifier;
+import com.groupbyinc.utils.Mappers;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -15,10 +15,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.util.HashMap;
 
 /**
@@ -153,7 +153,8 @@ public class NavigationController extends AbstractController {
             }
             // pass the results into the view.
             model.put("results", results);
-            model.put("resultsJson", debug ? doDebugQueryThroughUrl(clientKey, customerId, query) : Mappers.writeValueAsString(results));
+            model.put("resultsJson", debug ? doDebugQueryThroughUrl(clientKey, customerId, query) : Mappers
+                    .writeValueAsString(results));
 
 
             // render using index.jsp and the populated model.

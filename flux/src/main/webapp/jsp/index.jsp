@@ -40,7 +40,6 @@
         <jsp:include  page="default.jsp"/>
       </c:otherwise>
     </c:choose>
-    
 
   </div>
   <script src="<c:url value="/js/main.js"/>"></script>
