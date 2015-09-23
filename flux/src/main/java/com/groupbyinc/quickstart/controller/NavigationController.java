@@ -2,12 +2,14 @@ package com.groupbyinc.quickstart.controller;
 
 import com.groupbyinc.api.CloudBridge;
 import com.groupbyinc.api.Query;
+import com.groupbyinc.api.model.AbstractRecord;
+import com.groupbyinc.api.model.AbstractResults;
 import com.groupbyinc.api.model.Navigation;
 import com.groupbyinc.api.model.Refinement;
 import com.groupbyinc.api.model.RefinementsResult;
 import com.groupbyinc.api.model.Results;
 import com.groupbyinc.api.model.Sort;
-import com.groupbyinc.common.util.collections4.MapUtils;
+import com.groupbyinc.api.model.refinement.RefinementValue;
 import com.groupbyinc.common.util.io.IOUtils;
 import com.groupbyinc.common.util.lang3.StringUtils;
 import com.groupbyinc.quickstart.helper.Utils;
@@ -17,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
@@ -35,6 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
+
 /**
  * NavigationController is the single entry point for search and navigation
  * in the quickstart application.
@@ -45,46 +48,55 @@ public class NavigationController {
     private HashMap<String, Query> queryQueue = new HashMap<String, Query>();
     private HashMap<String, CloudBridge> bridgeQueue = new HashMap<String, CloudBridge>();
 
-    @RequestMapping(value = "/json.html")
-    public @ResponseBody
-    String getMoreNavigations(@RequestParam String navigationName, HttpServletRequest request)
-            throws IOException, JspException {
+    @RequestMapping(value = "/moreRefinements.html")
+    ModelAndView getMoreNavigations(@RequestParam String navigationName, @RequestParam String selectedRefinements,
+                                    HttpServletRequest request) throws IOException, JspException {
 
         String clientKey = getCookie(request, "clientKey", "").trim();
-
-        StringBuilder sb = new StringBuilder();
 
         Query query = queryQueue.get(clientKey);
         CloudBridge bridge = bridgeQueue.get(clientKey);
 
-        if(query == null || bridge == null) {
-            return sb.toString();
-        }
-
         navigationName = navigationName.trim();
-        List<Navigation> navigations = null;
 
-        if(MapUtils.isNotEmpty(query.getNavigations())) {
-            navigations = new ArrayList<Navigation>(query.getNavigations().values());
+        List<String> sRefinements = asList(selectedRefinements.split(","));
+        Map<String, Object> model = new HashMap<String, Object>();
+        List<Refinement> refinements = new ArrayList<Refinement>();
+        Navigation selectedNavigation = new Navigation().setName(navigationName)
+                                                        .setDisplayName(Utils.capitalize(navigationName));
+        Navigation availableNavigation = new Navigation().setName(navigationName)
+                                                         .setDisplayName(Utils.capitalize(navigationName));
+
+        for(String ref : sRefinements){
+            refinements.add(new RefinementValue().setValue(ref));
         }
+
+        selectedNavigation.setRefinements(refinements);
+
+        if(query == null || bridge == null) {
+            model.put("results", null);
+            model.put("nav", selectedNavigation);
+            return new ModelAndView("includes/navLink.jsp", model);
+        }
+
+        ResultsMock results = new ResultsMock();
+        results.setSelectedNavigation(asList(selectedNavigation));
 
         RefinementsResult refinementsResults = bridge.refinements(
-                new Query().setArea(query.getArea())
-                           .addRefinementsByString(query.getRefinementString()) //
-                           .setCollection(query.getCollection()) //
-                           .addValueRefinement("gbi_stream_upload", "1"), navigationName); //
+                new Query().setArea(query.getArea()).addRefinementsByString(query.getRefinementString()).setCollection(
+                        query.getCollection()).addValueRefinement("gbi_stream_upload", "1"), navigationName);
 
         if(refinementsResults != null && refinementsResults.getNavigation() != null) {
             List<Refinement> refinementList = refinementsResults.getNavigation().getRefinements();
-            if(!refinementList.isEmpty()) {
-                for(Refinement ref : refinementList) {
-                    sb.append(Utils.buildTemplate(
-                                      ref, navigationName, navigations, query.getQuery()));
-                }
+            if(refinementsResults.getNavigation().isOr()){
+                availableNavigation.setOr(true);
             }
+            availableNavigation.setRefinements(refinementList);
         }
-
-        return sb.toString();
+        results.setAvailableNavigation(asList(availableNavigation));
+        model.put("results", results);
+        model.put("nav", availableNavigation);
+        return new ModelAndView("/includes/navLink.jsp", model);
     }
 
     @RequestMapping({"**/index.html"})
@@ -332,4 +344,7 @@ public class NavigationController {
         }
         return pDefault;
     }
+
+    private static class RecordMock extends AbstractRecord<RecordMock> {}
+    private static class ResultsMock extends AbstractResults<RecordMock, ResultsMock> {}
 }

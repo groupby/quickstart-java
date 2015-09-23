@@ -39,3 +39,23 @@ function prettyJson() {
         }
     });
 }
+
+function getSelectedRefinements(){
+    var selected = $('#refinements').val().split("~");
+    var unrefined = selected.sanitize(selected);
+    var refined = [];
+    for(var i=0; i<unrefined.length; i++){
+        refined.push(unrefined[i].split("=")[1]);
+    }
+    return refined.toString();
+}
+
+Array.prototype.sanitize = function() {
+    for (var i = 0; i < this.length; i++) {
+        if (this[i] == "") {
+            this.splice(i, 1);
+            i--;
+        }
+    }
+    return this;
+};
