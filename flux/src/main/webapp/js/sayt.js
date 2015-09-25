@@ -172,7 +172,7 @@ $.widget('custom.sayt', $.ui.autocomplete, {
 
     // Private Helper Methods
     _getUrl: function (url) {
-        return 'https://' + this._getValue(this.options.subdomain) + url;
+        return '//' + this._getValue(this.options.subdomain) + url;
     },
     _clearTimeout: function () {
         this.productSearchTimer || clearTimeout(this.productSearchTimer);
