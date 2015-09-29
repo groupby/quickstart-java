@@ -2,9 +2,12 @@ GroupBy Quickstart Webapp
 =========
 
 ![build](https://build.groupbyinc.com/app/rest/builds/buildType:id:JavaQuickStart_CommonReleaseDevelop/statusIcon)
-![release](https://img.shields.io/maven-central/v/com.groupbyinc/quickstart-java.svg)
-![license](https://img.shields.io/github/license/groupby/quickstart-java.svg)
 
 Public implementation of api-java using Java/Spring/JSP
 
+Usage
+
+git clone git@github.com:groupby/quickstart-java
+cd quickstart-java
+mvn tomcat7:run
 
