@@ -8,9 +8,7 @@ Public implementation of api-java using Java/Spring/JSP
 Usage
 ---
 
-git clone git@github.com:groupby/quickstart-java
-
-cd quickstart-java/flux
-
-mvn tomcat7:run
+1. git clone https://github.com/groupby/quickstart-java.git
+1. cd quickstart-java/flux
+1. mvn tomcat7:run
 
