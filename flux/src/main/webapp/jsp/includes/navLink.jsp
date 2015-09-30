@@ -46,8 +46,12 @@
 			"selectedRefinements": getSelectedRefinements()
 		}).done(function(data){
 			if (data != "" || data != undefined) {
-				$('#nav-'+navigationName).replaceWith(data);
-				$("#more-" + navigationName).fadeOut();
+				var replace = document.getElementById("nav-"+navigationName);
+				var remove = document.getElementById("more-"+navigationName);
+				var html = document.createElement("div");
+				html.innerHTML = data;
+				replace.parentNode.replaceChild(html, replace);
+				remove.parentNode.removeChild(remove);
 			}else{
 				console.log("No data received.");
 			}

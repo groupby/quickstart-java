@@ -68,7 +68,7 @@ public class NavigationController {
         results.setSelectedNavigation(Utils.getSelectedNavigations(selectedRefinements));
         RefinementsResult refinementsResults = bridge.refinements(
                 new Query().setArea(query.getArea()).addRefinementsByString(query.getRefinementString()).setCollection(
-                        query.getCollection()).addValueRefinement("gbi_stream_upload", "1"), navigationName);
+                        query.getCollection()), navigationName);
 
         if(refinementsResults != null && refinementsResults.getNavigation() != null) {
             List<Refinement> refinementList = refinementsResults.getNavigation().getRefinements();
