@@ -23,7 +23,7 @@
 	</div>
 </c:if>
 <c:if test="${!nav['or']}">
-	<div class="navLink">
+	<div id="nav-${nav.name}" class="navLink">
 		<b>${nav.displayName} </b>
 		<div class="nav-${nav.name}">
 			<c:forEach items="${nav.refinements}" var="value">
@@ -39,12 +39,8 @@
 		<a style="color:white" href="#" onclick='getMoreNav("${nav.name}")'>More [+]</a>
 	</div>
 </c:if>
-
 <script>
-
 	function getMoreNav(navigationName) {
-		var selected = $('#refinements').val();
-
 		$.post("${pageContext.request.contextPath}/moreRefinements.html", {
 			"navigationName" : navigationName,
 			"selectedRefinements": getSelectedRefinements()
@@ -52,8 +48,8 @@
 			if (data != "" || data != undefined) {
 				$('#nav-'+navigationName).replaceWith(data);
 				$("#more-" + navigationName).fadeOut();
-			} else {
-				location.reload();
+			}else{
+				console.log("No data received.");
 			}
 		});
 	}

@@ -2,14 +2,11 @@ package com.groupbyinc.quickstart.controller;
 
 import com.groupbyinc.api.CloudBridge;
 import com.groupbyinc.api.Query;
-import com.groupbyinc.api.model.AbstractRecord;
-import com.groupbyinc.api.model.AbstractResults;
 import com.groupbyinc.api.model.Navigation;
 import com.groupbyinc.api.model.Refinement;
 import com.groupbyinc.api.model.RefinementsResult;
 import com.groupbyinc.api.model.Results;
 import com.groupbyinc.api.model.Sort;
-import com.groupbyinc.api.model.refinement.RefinementValue;
 import com.groupbyinc.common.util.io.IOUtils;
 import com.groupbyinc.common.util.lang3.StringUtils;
 import com.groupbyinc.quickstart.helper.Utils;
@@ -31,7 +28,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,29 +55,17 @@ public class NavigationController {
 
         navigationName = navigationName.trim();
 
-        List<String> sRefinements = asList(selectedRefinements.split(","));
         Map<String, Object> model = new HashMap<String, Object>();
-        List<Refinement> refinements = new ArrayList<Refinement>();
-        Navigation selectedNavigation = new Navigation().setName(navigationName)
-                                                        .setDisplayName(Utils.capitalize(navigationName));
-        Navigation availableNavigation = new Navigation().setName(navigationName)
-                                                         .setDisplayName(Utils.capitalize(navigationName));
-
-        for(String ref : sRefinements){
-            refinements.add(new RefinementValue().setValue(ref));
-        }
-
-        selectedNavigation.setRefinements(refinements);
+        Navigation availableNavigation = new Navigation().setName(navigationName);
 
         if(query == null || bridge == null) {
             model.put("results", null);
-            model.put("nav", selectedNavigation);
+            model.put("nav", availableNavigation);
             return new ModelAndView("includes/navLink.jsp", model);
         }
 
-        ResultsMock results = new ResultsMock();
-        results.setSelectedNavigation(asList(selectedNavigation));
-
+        Results results = new Results();
+        results.setSelectedNavigation(Utils.getSelectedNavigations(selectedRefinements));
         RefinementsResult refinementsResults = bridge.refinements(
                 new Query().setArea(query.getArea()).addRefinementsByString(query.getRefinementString()).setCollection(
                         query.getCollection()).addValueRefinement("gbi_stream_upload", "1"), navigationName);
@@ -91,8 +75,10 @@ public class NavigationController {
             if(refinementsResults.getNavigation().isOr()){
                 availableNavigation.setOr(true);
             }
+            availableNavigation.setDisplayName(refinementsResults.getNavigation().getDisplayName());
             availableNavigation.setRefinements(refinementList);
         }
+        results.setQuery(query.getQuery());
         results.setAvailableNavigation(asList(availableNavigation));
         model.put("results", results);
         model.put("nav", availableNavigation);
@@ -251,8 +237,7 @@ public class NavigationController {
             // pass the raw json representation of the query into the view regardless of errors
             model.put("rawQuery" + i, query.setReturnBinary(false).getBridgeJson(clientKey));
             model.put("originalQuery" + i, query);
-            query.setReturnBinary(true);
-
+            query.setReturnBinary(true);    
             try {
                 // execute the query
                 Results results = new Results();
@@ -344,7 +329,4 @@ public class NavigationController {
         }
         return pDefault;
     }
-
-    private static class RecordMock extends AbstractRecord<RecordMock> {}
-    private static class ResultsMock extends AbstractResults<RecordMock, ResultsMock> {}
 }

@@ -3,12 +3,8 @@ package com.groupbyinc.quickstart.helper;
 import com.groupbyinc.api.model.Navigation;
 import com.groupbyinc.api.model.Refinement;
 import com.groupbyinc.api.model.refinement.RefinementValue;
-import com.groupbyinc.api.tags.UrlFunctions;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.jsp.JspException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,33 +12,22 @@ import java.util.List;
  */
 public class Utils {
 
-    public static String buildTemplate(Refinement refinement, String navName,
-                                       List<Navigation> navigations, String searchString)
-            throws JspException {
-
-        UriComponents beautifierUrl = ServletUriComponentsBuilder.fromUriString(
-                UrlFunctions.toUrlAdd(
-                        "default", searchString, navigations, navName, refinement)).build();
-
-        UriComponentsBuilder context = ServletUriComponentsBuilder.fromCurrentContextPath().queryParams(
-                beautifierUrl.getQueryParams()).path(beautifierUrl.getPath());
-
-        return new T("<div><a style=\"color:white\" href=\"{url}\">{ref} ({count})</a></div>")
-                .add("url", context.build(false).toUriString()) //
-                .add("ref", formatRefinement(refinement))   //
-                .add("count", refinement.getCount())    //
-                .render();
-    }
-
-    private static String formatRefinement(Refinement refinement) {
-        if (refinement instanceof RefinementValue) {
-            return ((RefinementValue) refinement).getValue();
+    public static List<Navigation> getSelectedNavigations(String refinements){
+        List<Navigation> selectedNavigations = new ArrayList<Navigation>();
+        if(!refinements.isEmpty()){
+            String[] refs = refinements.split(",");
+            for(String s : refs){
+                String[] navsAndRefs = s.split("=");
+                int index = selectedNavigations.indexOf(new Navigation().setName(navsAndRefs[0]));
+                if(index != -1){
+                    selectedNavigations.get(index).getRefinements().add(new RefinementValue().setValue(navsAndRefs[1]));
+                } else{
+                    List<Refinement> refVals = new ArrayList<Refinement>();
+                    refVals.add(new RefinementValue().setValue(navsAndRefs[1]));
+                    selectedNavigations.add(new Navigation().setName(navsAndRefs[0]).setRefinements(refVals));
+                }
+            }
         }
-
-        return null;
-    }
-
-    public static String capitalize(final String line) {
-        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
+        return selectedNavigations;
     }
 }
