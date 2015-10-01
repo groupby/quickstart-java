@@ -39,3 +39,18 @@ function prettyJson() {
         }
     });
 }
+
+function getSelectedRefinements(){
+    var selected = $('#refinements').val().split("~");
+    return sanitize(selected).toString();
+}
+
+function sanitize(data){
+    for (var i = 0; i < data.length; i++) {
+        if (data[i] == "") {
+            data.splice(i, 1);
+            i--;
+        }
+    }
+    return data;
+}

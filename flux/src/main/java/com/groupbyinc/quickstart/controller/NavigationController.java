@@ -7,7 +7,6 @@ import com.groupbyinc.api.model.Refinement;
 import com.groupbyinc.api.model.RefinementsResult;
 import com.groupbyinc.api.model.Results;
 import com.groupbyinc.api.model.Sort;
-import com.groupbyinc.common.util.collections4.MapUtils;
 import com.groupbyinc.common.util.io.IOUtils;
 import com.groupbyinc.common.util.lang3.StringUtils;
 import com.groupbyinc.quickstart.helper.Utils;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
@@ -30,10 +28,11 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Arrays.asList;
 
 /**
  * NavigationController is the single entry point for search and navigation
@@ -45,46 +44,45 @@ public class NavigationController {
     private HashMap<String, Query> queryQueue = new HashMap<String, Query>();
     private HashMap<String, CloudBridge> bridgeQueue = new HashMap<String, CloudBridge>();
 
-    @RequestMapping(value = "/json.html")
-    public @ResponseBody
-    String getMoreNavigations(@RequestParam String navigationName, HttpServletRequest request)
-            throws IOException, JspException {
+    @RequestMapping(value = "/moreRefinements.html")
+    ModelAndView getMoreNavigations(@RequestParam String navigationName, @RequestParam String selectedRefinements,
+                                    HttpServletRequest request) throws IOException, JspException {
 
         String clientKey = getCookie(request, "clientKey", "").trim();
-
-        StringBuilder sb = new StringBuilder();
 
         Query query = queryQueue.get(clientKey);
         CloudBridge bridge = bridgeQueue.get(clientKey);
 
-        if(query == null || bridge == null) {
-            return sb.toString();
-        }
-
         navigationName = navigationName.trim();
-        List<Navigation> navigations = null;
 
-        if(MapUtils.isNotEmpty(query.getNavigations())) {
-            navigations = new ArrayList<Navigation>(query.getNavigations().values());
+        Map<String, Object> model = new HashMap<String, Object>();
+        Navigation availableNavigation = new Navigation().setName(navigationName);
+
+        if(query == null || bridge == null) {
+            model.put("results", null);
+            model.put("nav", availableNavigation);
+            return new ModelAndView("includes/navLink.jsp", model);
         }
 
+        Results results = new Results();
+        results.setSelectedNavigation(Utils.getSelectedNavigations(selectedRefinements));
         RefinementsResult refinementsResults = bridge.refinements(
-                new Query().setArea(query.getArea())
-                           .addRefinementsByString(query.getRefinementString()) //
-                           .setCollection(query.getCollection()) //
-                           .addValueRefinement("gbi_stream_upload", "1"), navigationName); //
+                new Query().setArea(query.getArea()).addRefinementsByString(query.getRefinementString()).setCollection(
+                        query.getCollection()), navigationName);
 
         if(refinementsResults != null && refinementsResults.getNavigation() != null) {
             List<Refinement> refinementList = refinementsResults.getNavigation().getRefinements();
-            if(!refinementList.isEmpty()) {
-                for(Refinement ref : refinementList) {
-                    sb.append(Utils.buildTemplate(
-                                      ref, navigationName, navigations, query.getQuery()));
-                }
+            if(refinementsResults.getNavigation().isOr()){
+                availableNavigation.setOr(true);
             }
+            availableNavigation.setDisplayName(refinementsResults.getNavigation().getDisplayName());
+            availableNavigation.setRefinements(refinementList);
         }
-
-        return sb.toString();
+        results.setQuery(query.getQuery());
+        results.setAvailableNavigation(asList(availableNavigation));
+        model.put("results", results);
+        model.put("nav", availableNavigation);
+        return new ModelAndView("/includes/navLink.jsp", model);
     }
 
     @RequestMapping({"**/index.html"})
@@ -239,8 +237,7 @@ public class NavigationController {
             // pass the raw json representation of the query into the view regardless of errors
             model.put("rawQuery" + i, query.setReturnBinary(false).getBridgeJson(clientKey));
             model.put("originalQuery" + i, query);
-            query.setReturnBinary(true);
-
+            query.setReturnBinary(true);    
             try {
                 // execute the query
                 Results results = new Results();
