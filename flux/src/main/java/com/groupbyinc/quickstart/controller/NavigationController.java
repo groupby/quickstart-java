@@ -7,11 +7,11 @@ import com.groupbyinc.api.model.Refinement;
 import com.groupbyinc.api.model.RefinementsResult;
 import com.groupbyinc.api.model.Results;
 import com.groupbyinc.api.model.Sort;
-import com.groupbyinc.common.util.io.IOUtils;
-import com.groupbyinc.common.util.lang3.StringUtils;
+import com.groupbyinc.common.jackson.util.Mappers;
+import com.groupbyinc.common.util.apache.commons.io.IOUtils;
+import com.groupbyinc.common.util.apache.commons.lang3.StringUtils;
 import com.groupbyinc.quickstart.helper.Utils;
 import com.groupbyinc.util.UrlBeautifier;
-import com.groupbyinc.utils.Mappers;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,9 +45,7 @@ public class NavigationController {
     private HashMap<String, CloudBridge> bridgeQueue = new HashMap<String, CloudBridge>();
 
     @RequestMapping(value = "/moreRefinements.html")
-    ModelAndView getMoreNavigations(@RequestParam String navigationName, @RequestParam String selectedRefinements,
-                                    HttpServletRequest request) throws IOException, JspException {
-
+    ModelAndView getMoreNavigations(@RequestParam String navigationName, @RequestParam String selectedRefinements, HttpServletRequest request) throws IOException, JspException {
         String clientKey = getCookie(request, "clientKey", "").trim();
 
         Query query = queryQueue.get(clientKey);
@@ -58,7 +56,7 @@ public class NavigationController {
         Map<String, Object> model = new HashMap<String, Object>();
         Navigation availableNavigation = new Navigation().setName(navigationName);
 
-        if(query == null || bridge == null) {
+        if (query == null || bridge == null) {
             model.put("results", null);
             model.put("nav", availableNavigation);
             return new ModelAndView("includes/navLink.jsp", model);
@@ -70,9 +68,9 @@ public class NavigationController {
                 new Query().setArea(query.getArea()).addRefinementsByString(query.getRefinementString()).setCollection(
                         query.getCollection()), navigationName);
 
-        if(refinementsResults != null && refinementsResults.getNavigation() != null) {
+        if (refinementsResults != null && refinementsResults.getNavigation() != null) {
             List<Refinement> refinementList = refinementsResults.getNavigation().getRefinements();
-            if(refinementsResults.getNavigation().isOr()){
+            if (refinementsResults.getNavigation().isOr()) {
                 availableNavigation.setOr(true);
             }
             availableNavigation.setDisplayName(refinementsResults.getNavigation().getDisplayName());
@@ -86,9 +84,7 @@ public class NavigationController {
     }
 
     @RequestMapping({"**/index.html"})
-    protected ModelAndView handleSearch(HttpServletRequest pRequest, HttpServletResponse pResponse)
-            throws Exception {
-
+    protected ModelAndView handleSearch(HttpServletRequest pRequest, HttpServletResponse pResponse) throws Exception {
         // Get the action from the request.
         String action = ServletRequestUtils.getStringParameter(pRequest, "action", null);
 
@@ -237,7 +233,7 @@ public class NavigationController {
             // pass the raw json representation of the query into the view regardless of errors
             model.put("rawQuery" + i, query.setReturnBinary(false).getBridgeJson(clientKey));
             model.put("originalQuery" + i, query);
-            query.setReturnBinary(true);    
+            query.setReturnBinary(true);
             try {
                 // execute the query
                 Results results = new Results();
@@ -260,7 +256,7 @@ public class NavigationController {
             }
         }
 
-        if(StringUtils.isNotBlank(clientKey)) {
+        if (StringUtils.isNotBlank(clientKey)) {
             queryQueue.put(clientKey, query);
             bridgeQueue.put(clientKey, bridge);
         }
@@ -275,6 +271,7 @@ public class NavigationController {
      * @param clientKey
      * @param customerId
      * @param query
+     *
      * @return
      */
     private String doDebugQueryThroughUrl(String clientKey, String customerId, Query query) {
@@ -316,6 +313,7 @@ public class NavigationController {
      * @param pRequest
      * @param pName
      * @param pDefault
+     *
      * @return the value of the named cookie, or default if it was not found.
      */
     private String getCookie(HttpServletRequest pRequest, String pName, String pDefault) {
@@ -329,4 +327,5 @@ public class NavigationController {
         }
         return pDefault;
     }
+
 }

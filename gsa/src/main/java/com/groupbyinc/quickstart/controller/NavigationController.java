@@ -3,10 +3,10 @@ package com.groupbyinc.quickstart.controller;
 import com.groupbyinc.api.Bridge;
 import com.groupbyinc.api.Query;
 import com.groupbyinc.api.model.Results;
-import com.groupbyinc.common.util.io.IOUtils;
-import com.groupbyinc.common.util.lang3.StringUtils;
+import com.groupbyinc.common.jackson.util.Mappers;
+import com.groupbyinc.common.util.apache.commons.io.IOUtils;
+import com.groupbyinc.common.util.apache.commons.lang3.StringUtils;
 import com.groupbyinc.util.UrlBeautifier;
-import com.groupbyinc.utils.Mappers;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -26,9 +26,9 @@ import java.util.HashMap;
  * in the quickstart application.
  */
 public class NavigationController extends AbstractController {
+
     @Override
-    protected ModelAndView handleRequestInternal(HttpServletRequest pRequest, HttpServletResponse pResponse)
-            throws Exception {
+    protected ModelAndView handleRequestInternal(HttpServletRequest pRequest, HttpServletResponse pResponse) throws Exception {
         // The UrlBeautifier deconstructs a URL into a query object.  You can create as many url
         // beautifiers as you want which may correspond to different kinds of urls that you want
         // to generate.  Here we construct one called 'default' that we use for every search and
@@ -170,9 +170,11 @@ public class NavigationController extends AbstractController {
 
     /**
      * Temporary method for debugging queries.  The debug parameter maybe discontinued without warning.
+     *
      * @param clientKey
      * @param customerId
      * @param query
+     *
      * @return
      */
     private String doDebugQueryThroughUrl(String clientKey, String customerId, Query query) {
@@ -214,6 +216,7 @@ public class NavigationController extends AbstractController {
      * @param pRequest
      * @param pName
      * @param pDefault
+     *
      * @return the value of the named cookie, or default if it was not found.
      */
     private String getCookie(HttpServletRequest pRequest, String pName, String pDefault) {

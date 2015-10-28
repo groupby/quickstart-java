@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>quickstart-java</artifactId>
-  <version>2.0.214-SNAPSHOT</version>
+  <version>2.0.219-SNAPSHOT</version>
 
   <packaging>pom</packaging>
 
@@ -29,6 +29,7 @@
   </scm>
 
   <properties>
+
     <project.build.jdkVersion>1.6</project.build.jdkVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.locale>en_US</project.build.locale>
@@ -38,11 +39,12 @@
     <engine.type.flux>flux</engine.type.flux>
     <engine.type.gsa>gsa</engine.type.gsa>
 
-    <groupbyinc.api.version>2.0.213</groupbyinc.api.version>
-    <groupbyinc.common.version>29</groupbyinc.common.version>
+    <groupbyinc.api.version>2.0.218</groupbyinc.api.version>
+    <groupbyinc.common.version>33</groupbyinc.common.version>
     <api.servlet.version>2.5</api.servlet.version>
     <api.jsp.version>2.1</api.jsp.version>
     <quickstart.spring.version>4.1.6.RELEASE</quickstart.spring.version>
+
   </properties>
 
   <build>
