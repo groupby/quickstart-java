@@ -42,7 +42,7 @@
     <engine.type.gsa>gsa</engine.type.gsa>
 
     <groupbyinc.api.version>2.0.221</groupbyinc.api.version>
-    <groupbyinc.common.version>34</groupbyinc.common.version>
+    <groupbyinc.common.version>35</groupbyinc.common.version>
 
     <!-- # 3rd-Party Dependency params-->
     <tomcat.embed.version>7.0.64</tomcat.embed.version>
