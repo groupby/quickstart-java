@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.groupbyinc</groupId>
     <artifactId>quickstart-java</artifactId>
-    <version>2.0.222-SNAPSHOT</version>
+    <version>2.0.221-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -15,6 +15,14 @@
 
   <name>GroupBy - QuickStart - Java - Flux</name>
   <description>${project.name}</description>
+
+  <!-- # required for Github plugin -->
+  <scm>
+    <url>https://github.com/groupby/quickstart-java</url>
+    <connection>scm:git:git@github.com:groupby/quickstart-java.git</connection>
+    <developerConnection>scm:git:git@github.com:groupby/quickstart-java.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
 
   <properties>
 
