@@ -16,18 +16,35 @@
   <name>GroupBy - QuickStart - Java - GSA</name>
   <description>${project.name}</description>
 
-  <scm>
-    <url>https://github.com/groupby/quickstart-java</url>
-    <connection>scm:git:git@github.com:groupby/quickstart-java.git</connection>
-    <developerConnection>scm:git:git@github.com:groupby/quickstart-java.git</developerConnection>
-    <tag>HEAD</tag>
-  </scm>
-
   <properties>
 
     <quickstart.api.type>${engine.type.gsa}</quickstart.api.type>
 
   </properties>
+
+  <dependencies>
+
+    <!-- ### GroupBy -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>api-java-gsa</artifactId>
+      <version>${groupbyinc.api.version}</version>
+      <classifier>uber</classifier>
+    </dependency>
+    <dependency>
+      <groupId>com.groupbyinc</groupId>
+      <artifactId>common-util</artifactId>
+      <version>${groupbyinc.common.version}</version>
+    </dependency>
+
+    <!-- ### Spring -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${quickstart.spring.version}</version>
+    </dependency>
+
+  </dependencies>
 
   <build>
 
@@ -66,29 +83,5 @@
     </plugins>
 
   </build>
-
-  <dependencies>
-
-    <!-- ### GroupBy -->
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>api-java-gsa</artifactId>
-      <version>${groupbyinc.api.version}</version>
-      <classifier>uber</classifier>
-    </dependency>
-    <dependency>
-      <groupId>com.groupbyinc</groupId>
-      <artifactId>common-util</artifactId>
-      <version>${groupbyinc.common.version}</version>
-    </dependency>
-
-    <!-- ### Spring -->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-webmvc</artifactId>
-      <version>${quickstart.spring.version}</version>
-    </dependency>
-
-  </dependencies>
 
 </project>

@@ -40,12 +40,48 @@
     <engine.type.gsa>gsa</engine.type.gsa>
 
     <groupbyinc.api.version>2.0.218</groupbyinc.api.version>
-    <groupbyinc.common.version>33</groupbyinc.common.version>
+    <groupbyinc.common.version>34</groupbyinc.common.version>
     <api.servlet.version>2.5</api.servlet.version>
     <api.jsp.version>2.1</api.jsp.version>
     <quickstart.spring.version>4.1.6.RELEASE</quickstart.spring.version>
 
   </properties>
+
+  <dependencies>
+
+    <!-- ### Servlet/JSP/JSTL -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>${api.servlet.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet.jsp</groupId>
+      <artifactId>jsp-api</artifactId>
+      <version>${api.jsp.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>1.1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>taglibs</groupId>
+      <artifactId>standard</artifactId>
+      <version>1.1.2</version>
+    </dependency>
+
+    <!-- ### Test -->
+    <dependency>
+      <groupId>spring</groupId>
+      <artifactId>spring-mock</artifactId>
+      <version>1.0.2</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
 
   <build>
 
@@ -207,6 +243,12 @@
         </plugin>
 
         <plugin>
+          <groupId>org.apache.tomcat.maven</groupId>
+          <artifactId>tomcat7-maven-plugin</artifactId>
+          <version>2.3-SNAPSHOT</version>
+        </plugin>
+
+        <plugin>
           <groupId>de.jutzig</groupId>
           <artifactId>github-release-plugin</artifactId>
           <version>1.1.1</version>
@@ -215,6 +257,18 @@
             <releaseName>v${project.version}</releaseName>
             <tag>v${project.version}</tag>
           </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.sonatype.plugins</groupId>
+          <artifactId>nexus-staging-maven-plugin</artifactId>
+          <version>1.6.5</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>2.2</version>
         </plugin>
 
       </plugins>
@@ -331,7 +385,6 @@
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.5</version>
         <extensions>true</extensions>
         <configuration>
           <serverId>ossrh</serverId>
@@ -343,7 +396,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
-        <version>2.2</version>
         <configuration>
           <includes>
             <include>${project.groupId}</include>
@@ -375,42 +427,6 @@
     </plugins>
 
   </build>
-
-  <dependencies>
-
-    <!-- ### Servlet/JSP/JSTL -->
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>${api.servlet.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>jsp-api</artifactId>
-      <version>${api.jsp.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jstl</artifactId>
-      <version>1.1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>taglibs</groupId>
-      <artifactId>standard</artifactId>
-      <version>1.1.2</version>
-    </dependency>
-
-    <!-- ### Test -->
-    <dependency>
-      <groupId>spring</groupId>
-      <artifactId>spring-mock</artifactId>
-      <version>1.0.2</version>
-      <scope>test</scope>
-    </dependency>
-
-  </dependencies>
 
   <profiles>
 
