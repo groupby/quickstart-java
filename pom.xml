@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>quickstart-java</artifactId>
-  <version>2.0.220-SNAPSHOT</version>
+  <version>2.0.221-SNAPSHOT</version>
 
   <packaging>pom</packaging>
 
