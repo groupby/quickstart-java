@@ -41,8 +41,8 @@
     <engine.type.flux>flux</engine.type.flux>
     <engine.type.gsa>gsa</engine.type.gsa>
 
-    <groupbyinc.api.version>2.0.228</groupbyinc.api.version>
-    <groupbyinc.common.version>37</groupbyinc.common.version>
+    <groupbyinc.api.version>2.0.229</groupbyinc.api.version>
+    <groupbyinc.common.version>38</groupbyinc.common.version>
 
     <!-- # 3rd-Party Dependency params-->
     <tomcat.embed.version>7.0.64</tomcat.embed.version>
