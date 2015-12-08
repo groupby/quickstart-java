@@ -196,7 +196,7 @@ public class NavigationController {
         // send a redirect command to the browser to redirect to the beautified URL.
         String incoming = request.getRequestURI();
         String beautified = request.getContextPath() + defaultUrlBeautifier.toUrl(
-                query.getQuery(), query.getRefinementString());
+                query.getQuery(), query.getNavigations());
         if (!beautified.startsWith(incoming)) {
             response.sendRedirect(beautified);
             return null;
