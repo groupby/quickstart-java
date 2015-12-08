@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 /**
  * NavigationController is the single entry point for search and navigation
@@ -40,12 +40,12 @@ import static java.util.Arrays.asList;
  */
 @Controller
 public class NavigationController {
-
     private HashMap<String, Query> queryQueue = new HashMap<String, Query>();
     private HashMap<String, CloudBridge> bridgeQueue = new HashMap<String, CloudBridge>();
 
     @RequestMapping(value = "/moreRefinements.html")
-    ModelAndView getMoreNavigations(@RequestParam String navigationName, @RequestParam String selectedRefinements, HttpServletRequest request) throws IOException, JspException {
+    ModelAndView getMoreNavigations(@RequestParam String navigationName, @RequestParam String selectedRefinements,
+                                    HttpServletRequest request) throws IOException, JspException {
         String clientKey = getCookie(request, "clientKey", "").trim();
 
         Query query = queryQueue.get(clientKey);
@@ -65,8 +65,8 @@ public class NavigationController {
         Results results = new Results();
         results.setSelectedNavigation(Utils.getSelectedNavigations(selectedRefinements));
         RefinementsResult refinementsResults = bridge.refinements(
-                new Query().setArea(query.getArea()).addRefinementsByString(query.getRefinementString()).setCollection(
-                        query.getCollection()), navigationName);
+                new Query().setArea(query.getArea()).addRefinementsByString(query.getRefinementString())
+                           .setCollection(query.getCollection()), navigationName);
 
         if (refinementsResults != null && refinementsResults.getNavigation() != null) {
             List<Refinement> refinementList = refinementsResults.getNavigation().getRefinements();
@@ -77,16 +77,16 @@ public class NavigationController {
             availableNavigation.setRefinements(refinementList);
         }
         results.setQuery(query.getQuery());
-        results.setAvailableNavigation(asList(availableNavigation));
+        results.setAvailableNavigation(singletonList(availableNavigation));
         model.put("results", results);
         model.put("nav", availableNavigation);
         return new ModelAndView("/includes/navLink.jsp", model);
     }
 
     @RequestMapping({"**/index.html"})
-    protected ModelAndView handleSearch(HttpServletRequest pRequest, HttpServletResponse pResponse) throws Exception {
+    protected ModelAndView handleSearch(HttpServletRequest request, HttpServletResponse response) throws Exception {
         // Get the action from the request.
-        String action = ServletRequestUtils.getStringParameter(pRequest, "action", null);
+        String action = ServletRequestUtils.getStringParameter(request, "action", null);
 
         // The UrlBeautifier deconstructs a URL into a query object.  You can create as many url
         // beautifiers as you want which may correspond to different kinds of urls that you want
@@ -104,12 +104,12 @@ public class NavigationController {
         }
 
         // Create the query object from the beautifier
-        Query query = defaultUrlBeautifier.fromUrl(pRequest.getRequestURI(), new Query());
+        Query query = defaultUrlBeautifier.fromUrl(request.getRequestURI(), new Query());
 
         // return all fields with each record.
         // If there are specific fields defined, use these, otherwise default to showing all fields.
         boolean debug = false;
-        String fieldString = getCookie(pRequest, "fields", "").trim();
+        String fieldString = getCookie(request, "fields", "").trim();
         if (StringUtils.isNotBlank(fieldString)) {
             String[] fields = fieldString.split(",");
             for (String field : fields) {
@@ -129,37 +129,37 @@ public class NavigationController {
         }
 
         // Setup parameters for the bridge
-        String customerId = getCookie(pRequest, "customerId", "").trim();
-        String clientKey = getCookie(pRequest, "clientKey", "").trim();
+        String customerId = getCookie(request, "customerId", "").trim();
+        String clientKey = getCookie(request, "clientKey", "").trim();
 
         // Create the communications bridge to the cloud service.
         CloudBridge bridge = new CloudBridge(clientKey, customerId);
 
         // If a specific area is set in the url params set it on the query.
         // Areas are used to name space rules / query rewrites.
-        String area = getCookie(pRequest, "area", "").trim();
+        String area = getCookie(request, "area", "").trim();
         if (StringUtils.isNotBlank(area)) {
             query.setArea(area);
         }
 
         // Use a specific language
         // See the documentation for which language codes are available.
-        String language = getCookie(pRequest, "language", "").trim();
+        String language = getCookie(request, "language", "").trim();
         if (StringUtils.isNotBlank(language)) {
             query.setLanguage(language);
         }
 
         // If you have data in different collections you can specify the specific
         // collection you wish to query against.
-        String collection = getCookie(pRequest, "collection", "").trim();
+        String collection = getCookie(request, "collection", "").trim();
         if (StringUtils.isNotBlank(collection)) {
             query.setCollection(collection);
         }
 
         // You can specify the sort field and order of the results.
-        String sortField = getCookie(pRequest, "sortField", "").trim();
+        String sortField = getCookie(request, "sortField", "").trim();
         if (StringUtils.isNotBlank(sortField)) {
-            String sortOrder = getCookie(pRequest, "sortOrder", "").trim();
+            String sortOrder = getCookie(request, "sortOrder", "").trim();
             String[] fields = sortField.split(",");
             String[] orders = sortOrder.split(",");
             for (int i = 0; i < fields.length; i++) {
@@ -178,32 +178,32 @@ public class NavigationController {
 
         // If there are additional refinements that aren't being beautified get these from the
         // URL and add them to the query.
-        String refinements = ServletRequestUtils.getStringParameter(pRequest, "refinements", "");
+        String refinements = ServletRequestUtils.getStringParameter(request, "refinements", "");
         if (StringUtils.isNotBlank(refinements)) {
             query.addRefinementsByString(refinements);
         }
 
         // If the search string has not been beautified get it from the URL parameters.
-        String queryString = ServletRequestUtils.getStringParameter(pRequest, "q", "");
+        String queryString = ServletRequestUtils.getStringParameter(request, "q", "");
         if (StringUtils.isNotBlank(queryString)) {
             query.setQuery(queryString);
         }
 
         // If we're paging through results set the skip from the url params
-        query.setSkip(ServletRequestUtils.getIntParameter(pRequest, "p", 0));
+        query.setSkip(ServletRequestUtils.getIntParameter(request, "p", 0));
 
         // If the query is supposed to be beautified, and it was in fact in the URL params
         // send a redirect command to the browser to redirect to the beautified URL.
-        String incoming = pRequest.getRequestURI();
-        String beautified = pRequest.getContextPath() + defaultUrlBeautifier.toUrl(
+        String incoming = request.getRequestURI();
+        String beautified = request.getContextPath() + defaultUrlBeautifier.toUrl(
                 query.getQuery(), query.getRefinementString());
         if (!beautified.startsWith(incoming)) {
-            pResponse.sendRedirect(beautified);
+            response.sendRedirect(beautified);
             return null;
         }
 
         // Define the page size.
-        query.setPageSize(ServletRequestUtils.getIntParameter(pRequest, "ps", 50));
+        query.setPageSize(ServletRequestUtils.getIntParameter(request, "ps", 50));
 
         // Create a model that we will pass into the rendering JSP
         Map<String, Object> model = new HashMap<String, Object>();
@@ -214,7 +214,7 @@ public class NavigationController {
         model.put("customerId", customerId);
 
         // If a specific biasing profile is set in the url params set it on the query.
-        String biasingProfile = getCookie(pRequest, "biasingProfile", "").trim();
+        String biasingProfile = getCookie(request, "biasingProfile", "").trim();
 
         // We will run this query multiple times for each biasing profile found
         String[] biasingProfiles = biasingProfile.split(",", -1);
@@ -327,5 +327,4 @@ public class NavigationController {
         }
         return pDefault;
     }
-
 }
