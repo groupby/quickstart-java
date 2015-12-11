@@ -41,7 +41,7 @@
     <engine.type.flux>flux</engine.type.flux>
     <engine.type.gsa>gsa</engine.type.gsa>
 
-    <groupbyinc.api.version>2.0.248</groupbyinc.api.version>
+    <groupbyinc.api.version>2.0.249</groupbyinc.api.version>
     <groupbyinc.common.version>41</groupbyinc.common.version>
 
     <!-- # 3rd-Party Dependency params-->
