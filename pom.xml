@@ -11,16 +11,12 @@
   <artifactId>quickstart-java</artifactId>
   <version>2.0.251-SNAPSHOT</version>
 
-  <packaging>pom</packaging>
+  <packaging>war</packaging>
 
   <name>GroupBy - QuickStart - Java</name>
   <description>${project.name}</description>
 
-  <modules>
-    <module>flux</module>
-    <module>gsa</module>
-  </modules>
-
+  <!-- # required for Github plugin -->
   <scm>
     <url>https://github.com/groupby/quickstart-java</url>
     <connection>scm:git:git@github.com:groupby/quickstart-java.git</connection>
@@ -36,10 +32,6 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <project.build.locale>en_US</project.build.locale>
     <repo.upload.retryAttempts>3</repo.upload.retryAttempts>
-
-    <quickstart.api.type />
-    <engine.type.flux>flux</engine.type.flux>
-    <engine.type.gsa>gsa</engine.type.gsa>
 
     <groupbyinc.api.version>2.0.250</groupbyinc.api.version>
     <groupbyinc.common.version>41</groupbyinc.common.version>
@@ -57,6 +49,19 @@
   </properties>
 
   <dependencies>
+
+    <!-- ### GroupBy -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>api-java-flux</artifactId>
+      <version>${groupbyinc.api.version}</version>
+      <classifier>uber</classifier>
+    </dependency>
+    <dependency>
+      <groupId>com.groupbyinc</groupId>
+      <artifactId>common-util</artifactId>
+      <version>${groupbyinc.common.version}</version>
+    </dependency>
 
     <!-- ### Servlet/JSP/JSTL -->
     <dependency>
@@ -82,12 +87,33 @@
       <version>1.1.2</version>
     </dependency>
 
+
+    <!-- ### Spring -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${quickstart.spring.version}</version>
+    </dependency>
+
     <!-- ### Test -->
     <dependency>
       <groupId>spring</groupId>
       <artifactId>spring-mock</artifactId>
       <version>1.0.2</version>
       <scope>test</scope>
+    </dependency>
+
+    <!-- ### Misc -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.4</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-lang</groupId>
+          <artifactId>commons-lang</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
   </dependencies>
@@ -543,6 +569,36 @@
             </property>
           </properties>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <webResources>
+            <resource>
+              <directory>${project.build.sourceDirectory}</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>de.jutzig</groupId>
+        <artifactId>github-release-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>github-deploy</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>release</goal>
+            </goals>
+            <configuration>
+              <artifact>${project.build.directory}/${project.artifactId}-${project.version}.war</artifact>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
     </plugins>
