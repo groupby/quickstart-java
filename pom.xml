@@ -33,7 +33,7 @@
     <project.build.locale>en_US</project.build.locale>
     <repo.upload.retryAttempts>3</repo.upload.retryAttempts>
 
-    <groupbyinc.api.version>2.0.251</groupbyinc.api.version>
+    <groupbyinc.api.version>2.0.252</groupbyinc.api.version>
     <groupbyinc.common.version>41</groupbyinc.common.version>
 
     <!-- # 3rd-Party Dependency params-->
@@ -53,7 +53,7 @@
     <!-- ### GroupBy -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>api-java</artifactId>
+      <artifactId>api-java-flux</artifactId>
       <version>${groupbyinc.api.version}</version>
       <classifier>uber</classifier>
     </dependency>
