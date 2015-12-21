@@ -1,7 +1,6 @@
 <div class="header">
 
 <form id="cookieForm">
-
   <img align="right" src="<c:url value="/images/logo.png"/>" height="27px"/>
   <c:if test="${!empty customerId}">
     <a target="_blank" id="commandCenterLink" href="https://${customerId}.groupbycloud.com/admin/keyManagement.html">Command Center</a>
@@ -13,6 +12,8 @@
   <input type="text" name="language" id="language" placeholder="Language" style="width:80px"> |
   <input type="text" name="sortField" id="sortField" placeholder="Sort Field" style="width:100px;margin-top:10px">
   <input type="text" name="sortOrder" id="sortOrder" placeholder="Sort Order (A or D)" style="width:150px;margin-top:10px"><br />
+  <input type="text" name="includedNavigations" id="includedNavigations" placeholder="Included Navigations" style="width:125px;margin-top:10px">
+  <input type="text" name="excludedNavigations" id="excludedNavigations" placeholder="Excluded Navigations" style="width:125px;margin-top:10px"><br />
   <input type="text" name="fields" id="fields" placeholder="Field List, comma separated" style="width:750px;margin-top:10px"><br />
   <input type="hidden" name="biasingProfile" id="biasingProfile">
 </form>

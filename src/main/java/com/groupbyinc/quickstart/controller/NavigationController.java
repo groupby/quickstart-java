@@ -176,6 +176,20 @@ public class NavigationController {
             }
         }
 
+        String includedNavigations = getCookie(request, "includedNavigations", "").trim();
+        if (StringUtils.isNotBlank(includedNavigations)) {
+            for (String name : StringUtils.split(includedNavigations, ",")) {
+                query.addIncludedNavigations(name.trim());
+            }
+        }
+
+        String excludedNavigations = getCookie(request, "excludedNavigations", "").trim();
+        if (StringUtils.isNotBlank(excludedNavigations)) {
+            for (String name : StringUtils.split(excludedNavigations, ",")) {
+                query.addExcludedNavigations(name.trim());
+            }
+        }
+
         // If there are additional refinements that aren't being beautified get these from the
         // URL and add them to the query.
         String refinements = ServletRequestUtils.getStringParameter(request, "refinements", "");
