@@ -9,6 +9,6 @@ Usage
 ---
 
 1. git clone https://github.com/groupby/quickstart-java.git
-1. cd quickstart-java/flux
+1. cd quickstart-java
 1. mvn tomcat7:run
 
