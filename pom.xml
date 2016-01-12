@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>quickstart-java</artifactId>
-  <version>2.0.260-SNAPSHOT</version>
+  <version>2.2.1-SNAPSHOT</version>
 
   <packaging>war</packaging>
 
@@ -33,7 +33,7 @@
     <project.build.locale>en_US</project.build.locale>
     <repo.upload.retryAttempts>3</repo.upload.retryAttempts>
 
-    <groupbyinc.api.version>2.0.255</groupbyinc.api.version>
+    <groupbyinc.api.version>2.2.1</groupbyinc.api.version>
     <groupbyinc.common.version>41</groupbyinc.common.version>
 
     <!-- # 3rd-Party Dependency params-->
@@ -563,7 +563,7 @@
               <dependencies>
                 <dependency>
                   <groupId>${project.groupId}</groupId>
-                  <artifactId>api-java</artifactId>
+                  <artifactId>api-java-flux</artifactId>
                 </dependency>
               </dependencies>
             </property>
