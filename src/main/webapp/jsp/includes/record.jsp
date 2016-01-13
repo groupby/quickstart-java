@@ -13,9 +13,9 @@
                 </c:if>
             </c:forEach>
             <c:forEach items="${record.allMeta}" var="entry">
-                <c:if test="${fn:endsWith(entry.value, '.jpg') or fn:endsWith(entry.value, '.jpeg') or fn:endsWith(entry.value, '.png') or fn:endsWith(entry.value, '.gif')}">
+                <c:if test="${fn:contains(entry.key, 'image') or fn:endsWith(entry.value, '.jpg') or fn:endsWith(entry.value, '.jpeg') or fn:endsWith(entry.value, '.png') or fn:endsWith(entry.value, '.gif')}">
                     ${entry.key}:
-                    <img style="display: inline-block; max-width: 200px; max-height: 200px; margin: 5px;" src="${entry.value }"/>
+                    <img style="display: inline-block; max-width: 200px; max-height: 200px; margin: 5px;" src="${entry.value}"/>
                 </c:if>
             </c:forEach>
         </div>
