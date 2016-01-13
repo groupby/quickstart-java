@@ -15,6 +15,7 @@
   <input type="text" name="includedNavigations" id="includedNavigations" placeholder="Included Navigations" style="width:125px;margin-top:10px">
   <input type="text" name="excludedNavigations" id="excludedNavigations" placeholder="Excluded Navigations" style="width:125px;margin-top:10px"><br />
   <input type="text" name="fields" id="fields" placeholder="Field List, comma separated" style="width:750px;margin-top:10px"><br />
+  <input type="text" name="bringToTop" id="bringToTop" placeholder="Bring To Top, comma separated list of Product IDs" style="width:750px;margin-top:10px"><br />
   <input type="hidden" name="biasingProfile" id="biasingProfile">
 </form>
 </div>

@@ -190,6 +190,13 @@ public class NavigationController {
             }
         }
 
+        String bringToTop = getCookie(request, "bringToTop", "").trim();
+        if (StringUtils.isNotBlank(bringToTop)) {
+            for (String name : StringUtils.split(bringToTop, ",")) {
+                query.setBringToTop(name.trim());
+            }
+        }
+
         // If there are additional refinements that aren't being beautified get these from the
         // URL and add them to the query.
         String refinements = ServletRequestUtils.getStringParameter(request, "refinements", "");
