@@ -33,7 +33,7 @@
     <project.build.locale>en_US</project.build.locale>
     <repo.upload.retryAttempts>3</repo.upload.retryAttempts>
 
-    <groupbyinc.api.version>2.2.16</groupbyinc.api.version>
+    <groupbyinc.api.version>2.2.17</groupbyinc.api.version>
     <groupbyinc.common.version>42</groupbyinc.common.version>
 
     <!-- # 3rd-Party Dependency params-->
