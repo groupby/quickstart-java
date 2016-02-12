@@ -2,7 +2,9 @@ package com.groupbyinc.quickstart.controller;
 
 import com.groupbyinc.api.CloudBridge;
 import com.groupbyinc.api.Query;
+import com.groupbyinc.api.model.MatchStrategy;
 import com.groupbyinc.api.model.Navigation;
+import com.groupbyinc.api.model.PartialMatchRule;
 import com.groupbyinc.api.model.Refinement;
 import com.groupbyinc.api.model.RefinementsResult;
 import com.groupbyinc.api.model.Results;
@@ -11,6 +13,7 @@ import com.groupbyinc.common.apache.commons.io.IOUtils;
 import com.groupbyinc.common.apache.commons.lang3.StringUtils;
 import com.groupbyinc.common.jackson.Mappers;
 import com.groupbyinc.quickstart.helper.Utils;
+import com.groupbyinc.quickstart.model.QuickstartResults;
 import com.groupbyinc.util.UrlBeautifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -28,6 +31,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -244,6 +248,14 @@ public class NavigationController {
         }
         model.put("biasingProfileCount", biasingProfiles.length);
 
+		String matchStrategy = getCookie(request, "matchStrategy", "").trim();
+
+		String[] matchStrategies = matchStrategy.split("\\|", -1);
+		if (matchStrategies.length == 0) {
+			matchStrategies = new String[] { "" };
+		}
+		model.put("matchStrategyCount", matchStrategies.length);
+
         for (int i = 0; i < biasingProfiles.length; i++) {
             String profile = biasingProfiles[i].trim();
             query.setBiasingProfile(null);
@@ -251,8 +263,23 @@ public class NavigationController {
                 query.setBiasingProfile(profile);
             }
 
-            // pass the raw json representation of the query into the view regardless of errors
-            model.put("rawQuery" + i, query.setReturnBinary(false).getBridgeJson(clientKey));
+			String strategy = "[{ 'terms': 2, 'mustMatch': 2 }, { 'terms': 3, 'mustMatch': 2 }, { 'terms': 4, 'mustMatch': 3 }, { 'terms': 5, 'mustMatch': 3 }, { 'terms': 6, 'mustMatch': 4 }, { 'terms': 7, 'mustMatch': 4 }, { 'terms': 8, 'mustMatch': 5 }, { 'termsGreaterThan': 8, 'mustMatch': 60, 'percentage': true }]";
+			try {
+				strategy = matchStrategies[i].trim();
+				MatchStrategy oMatchStrategy = Utils.getMatchStrategy(strategy);
+				if (oMatchStrategy != null) {
+					query.setMatchStrategy(oMatchStrategy);
+				}
+
+			} catch (Exception e) {
+				// swallow any exception in attempting to get / set a match
+				// strategy
+			}
+
+			// pass the raw json representation of the query into the view
+			// regardless of errors
+			model.put("rawQuery" + i, query.setReturnBinary(false)
+					.getBridgeJson(clientKey));
             model.put("originalQuery" + i, query);
             query.setReturnBinary(true);
             try {
@@ -264,7 +291,11 @@ public class NavigationController {
                     model.put("time" + i, System.currentTimeMillis() - startTime);
                 }
                 // pass the results into the view.
-                model.put("results" + i, results);
+				QuickstartResults quickstartResults = new QuickstartResults(
+						results);
+
+				quickstartResults.setMatchStrategy(strategy);
+				model.put("results" + i, quickstartResults);
                 model.put(
                         "resultsJson" + i, debug ? doDebugQueryThroughUrl(clientKey, customerId, query)
                                                  : Mappers.writeValueAsString(results));

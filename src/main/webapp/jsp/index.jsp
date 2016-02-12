@@ -36,7 +36,8 @@
         <jsp:include  page="default.jsp"/>
       </c:when>
       <c:otherwise>
-        <h2>Landing page not defined: "${results.template.name}"</h2>
+      <h3><strong>Triggered Rule:</strong> "${results.template.ruleName}"<BR>
+	      <strong>Triggered Template:</strong> "${results.template.name}"</h3>
         <jsp:include  page="default.jsp"/>
       </c:otherwise>
     </c:choose>
