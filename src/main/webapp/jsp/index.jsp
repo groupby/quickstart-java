@@ -37,7 +37,8 @@
       </c:when>
       <c:otherwise>
       <h3><strong>Triggered Rule:</strong> "${results.template.ruleName}"<BR>
-	      <strong>Triggered Template:</strong> "${results.template.name}"</h3>
+	      <strong>Triggered Template:</strong> "${results.template.name}"<BR>
+      <strong>Rewrites:</strong> ${results.rewrites}</h3>
         <jsp:include  page="default.jsp"/>
       </c:otherwise>
     </c:choose>
