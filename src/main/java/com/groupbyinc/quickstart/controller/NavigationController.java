@@ -15,6 +15,7 @@ import com.groupbyinc.common.jackson.Mappers;
 import com.groupbyinc.quickstart.helper.Utils;
 import com.groupbyinc.quickstart.model.QuickstartResults;
 import com.groupbyinc.util.UrlBeautifier;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,17 +41,19 @@ import java.util.Map;
 import static java.util.Collections.singletonList;
 
 /**
- * NavigationController is the single entry point for search and navigation
- * in the quickstart application.
+ * NavigationController is the single entry point for search and navigation in
+ * the quickstart application.
  */
 @Controller
 public class NavigationController {
+    private static final String DEFAULT_MATCH_STRATEGY = "[{ 'terms': 2, 'mustMatch': 2 }, { 'terms': 3, 'mustMatch': 2 }, { 'terms': 4, 'mustMatch': 3 }, { 'terms': 5, 'mustMatch': 3 }, { 'terms': 6, 'mustMatch': 4 }, { 'terms': 7, 'mustMatch': 4 }, { 'terms': 8, 'mustMatch': 5 }, { 'termsGreaterThan': 8, 'mustMatch': 60, 'percentage': true }]";
     private HashMap<String, Query> queryQueue = new HashMap<String, Query>();
     private HashMap<String, CloudBridge> bridgeQueue = new HashMap<String, CloudBridge>();
 
     @RequestMapping(value = "/moreRefinements.html")
-    ModelAndView getMoreNavigations(@RequestParam String navigationName, @RequestParam String selectedRefinements,
-                                    HttpServletRequest request) throws IOException, JspException {
+    ModelAndView getMoreNavigations(@RequestParam String navigationName,
+            @RequestParam String selectedRefinements, HttpServletRequest request)
+            throws IOException, JspException {
         String clientKey = getCookie(request, "clientKey", "").trim();
 
         Query query = queryQueue.get(clientKey);
@@ -58,7 +62,8 @@ public class NavigationController {
         navigationName = navigationName.trim();
 
         Map<String, Object> model = new HashMap<String, Object>();
-        Navigation availableNavigation = new Navigation().setName(navigationName);
+        Navigation availableNavigation = new Navigation()
+                .setName(navigationName);
 
         if (query == null || bridge == null) {
             model.put("results", null);
@@ -67,17 +72,22 @@ public class NavigationController {
         }
 
         Results results = new Results();
-        results.setSelectedNavigation(Utils.getSelectedNavigations(selectedRefinements));
+        results.setSelectedNavigation(Utils
+                .getSelectedNavigations(selectedRefinements));
         RefinementsResult refinementsResults = bridge.refinements(
-                new Query().setArea(query.getArea()).addRefinementsByString(query.getRefinementString())
-                           .setCollection(query.getCollection()), navigationName);
+                new Query().setArea(query.getArea())
+                        .addRefinementsByString(query.getRefinementString())
+                        .setCollection(query.getCollection()), navigationName);
 
-        if (refinementsResults != null && refinementsResults.getNavigation() != null) {
-            List<Refinement> refinementList = refinementsResults.getNavigation().getRefinements();
+        if (refinementsResults != null
+                && refinementsResults.getNavigation() != null) {
+            List<Refinement> refinementList = refinementsResults
+                    .getNavigation().getRefinements();
             if (refinementsResults.getNavigation().isOr()) {
                 availableNavigation.setOr(true);
             }
-            availableNavigation.setDisplayName(refinementsResults.getNavigation().getDisplayName());
+            availableNavigation.setDisplayName(refinementsResults
+                    .getNavigation().getDisplayName());
             availableNavigation.setRefinements(refinementList);
         }
         results.setQuery(query.getQuery());
@@ -87,19 +97,26 @@ public class NavigationController {
         return new ModelAndView("/includes/navLink.jsp", model);
     }
 
-    @RequestMapping({"**/index.html"})
-    protected ModelAndView handleSearch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @RequestMapping({ "**/index.html" })
+    protected ModelAndView handleSearch(HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
         // Get the action from the request.
-        String action = ServletRequestUtils.getStringParameter(request, "action", null);
+        String action = ServletRequestUtils.getStringParameter(request,
+                "action", null);
 
-        // The UrlBeautifier deconstructs a URL into a query object.  You can create as many url
-        // beautifiers as you want which may correspond to different kinds of urls that you want
-        // to generate.  Here we construct one called 'default' that we use for every search and
+        // The UrlBeautifier deconstructs a URL into a query object. You can
+        // create as many url
+        // beautifiers as you want which may correspond to different kinds of
+        // urls that you want
+        // to generate. Here we construct one called 'default' that we use for
+        // every search and
         // navigation URL.
-        UrlBeautifier defaultUrlBeautifier = UrlBeautifier.getUrlBeautifiers().get("default");
+        UrlBeautifier defaultUrlBeautifier = UrlBeautifier.getUrlBeautifiers()
+                .get("default");
         if (defaultUrlBeautifier == null) {
             UrlBeautifier.createUrlBeautifier("default");
-            defaultUrlBeautifier = UrlBeautifier.getUrlBeautifiers().get("default");
+            defaultUrlBeautifier = UrlBeautifier.getUrlBeautifiers().get(
+                    "default");
             defaultUrlBeautifier.addRefinementMapping('s', "size");
             defaultUrlBeautifier.setSearchMapping('q');
             defaultUrlBeautifier.setAppend("/index.html");
@@ -108,10 +125,12 @@ public class NavigationController {
         }
 
         // Create the query object from the beautifier
-        Query query = defaultUrlBeautifier.fromUrl(request.getRequestURI(), new Query());
+        Query query = defaultUrlBeautifier.fromUrl(request.getRequestURI(),
+                new Query());
 
         // return all fields with each record.
-        // If there are specific fields defined, use these, otherwise default to showing all fields.
+        // If there are specific fields defined, use these, otherwise default to
+        // showing all fields.
         boolean debug = false;
         String fieldString = getCookie(request, "fields", "").trim();
         if (StringUtils.isNotBlank(fieldString)) {
@@ -120,7 +139,8 @@ public class NavigationController {
                 if (StringUtils.isNotBlank(field)) {
                     query.addFields(field.trim());
                 }
-                // this debug endpoint for search is temporary and maybe removed without warning.
+                // this debug endpoint for search is temporary and maybe removed
+                // without warning.
                 if (field.trim().equalsIgnoreCase("debug")) {
                     debug = true;
                     if (fields.length == 1) {
@@ -153,7 +173,8 @@ public class NavigationController {
             query.setLanguage(language);
         }
 
-        // If you have data in different collections you can specify the specific
+        // If you have data in different collections you can specify the
+        // specific
         // collection you wish to query against.
         String collection = getCookie(request, "collection", "").trim();
         if (StringUtils.isNotBlank(collection)) {
@@ -180,14 +201,16 @@ public class NavigationController {
             }
         }
 
-        String includedNavigations = getCookie(request, "includedNavigations", "").trim();
+        String includedNavigations = getCookie(request, "includedNavigations",
+                "").trim();
         if (StringUtils.isNotBlank(includedNavigations)) {
             for (String name : StringUtils.split(includedNavigations, ",")) {
                 query.addIncludedNavigations(name.trim());
             }
         }
 
-        String excludedNavigations = getCookie(request, "excludedNavigations", "").trim();
+        String excludedNavigations = getCookie(request, "excludedNavigations",
+                "").trim();
         if (StringUtils.isNotBlank(excludedNavigations)) {
             for (String name : StringUtils.split(excludedNavigations, ",")) {
                 query.addExcludedNavigations(name.trim());
@@ -201,15 +224,19 @@ public class NavigationController {
             }
         }
 
-        // If there are additional refinements that aren't being beautified get these from the
+        // If there are additional refinements that aren't being beautified get
+        // these from the
         // URL and add them to the query.
-        String refinements = ServletRequestUtils.getStringParameter(request, "refinements", "");
+        String refinements = ServletRequestUtils.getStringParameter(request,
+                "refinements", "");
         if (StringUtils.isNotBlank(refinements)) {
             query.addRefinementsByString(refinements);
         }
 
-        // If the search string has not been beautified get it from the URL parameters.
-        String queryString = ServletRequestUtils.getStringParameter(request, "q", "");
+        // If the search string has not been beautified get it from the URL
+        // parameters.
+        String queryString = ServletRequestUtils.getStringParameter(request,
+                "q", "");
         if (StringUtils.isNotBlank(queryString)) {
             query.setQuery(queryString);
         }
@@ -217,44 +244,50 @@ public class NavigationController {
         // If we're paging through results set the skip from the url params
         query.setSkip(ServletRequestUtils.getIntParameter(request, "p", 0));
 
-        // If the query is supposed to be beautified, and it was in fact in the URL params
-        // send a redirect command to the browser to redirect to the beautified URL.
+        // If the query is supposed to be beautified, and it was in fact in the
+        // URL params
+        // send a redirect command to the browser to redirect to the beautified
+        // URL.
         String incoming = request.getRequestURI();
-        String beautified = request.getContextPath() + defaultUrlBeautifier.toUrl(
-                query.getQuery(), query.getNavigations());
+        String beautified = request.getContextPath()
+                + defaultUrlBeautifier.toUrl(query.getQuery(),
+                        query.getNavigations());
         if (!beautified.startsWith(incoming)) {
             response.sendRedirect(beautified);
             return null;
         }
 
         // Define the page size.
-        query.setPageSize(ServletRequestUtils.getIntParameter(request, "ps", 50));
+        query.setPageSize(ServletRequestUtils
+                .getIntParameter(request, "ps", 50));
 
         // Create a model that we will pass into the rendering JSP
         Map<String, Object> model = new HashMap<String, Object>();
-        ModelAndView modelAndView = new ModelAndView("getOrderList".equals(action) ? "orderList.jsp" : "index.jsp");
+        ModelAndView modelAndView = new ModelAndView(
+                "getOrderList".equals(action) ? "orderList.jsp" : "index.jsp");
         modelAndView.addObject("model", model);
 
         // put back the customerId
         model.put("customerId", customerId);
 
-        // If a specific biasing profile is set in the url params set it on the query.
+        // If a specific biasing profile is set in the url params set it on the
+        // query.
         String biasingProfile = getCookie(request, "biasingProfile", "").trim();
 
         // We will run this query multiple times for each biasing profile found
         String[] biasingProfiles = biasingProfile.split(",", -1);
         if (biasingProfiles.length == 0) {
-            biasingProfiles = new String[]{""};
+            biasingProfiles = new String[] { "" };
         }
         model.put("biasingProfileCount", biasingProfiles.length);
 
-		String matchStrategy = getCookie(request, "matchStrategy", "").trim();
+        String matchStrategy = getCookie(request, "matchStrategy", "").trim();
 
-		String[] matchStrategies = matchStrategy.split("\\|", -1);
-		if (matchStrategies.length == 0) {
-			matchStrategies = new String[] { "" };
-		}
-		model.put("matchStrategyCount", matchStrategies.length);
+        String[] matchStrategies = matchStrategy.split("\\|", -1);
+        if (matchStrategies.length == 0) {
+            matchStrategies = new String[] { "" };
+        }
+        model.put("matchStrategyCount", matchStrategies.length);
 
         for (int i = 0; i < biasingProfiles.length; i++) {
             String profile = biasingProfiles[i].trim();
@@ -263,23 +296,25 @@ public class NavigationController {
                 query.setBiasingProfile(profile);
             }
 
-			String strategy = "[{ 'terms': 2, 'mustMatch': 2 }, { 'terms': 3, 'mustMatch': 2 }, { 'terms': 4, 'mustMatch': 3 }, { 'terms': 5, 'mustMatch': 3 }, { 'terms': 6, 'mustMatch': 4 }, { 'terms': 7, 'mustMatch': 4 }, { 'terms': 8, 'mustMatch': 5 }, { 'termsGreaterThan': 8, 'mustMatch': 60, 'percentage': true }]";
-			try {
-				strategy = matchStrategies[i].trim();
-				MatchStrategy oMatchStrategy = Utils.getMatchStrategy(strategy);
-				if (oMatchStrategy != null) {
-					query.setMatchStrategy(oMatchStrategy);
-				}
+            String strategy = DEFAULT_MATCH_STRATEGY;
+            try {
+                strategy = matchStrategies[i].trim();
+                MatchStrategy oMatchStrategy = Utils.getMatchStrategy(strategy);
+                if (oMatchStrategy != null) {
+                    query.setMatchStrategy(oMatchStrategy);
+                }
 
-			} catch (Exception e) {
-				// swallow any exception in attempting to get / set a match
-				// strategy
-			}
+            } catch (Exception e) {
+                // Output error and swallow exception
+                // Note that any error at this point means that the default
+                // match strategy will be applied
+                e.printStackTrace();
+            }
 
-			// pass the raw json representation of the query into the view
-			// regardless of errors
-			model.put("rawQuery" + i, query.setReturnBinary(false)
-					.getBridgeJson(clientKey));
+            // pass the raw json representation of the query into the view
+            // regardless of errors
+            model.put("rawQuery" + i, query.setReturnBinary(false)
+                    .getBridgeJson(clientKey));
             model.put("originalQuery" + i, query);
             query.setReturnBinary(true);
             try {
@@ -288,17 +323,18 @@ public class NavigationController {
                 if (StringUtils.isNotBlank(clientKey)) {
                     long startTime = System.currentTimeMillis();
                     results = bridge.search(query);
-                    model.put("time" + i, System.currentTimeMillis() - startTime);
+                    model.put("time" + i, System.currentTimeMillis()
+                            - startTime);
                 }
                 // pass the results into the view.
-				QuickstartResults quickstartResults = new QuickstartResults(
-						results);
-
-				quickstartResults.setMatchStrategy(strategy);
-				model.put("results" + i, quickstartResults);
+                QuickstartResults quickstartResults = new QuickstartResults(
+                        results);
+                quickstartResults.setMatchStrategy(strategy);
+                model.put("results" + i, quickstartResults);
                 model.put(
-                        "resultsJson" + i, debug ? doDebugQueryThroughUrl(clientKey, customerId, query)
-                                                 : Mappers.writeValueAsString(results));
+                        "resultsJson" + i,
+                        debug ? doDebugQueryThroughUrl(clientKey, customerId,
+                                query) : Mappers.writeValueAsString(results));
             } catch (Exception e) {
                 // Something went wrong.
                 e.printStackTrace();
@@ -318,23 +354,27 @@ public class NavigationController {
     }
 
     /**
-     * Temporary method for debugging queries.  The debug parameter maybe discontinued without warning.
-     *
+     * Temporary method for debugging queries. The debug parameter maybe
+     * discontinued without warning.
+     * 
      * @param clientKey
      * @param customerId
      * @param query
-     *
+     * 
      * @return
      */
-    private String doDebugQueryThroughUrl(String clientKey, String customerId, Query query) {
+    private String doDebugQueryThroughUrl(String clientKey, String customerId,
+            Query query) {
         DataOutputStream outputStream = null;
         InputStream inputStream = null;
         try {
             query.setReturnBinary(false);
             byte[] postData = query.getBridgeJson(clientKey).getBytes("UTF-8");
 
-            // this debug endpoint for search is temporary and maybe removed without warning.
-            URL url = new URL("https://" + customerId + ".groupbycloud.com/api/v1/search?debug");
+            // this debug endpoint for search is temporary and maybe removed
+            // without warning.
+            URL url = new URL("https://" + customerId
+                    + ".groupbycloud.com/api/v1/search?debug");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setDoInput(true);
@@ -342,7 +382,8 @@ public class NavigationController {
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("charset", "utf-8");
-            conn.setRequestProperty("Content-Length", Integer.toString(postData.length));
+            conn.setRequestProperty("Content-Length",
+                    Integer.toString(postData.length));
             conn.setUseCaches(false);
             outputStream = new DataOutputStream(conn.getOutputStream());
             outputStream.write(postData);
@@ -359,16 +400,18 @@ public class NavigationController {
     }
 
     /**
-     * Helper method to get cookie values.  We use this for storing the clientKey and customerId, though
-     * these values should typically be put in a properties file.
-     *
+     * Helper method to get cookie values. We use this for storing the clientKey
+     * and customerId, though these values should typically be put in a
+     * properties file.
+     * 
      * @param pRequest
      * @param pName
      * @param pDefault
-     *
+     * 
      * @return the value of the named cookie, or default if it was not found.
      */
-    private String getCookie(HttpServletRequest pRequest, String pName, String pDefault) {
+    private String getCookie(HttpServletRequest pRequest, String pName,
+            String pDefault) {
         Cookie[] cookies = pRequest.getCookies();
         if (pRequest.getCookies() != null) {
             for (Cookie cookie : cookies) {

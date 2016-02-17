@@ -21,55 +21,56 @@ import java.util.List;
  */
 public class Utils {
 
-    public static List<Navigation> getSelectedNavigations(String refinements){
+    public static List<Navigation> getSelectedNavigations(String refinements) {
         List<Navigation> selectedNavigations = new ArrayList<Navigation>();
-        if(!refinements.isEmpty()){
+        if (!refinements.isEmpty()) {
             String[] refs = refinements.split(",");
-            for(String s : refs){
+            for (String s : refs) {
                 String[] navsAndRefs = s.split("=");
-                int index = selectedNavigations.indexOf(new Navigation().setName(navsAndRefs[0]));
-                if(index != -1){
-                    selectedNavigations.get(index).getRefinements().add(new RefinementValue().setValue(navsAndRefs[1]));
-                } else{
+                int index = selectedNavigations.indexOf(new Navigation()
+                        .setName(navsAndRefs[0]));
+                if (index != -1) {
+                    selectedNavigations
+                            .get(index)
+                            .getRefinements()
+                            .add(new RefinementValue().setValue(navsAndRefs[1]));
+                } else {
                     List<Refinement> refVals = new ArrayList<Refinement>();
                     refVals.add(new RefinementValue().setValue(navsAndRefs[1]));
-                    selectedNavigations.add(new Navigation().setName(navsAndRefs[0]).setRefinements(refVals));
+                    selectedNavigations.add(new Navigation().setName(
+                            navsAndRefs[0]).setRefinements(refVals));
                 }
             }
         }
         return selectedNavigations;
     }
-    
-	public static MatchStrategy getMatchStrategy(String jsonString) {
-		jsonString = jsonString.replace("'", "\"");
-		
-		if (!(jsonString.startsWith("[") && jsonString.endsWith("]"))) {
-			jsonString = "[" + jsonString + "]";
-		} else if (!jsonString.startsWith("[") || !jsonString.endsWith("]")) {
-			return null;
-		}
-		ObjectMapper mapper = new ObjectMapper();
-		List<PartialMatchRule> rules = null;
-		try {
-			rules = mapper.readValue(jsonString, new TypeReference<List<PartialMatchRule>>(){});
-		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		MatchStrategy matchStrategy = null;
-		
-		if (rules != null) {
-			matchStrategy = new MatchStrategy();
-			matchStrategy.setRules(rules);
-		}
-		
-		return matchStrategy;
-	}
+
+    public static MatchStrategy getMatchStrategy(String jsonString) {
+        jsonString = jsonString.replace("'", "\"");
+
+        if (!(jsonString.startsWith("[") && jsonString.endsWith("]"))) {
+            jsonString = "[" + jsonString + "]";
+        } else if (!jsonString.startsWith("[") || !jsonString.endsWith("]")) {
+            return null;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        List<PartialMatchRule> rules = null;
+        try {
+            rules = mapper.readValue(jsonString,
+                    new TypeReference<List<PartialMatchRule>>() {
+                    });
+        } catch (Exception e) {
+            // Output error and swallow exception
+            e.printStackTrace();
+        }
+
+        MatchStrategy matchStrategy = null;
+
+        if (rules != null) {
+            matchStrategy = new MatchStrategy();
+            matchStrategy.setRules(rules);
+        }
+
+        return matchStrategy;
+    }
 }
