@@ -47,6 +47,7 @@ import static java.util.Collections.singletonList;
 @Controller
 public class NavigationController {
     private static final String DEFAULT_MATCH_STRATEGY = "[{ 'terms': 2, 'mustMatch': 2 }, { 'terms': 3, 'mustMatch': 2 }, { 'terms': 4, 'mustMatch': 3 }, { 'terms': 5, 'mustMatch': 3 }, { 'terms': 6, 'mustMatch': 4 }, { 'terms': 7, 'mustMatch': 4 }, { 'terms': 8, 'mustMatch': 5 }, { 'termsGreaterThan': 8, 'mustMatch': 60, 'percentage': true }]";
+    private static final String DEFAULT_SORT_ORDER = "[{ 'field': '_relevance' }]";
     private HashMap<String, Query> queryQueue = new HashMap<String, Query>();
     private HashMap<String, CloudBridge> bridgeQueue = new HashMap<String, CloudBridge>();
 
@@ -287,7 +288,13 @@ public class NavigationController {
         if (matchStrategies.length == 0) {
             matchStrategies = new String[] { "" };
         }
-        model.put("matchStrategyCount", matchStrategies.length);
+        
+        String sortOrderCookie = getCookie(request, "recordColumnSortOrder", "").trim();
+
+        String[] sortOrders = sortOrderCookie.split("\\|", -1);
+        if (sortOrders.length == 0) {
+            sortOrders = new String[] { "" };
+        }
 
         for (int i = 0; i < biasingProfiles.length; i++) {
             String profile = biasingProfiles[i].trim();
@@ -302,6 +309,21 @@ public class NavigationController {
                 MatchStrategy oMatchStrategy = Utils.getMatchStrategy(strategy);
                 if (oMatchStrategy != null) {
                     query.setMatchStrategy(oMatchStrategy);
+                }
+
+            } catch (Exception e) {
+                // Output error and swallow exception
+                // Note that any error at this point means that the default
+                // match strategy will be applied
+                e.printStackTrace();
+            }
+            
+            String sortOrder = DEFAULT_SORT_ORDER;
+            try {
+                sortOrder = sortOrders[i].trim();
+                Sort[] oSortOrder = Utils.getSortOrder(sortOrder);
+                if (oSortOrder != null && oSortOrder.length > 0) {
+                    query.setSort(oSortOrder);
                 }
 
             } catch (Exception e) {
@@ -330,6 +352,7 @@ public class NavigationController {
                 QuickstartResults quickstartResults = new QuickstartResults(
                         results);
                 quickstartResults.setMatchStrategy(strategy);
+                quickstartResults.setSortOrder(sortOrder);
                 model.put("results" + i, quickstartResults);
                 model.put(
                         "resultsJson" + i,

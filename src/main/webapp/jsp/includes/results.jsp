@@ -26,6 +26,11 @@
 	<a href="javascript:;" class="rightMatchStrategy" onclick="resetMatchStrategy(${b.index})">Default Match Strategy</a><br>
 <textarea id="matchStrategy${b.index}" value="${results.matchStrategy}" placeholder="[{ 'terms': 2, 'mustMatch': 2 }, { 'terms': 3, 'mustMatch': 2 }, { 'terms': 4, 'mustMatch': 3 }, { 'terms': 5, 'mustMatch': 3 }, { 'terms': 6, 'mustMatch': 4 }, { 'terms': 7, 'mustMatch': 4 }, { 'terms': 8, 'mustMatch': 5 }, { 'termsGreaterThan': 8, 'mustMatch': 60, 'percentage': true }]" rows=5 style="width:100%">${results.matchStrategy}</textarea><br>
 </div>
+<BR>
+<div class="resultSortOrder">
+	<a href="javascript:;" class="rightSortOrder" onclick="resetSortOrder(${b.index})">Default Sort Order</a><br>
+	<textarea id="sortOrder${b.index}" value="${results.sortOrder}" placeholder="[{ 'field': '_relevance' }]" rows=5 style="width:100%">${results.sortOrder}</textarea><br>
+</div>
 
 
 <ol id="replacementRow${b.index}" style="display: none">
@@ -66,9 +71,9 @@
         }
     });
 
-    $('.recordColumn textarea').keydown(function(e){
+    $('.resultMatchStrategy textarea').keydown(function(e){
 	    var matchStrategies = '';
-            $('.recordColumn textarea').each(function(){
+            $('.resultMatchStrategy textarea').each(function(){
                 matchStrategies += $(this).val() +  "|"
             });
             matchStrategies = matchStrategies.substring(0, matchStrategies.length-1);
@@ -82,11 +87,32 @@
             $('#form').submit();
 	} 
     });
+
+	$('.resultSortOrder textarea').keydown(function(e){
+	    var sortOrders = '';
+            $('.resultSortOrder textarea').each(function(){
+                sortOrders += $(this).val() +  "|"
+            });
+            sortOrders = sortOrders.substring(0, sortOrders.length-1);
+            $('#recordColumnSortOrder').val(sortOrders);
+            $('#recordColumnSortOrder').trigger('change');
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if (code == 13) {
+            e.preventDefault();
+            e.stopPropagation();
+            saveForm();
+            $('#form').submit();
+	} 
+    });
     
     function removeColumn(pIndex){
         $('#biasing' + pIndex).parent().hide('slide');
         $('#biasing' + pIndex).remove();
+        $('#matchStrategy' + pIndex).remove();
+        $('#sortOrder' + pIndex).remove();
         $('.recordColumn input').trigger('keyup');
+        $('.resultMatchStrategy textarea').trigger('keydown');
+        $('.resultSortOrder textarea').trigger('keydown');
         saveForm();
         $('#form').submit();
     }
@@ -103,7 +129,7 @@
 	    document.getElementById("matchStrategy"+pIndex).value="[{ 'terms': 2, 'mustMatch': 2 }, { 'terms': 3, 'mustMatch': 2 }, { 'terms': 4, 'mustMatch': 3 }, { 'terms': 5, 'mustMatch': 3 }, { 'terms': 6, 'mustMatch': 4 }, { 'terms': 7, 'mustMatch': 4 }, { 'terms': 8, 'mustMatch': 5 }, { 'termsGreaterThan': 8, 'mustMatch': 60, 'percentage': true }]";
 	    saveForm();
 	    var matchStrategies = '';
-            $('.recordColumn textarea').each(function(){
+            $('.resultMatchStrategy textarea').each(function(){
                 matchStrategies += $(this).val() +  "|";
             });
             matchStrategies = matchStrategies.substring(0, matchStrategies.length-1);
@@ -117,7 +143,7 @@
 	    document.getElementById("matchStrategy"+pIndex).value="[{ 'termsGreaterThan': 1, 'mustMatch': 100, 'percentage': true }]";
 	    saveForm();
 	    var matchStrategies = '';
-            $('.recordColumn textarea').each(function(){
+            $('.resultMatchStrategy textarea').each(function(){
                 matchStrategies += $(this).val() +  "|";
             });
             matchStrategies = matchStrategies.substring(0, matchStrategies.length-1);
@@ -126,4 +152,19 @@
             saveForm();
             $('#form').submit();
     }
+
+    function resetSortOrder(pIndex){
+	    document.getElementById("sortOrder"+pIndex).value="[{ 'field': '_relevance' }]";
+	    saveForm();
+	    var sortOrders = '';
+            $('.recordColumn .resultSortOrder textarea').each(function(){
+                sortOrders += $(this).val() +  "|";
+            });
+            sortOrders = sortOrders.substring(0, sortOrders.length-1);
+            $('#recordColumnSortOrder').val(sortOrders);
+            $('#recordColumnSortOrder').trigger('change');
+            saveForm();
+            $('#form').submit();
+    }
 </script>
+

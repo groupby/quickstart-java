@@ -19,6 +19,7 @@
   <br />
   <input type="hidden" name="biasingProfile" id="biasingProfile">
   <input type="hidden" name="matchStrategy" id="matchStrategy">
+  <input type="hidden" name="recordColumnSortOrder" id="recordColumnSortOrder">
 </form>
 </div>
 <form id="form" accept-charset="UTF-8" action="<c:url value="${b:toUrlAdd('default', results.query, results.selectedNavigation, 'selected', null) }"/>">

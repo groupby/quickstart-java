@@ -4,6 +4,7 @@ import com.groupbyinc.api.model.Results;
 
 public class QuickstartResults extends Results {
     private String matchStrategy = null;
+    private String sortOrder = null;
 
     public QuickstartResults(Results results) {
         super();
@@ -32,5 +33,13 @@ public class QuickstartResults extends Results {
 
     public void setMatchStrategy(String matchStrategy) {
         this.matchStrategy = matchStrategy;
+    }
+
+    public String getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(String sortOrder) {
+        this.sortOrder = sortOrder;
     }
 }

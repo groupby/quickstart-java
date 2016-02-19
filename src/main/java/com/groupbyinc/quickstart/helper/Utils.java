@@ -5,6 +5,7 @@ import com.groupbyinc.api.model.Navigation;
 import com.groupbyinc.api.model.PartialMatchRule;
 import com.groupbyinc.api.model.Refinement;
 import com.groupbyinc.api.model.Results;
+import com.groupbyinc.api.model.Sort;
 import com.groupbyinc.api.model.refinement.RefinementValue;
 import com.groupbyinc.common.jackson.core.JsonParseException;
 import com.groupbyinc.common.jackson.core.type.TypeReference;
@@ -72,5 +73,46 @@ public class Utils {
         }
 
         return matchStrategy;
+    }
+    
+    public static String getCustomerId(StringBuffer requestUrl) {
+        String customerID = null;
+        
+        try {
+            String temp = requestUrl.substring(requestUrl.indexOf("://")+3);
+            customerID = temp.substring(0,temp.indexOf("."));
+        } catch (Exception e) {
+            //Failed to parse out the customer ID from the URL
+            e.printStackTrace();
+        }
+        
+        return customerID;
+    }
+
+    public static Sort[] getSortOrder(String jsonString) {
+        jsonString = jsonString.replace("'", "\"");
+
+        if (!(jsonString.startsWith("[") && jsonString.endsWith("]"))) {
+            jsonString = "[" + jsonString + "]";
+        } else if (!jsonString.startsWith("[") || !jsonString.endsWith("]")) {
+            return null;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        List<Sort> sorts = null;
+        try {
+            sorts = mapper.readValue(jsonString,
+                    new TypeReference<List<Sort>>() {
+                    });
+        } catch (Exception e) {
+            // Output error and swallow exception
+            e.printStackTrace();
+        }
+
+        Sort[] sortArray = null;
+        if (sorts != null && !sorts.isEmpty()) {
+            sortArray = new Sort[sorts.size()];
+            sortArray = sorts.toArray(sortArray);
+        }
+        return sortArray;
     }
 }

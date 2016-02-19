@@ -326,3 +326,14 @@ display: inline-block;
     left: 10px;
 }
 
+.resultSortOrder {
+	position:relative;
+}
+
+.rightSortOrder {
+	position:absolute;
+	right:0;
+	top:0;
+	font-size:12px;
+}
+
