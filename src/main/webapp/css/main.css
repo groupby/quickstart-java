@@ -291,8 +291,14 @@ label {
 
 }
 
+.toggleMatchStrategy {
+	font-size:12px;
+}
+
 .resultMatchStrategy {
 	position:relative;
+	background-color:#EEEEEE;
+	display:none;
 }
 
 .leftMatchStrategy {
@@ -326,8 +332,14 @@ display: inline-block;
     left: 10px;
 }
 
+.toggleSortOrder {
+	font-size:12px;
+}
+
 .resultSortOrder {
 	position:relative;
+	background-color:#EEEEEE;
+	display:none;
 }
 
 .rightSortOrder {
