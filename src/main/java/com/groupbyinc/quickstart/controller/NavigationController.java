@@ -323,6 +323,10 @@ public class NavigationController {
                 sortOrder = sortOrders[i].trim();
                 Sort[] oSortOrder = Utils.getSortOrder(sortOrder);
                 if (oSortOrder != null && oSortOrder.length > 0) {
+                    //Remove the older sort order before we add in the new one
+                    Utils.removeSortOrder(query.getSort());
+                    
+                    //Now we can add in the new sort order
                     query.setSort(oSortOrder);
                 }
 

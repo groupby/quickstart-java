@@ -115,4 +115,12 @@ public class Utils {
         }
         return sortArray;
     }
+    
+    public static void removeSortOrder(List<Sort> sortList) {
+        if (sortList.isEmpty()) return;
+        
+        for (int i = sortList.size()-1; i >= 0; i--) {
+            sortList.remove(i);
+        }
+    }
 }
