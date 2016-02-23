@@ -342,6 +342,13 @@ display: inline-block;
 	display:none;
 }
 
+.leftSortOrder {
+	position:absolute;
+	left:0;
+	top:0;
+	font-size:12px;
+}
+
 .rightSortOrder {
 	position:absolute;
 	right:0;

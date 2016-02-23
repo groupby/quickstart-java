@@ -30,6 +30,7 @@
 <BR>
 <a class="toggleSortOrder" href="javascript:;" onclick="$.cookie('resultSortOrder${index}', !$('#resultSortOrder${index}').is(':visible'));$('#resultSortOrder${index}').toggle('slide')">show sort order >></a>
 <div id="resultSortOrder${b.index}" class="resultSortOrder">
+	<a href="javascript:;" class="leftSortOrder" onclick="titleSortOrder(${b.index})">Title Sort Order</a>
 	<a href="javascript:;" class="rightSortOrder" onclick="resetSortOrder(${b.index})">Default Sort Order</a><br>
 	<textarea id="sortOrder${b.index}" value="${results.sortOrder}" placeholder="[{ 'field': '_relevance' }]" rows=5 style="width:100%">${results.sortOrder}</textarea><br>
 </div>
@@ -151,6 +152,20 @@
             matchStrategies = matchStrategies.substring(0, matchStrategies.length-1);
             $('#matchStrategy').val(matchStrategies);
             $('#matchStrategy').trigger('change');
+            saveForm();
+            $('#form').submit();
+    }
+
+    function titleSortOrder(pIndex){
+	    document.getElementById("sortOrder"+pIndex).value="[{'field':'title','order':'Ascending'},{ 'field': '_relevance' }]";
+	    saveForm();
+	    var sortOrders = '';
+            $('.recordColumn .resultSortOrder textarea').each(function(){
+                sortOrders += $(this).val() +  "|";
+            });
+            sortOrders = sortOrders.substring(0, sortOrders.length-1);
+            $('#recordColumnSortOrder').val(sortOrders);
+            $('#recordColumnSortOrder').trigger('change');
             saveForm();
             $('#form').submit();
     }
