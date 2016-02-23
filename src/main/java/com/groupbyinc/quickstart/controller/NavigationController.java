@@ -305,8 +305,10 @@ public class NavigationController {
 
             String strategy = DEFAULT_MATCH_STRATEGY;
             try {
-                strategy = matchStrategies[i].trim();
-                MatchStrategy oMatchStrategy = Utils.getMatchStrategy(strategy);
+                if (i < matchStrategies.length) {
+                    strategy = matchStrategies[i];
+                }
+                MatchStrategy oMatchStrategy = Utils.getMatchStrategy(strategy.trim());
                 if (oMatchStrategy != null) {
                     query.setMatchStrategy(oMatchStrategy);
                 }
@@ -320,8 +322,10 @@ public class NavigationController {
             
             String sortOrder = DEFAULT_SORT_ORDER;
             try {
-                sortOrder = sortOrders[i].trim();
-                Sort[] oSortOrder = Utils.getSortOrder(sortOrder);
+                if (i < sortOrders.length) {
+                    sortOrder = sortOrders[i];
+                }
+                Sort[] oSortOrder = Utils.getSortOrder(sortOrder.trim());
                 if (oSortOrder != null && oSortOrder.length > 0) {
                     //Remove the older sort order before we add in the new one
                     Utils.removeSortOrder(query.getSort());
