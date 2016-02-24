@@ -21,18 +21,17 @@
 </div>
 
 <BR>
-<a class="toggleMatchStrategy" href="javascript:;" onclick="$.cookie('resultMatchStrategy${index}', !$('#resultMatchStrategy${index}').is(':visible'));$('#resultMatchStrategy${index}').toggle('slide')">show match strategy >></a>
+<a class="toggleMatchStrategy" href="javascript:;" onclick="$.cookie('resultMatchStrategy${b.index}', !$('#resultMatchStrategy${b.index}').is(':visible'));$('#resultMatchStrategy${b.index}').toggle('slide');$('#showMatchStrategyText${b.index}').toggle('slide');$('#hideMatchStrategyText${b.index}').toggle('slide');"><div id="showMatchStrategyText${b.index}">show match strategy >></div><div id="hideMatchStrategyText${b.index}" style="display:none">hide match strategy >></div></a>
 <div id="resultMatchStrategy${b.index}" class="resultMatchStrategy">
 	<a href="javascript:;" class="leftMatchStrategy" onclick="exactMatchStrategy(${b.index})">Exact Match Strategy</a>
 	<a href="javascript:;" class="rightMatchStrategy" onclick="resetMatchStrategy(${b.index})">Default Match Strategy</a><br>
-<textarea id="matchStrategy${b.index}" value="${results.matchStrategy}" placeholder="[{ 'terms': 2, 'mustMatch': 2 }, { 'terms': 3, 'mustMatch': 2 }, { 'terms': 4, 'mustMatch': 3 }, { 'terms': 5, 'mustMatch': 3 }, { 'terms': 6, 'mustMatch': 4 }, { 'terms': 7, 'mustMatch': 4 }, { 'terms': 8, 'mustMatch': 5 }, { 'termsGreaterThan': 8, 'mustMatch': 60, 'percentage': true }]" rows=5 style="width:100%">${results.matchStrategy}</textarea><br>
+<textarea id="matchStrategy${b.index}" value="${results.matchStrategy}" placeholder="[{ 'terms': 2, 'mustMatch': 2 }, { 'terms': 3, 'mustMatch': 2 }, { 'terms': 4, 'mustMatch': 3 }, { 'terms': 5, 'mustMatch': 3 }, { 'terms': 6, 'mustMatch': 4 }, { 'terms': 7, 'mustMatch': 4 }, { 'terms': 8, 'mustMatch': 5 }, { 'termsGreaterThan': 8, 'mustMatch': 60, 'percentage': true }]" rows=5>${results.matchStrategy}</textarea>
 </div>
-<BR>
-<a class="toggleSortOrder" href="javascript:;" onclick="$.cookie('resultSortOrder${index}', !$('#resultSortOrder${index}').is(':visible'));$('#resultSortOrder${index}').toggle('slide')">show sort order >></a>
+<a class="toggleSortOrder" href="javascript:;" onclick="$.cookie('resultSortOrder${b.index}', !$('#resultSortOrder${b.index}').is(':visible'));$('#resultSortOrder${b.index}').toggle('slide');$('#showSortText${b.index}').toggle('slide');$('#hideSortText${b.index}').toggle('slide');"><div id="showSortText${b.index}">show sort order >></div><div id="hideSortText${b.index}" style="display:none">hide sort order >></div></a>
 <div id="resultSortOrder${b.index}" class="resultSortOrder">
 	<a href="javascript:;" class="leftSortOrder" onclick="titleSortOrder(${b.index})">Title Sort Order</a>
 	<a href="javascript:;" class="rightSortOrder" onclick="resetSortOrder(${b.index})">Default Sort Order</a><br>
-	<textarea id="sortOrder${b.index}" value="${results.sortOrder}" placeholder="[{ 'field': '_relevance' }]" rows=5 style="width:100%">${results.sortOrder}</textarea><br>
+	<textarea id="sortOrder${b.index}" value="${results.sortOrder}" placeholder="[{ 'field': '_relevance' }]" rows=5>${results.sortOrder}</textarea>
 </div>
 
 

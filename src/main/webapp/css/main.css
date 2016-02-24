@@ -292,13 +292,20 @@ label {
 }
 
 .toggleMatchStrategy {
-	font-size:12px;
+	font-size:14px;
 }
 
 .resultMatchStrategy {
 	position:relative;
 	background-color:#EEEEEE;
 	display:none;
+}
+
+.resultMatchStrategy textarea {
+	display:block;
+	margin-left: auto;
+	margin-right: auto;
+	width:95%;
 }
 
 .leftMatchStrategy {
@@ -333,13 +340,20 @@ display: inline-block;
 }
 
 .toggleSortOrder {
-	font-size:12px;
+	font-size:14px;
 }
 
 .resultSortOrder {
 	position:relative;
 	background-color:#EEEEEE;
 	display:none;
+}
+
+.resultSortOrder textarea {
+	display:block;
+	margin-left: auto;
+	margin-right: auto;
+	width:95%;
 }
 
 .leftSortOrder {
