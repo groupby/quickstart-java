@@ -5,6 +5,7 @@ import com.groupbyinc.api.Query;
 import com.groupbyinc.api.model.MatchStrategy;
 import com.groupbyinc.api.model.Navigation;
 import com.groupbyinc.api.model.PartialMatchRule;
+import com.groupbyinc.api.model.Record;
 import com.groupbyinc.api.model.Refinement;
 import com.groupbyinc.api.model.RefinementsResult;
 import com.groupbyinc.api.model.Results;
@@ -224,6 +225,13 @@ public class NavigationController {
                 query.setBringToTop(name.trim());
             }
         }
+        
+        String imagePath = getCookie(request, "imagePath", "").trim();
+        String imagePathPrefix = getCookie(request, "imagePathPrefix", "").trim();
+        String imagePathSuffix = getCookie(request, "imagePathSuffix", "").trim();
+        
+        //Ensure that the attribute used to derive the image path is added to the list of fields returned in the query response
+        if (!query.getFields().contains(imagePath)) query.addFields(imagePath);
 
         // If there are additional refinements that aren't being beautified get
         // these from the
@@ -361,6 +369,9 @@ public class NavigationController {
                         results);
                 quickstartResults.setMatchStrategy(strategy);
                 quickstartResults.setSortOrder(sortOrder);
+                
+                deriveImage(quickstartResults, imagePath, imagePathPrefix, imagePathSuffix);
+                
                 model.put("results" + i, quickstartResults);
                 model.put(
                         "resultsJson" + i,
@@ -382,6 +393,59 @@ public class NavigationController {
 
         // render using index.jsp and the populated model.
         return modelAndView;
+    }
+
+    private void deriveImage(QuickstartResults quickstartResults, String imagePath, String imagePathPrefix, String imagePathSuffix) {
+        List<Record> recordList = quickstartResults.getRecords();
+        try {
+            for (Record record : recordList) {
+                String imageName = walkdownRecordAttribute(record.getAllMeta(), imagePath);
+                
+                Map tileMap = (Map)record.getMetaValue("tile");
+                String gbiImagePath = imagePathPrefix + imageName + imagePathSuffix;
+
+                record.getAllMeta().put("gbi_image_path", gbiImagePath);
+            }
+        } catch (Exception e) {
+            //swallow exception
+        }
+    }
+
+    private String walkdownRecordAttribute(Object attribute, String path) throws Exception {
+        if (attribute == null) throw new Exception("Failed walkdownrecordAttribute method call");
+        int indexOfDot = path.indexOf(".");
+        if (indexOfDot > 0) {
+            //get the next step in the path
+            String nextStep = null;
+            nextStep = path.substring(0, indexOfDot);
+            
+            String nextPath = path.substring(indexOfDot+1);
+            try {
+                return walkdownRecordAttribute(getNextStep(attribute, nextStep), nextPath);
+            } catch (Exception e) {
+                //bubble up the exception
+                throw e;
+            }
+        } else {
+            //we're at the last step;
+            return (String)getNextStep(attribute, path);
+        }
+    }
+
+    private Object getNextStep(Object attribute, String path) {
+        Object nextStep = null;
+        
+        try {
+            if (attribute instanceof Map) {
+                nextStep = ((Map<String,Object>)attribute).get(path);
+            } else if (attribute instanceof List) {
+                return getNextStep(((List<Map<String,Object>>)attribute).get(0), path);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return nextStep;
     }
 
     /**
