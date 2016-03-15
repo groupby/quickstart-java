@@ -231,7 +231,7 @@ public class NavigationController {
         String imagePathSuffix = getCookie(request, "imagePathSuffix", "").trim();
         
         //Ensure that the attribute used to derive the image path is added to the list of fields returned in the query response
-        if (!query.getFields().contains(imagePath)) query.addFields(imagePath);
+        if (!imagePath.isEmpty() && !query.getFields().contains(imagePath)) query.addFields(imagePath);
 
         // If there are additional refinements that aren't being beautified get
         // these from the
@@ -399,7 +399,12 @@ public class NavigationController {
         List<Record> recordList = quickstartResults.getRecords();
         try {
             for (Record record : recordList) {
-                String imageName = walkdownRecordAttribute(record.getAllMeta(), imagePath);
+                String imageName = null;
+                try {
+                    imageName = walkdownRecordAttribute(record.getAllMeta(), imagePath);
+                } catch (MissingImageAttributeException me) {
+                    throw new MissingImageAttributeException("Missing image attribute (" + imagePath +") for record id " + (String)record.getAllMeta().get("id"), me);
+                }
                 
                 Map tileMap = (Map)record.getMetaValue("tile");
                 String gbiImagePath = imagePathPrefix + imageName + imagePathSuffix;
@@ -407,11 +412,11 @@ public class NavigationController {
                 record.getAllMeta().put("gbi_image_path", gbiImagePath);
             }
         } catch (Exception e) {
-            //swallow exception
+            e.printStackTrace();
         }
     }
 
-    private String walkdownRecordAttribute(Object attribute, String path) throws Exception {
+    private String walkdownRecordAttribute(Object attribute, String path) throws MissingImageAttributeException, Exception {
         if (attribute == null) throw new Exception("Failed walkdownrecordAttribute method call");
         int indexOfDot = path.indexOf(".");
         if (indexOfDot > 0) {
@@ -432,15 +437,21 @@ public class NavigationController {
         }
     }
 
-    private Object getNextStep(Object attribute, String path) {
+    private Object getNextStep(Object attribute, String path) throws MissingImageAttributeException {
         Object nextStep = null;
         
         try {
             if (attribute instanceof Map) {
                 nextStep = ((Map<String,Object>)attribute).get(path);
             } else if (attribute instanceof List) {
-                return getNextStep(((List<Map<String,Object>>)attribute).get(0), path);
+                try {
+                    return getNextStep(((List<Map<String,Object>>)attribute).get(0), path);
+                } catch (Exception e) {
+                    throw new MissingImageAttributeException(e);
+                }
             }
+        } catch (MissingImageAttributeException me) {
+            throw me;
         } catch (Exception e) {
             e.printStackTrace();
         }
