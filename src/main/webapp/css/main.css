@@ -3,16 +3,40 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
     padding: 0;
     border: 0;
     font: inherit;
-    font-family: Arial;
+    font-family: Verdana, "Helvetica Neue",Arial, sans-serif;
 }
 
 body {
     margin: 2px;
 }
 
+a {
+color: #0084BF;
+}
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
     display: block;
+}
+
+input[type="text"], textarea,select {
+border: 1px solid #DADADA;
+    color: #888;
+    /* height: 30px; */
+    margin-bottom: 1px;
+    /* margin-right: 6px; */
+    /* margin-top: 2px; */
+    outline: 0 none;
+    padding: 3px 3px 3px 5px;
+    /* width: 70%; */
+    /* font-size: 12px; */
+    /* line-height: 15px; */
+    box-shadow: inset 0px 1px 4px #ECECEC;
+    -moz-box-shadow: inset 0px 1px 4px #ECECEC;
+    -webkit-box-shadow: inset 0px 1px 4px #ECECEC;
+      -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .transparent {
@@ -44,11 +68,16 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+.keyValue {
+    padding-bottom: 3px;
+}
 
 .record {
-    width: 350px;
-    border: 1px solid white;
+    width: 400px;
+    border: 1px solid #CCCCCC;
     font-size: 13px;
+    /* padding: 2px; */
+    margin: 5px;
 }
 
 .record .details b {
@@ -57,14 +86,28 @@ table {
 
 .record .details {
     margin-left: 20px;
-}
+} 
 
 h2 {
-    background-color: #008800;
+    background-color: #315231;
     padding: 4px;
     color: white;
     font-size: 18px;
     margin-bottom: 10px;
+}
+
+h3 {
+    background-color: #EEEEEE;
+    padding: 4px;
+    color: black;
+    font-size: 16px;
+    
+    margin-bottom: 10px;
+font-weight: bolder;
+}
+
+h3 strong {
+font-weight: normal;
 }
 
 select {
@@ -77,21 +120,37 @@ select {
     margin-bottom: 10px;
 }
 
-.navigation {
-    background-color: #007700;
-    padding: 4px;
-    color: white;
+#nav-categoryl1 > div:nth-child(even) {
+color:red;
 }
 
-.page {
-    float: right
+.navigation {
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    background: #315231;
+    background: -moz-linear-gradient(left, #bfbfbf, #ffffff);
+    background: -webkit-linear-gradient(left, #bfbfbf, #ffffff);
+    background: -o-linear-gradient(left, #bfbfbf, #ffffff);
+    background: -ms-linear-gradient(left, #bfbfbf, #ffffff);
+    background: linear-gradient(to left, #bfbfbf, #FFFFFF);
+    color: black;
+}
+
+
+.page a {
+    color: #907D7D;
+    float: right;
 }
 
 form {
     padding: 4px;
     color: white;
-    background-color: #007700;
+    background-color: #315231;
     margin-bottom: 10px;
+    box-shadow: inset 0px 1px 4px #ECECEC;
+    -moz-box-shadow: inset 0px 1px 4px #ECECEC;
+    -webkit-box-shadow: inset 0px 1px 4px #ECECEC;
+    
 }
 
 #refinementsDiv {
@@ -151,17 +210,23 @@ label {
 }
 
 .navLink {
-    max-height: 200px;
-    overflow: auto;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-top: 10px solid #007700;
-    line-height: 12px;
-    font-size: 11px;
+     max-height: 250px;
+     overflow: auto;
+     border-top: 1px solid #005500;
+     line-height: 12px;
+     font-size: 11px;
+     display: block;
+     padding: 14px 12px;
+     /* font-family: Helvetica, Arial, sans-serif; */
+     font-size: 16px;
+     font-weight: bold;
+     text-decoration: none;
+    color: black;
 }
 
 .navLink b {
     font-weight: bolder;
+    font-size: 12px;
 }
 
 .navLink a:hover {
@@ -173,7 +238,8 @@ label {
     font-size: 11px;
     margin-left: 4px;
     text-decoration: none;
-    color: white;
+    font-weight: normal;
+    color: black;
 }
 
 #raw pre {
@@ -201,7 +267,7 @@ label {
 }
 
 .largeResponse {
-    background-color: red;
+    background-color: #EFB0B0;
     padding-left: 4px;
     padding-right: 4px;
 }
@@ -221,6 +287,86 @@ label {
 }
 
 .highlight {
-    background-color: yellow;
-    border: 1px solid yellow;
+	background: rgba(251, 255, 0, 0.25);
+
 }
+
+.toggleMatchStrategy {
+	font-size:14px;
+}
+
+.resultMatchStrategy {
+	position:relative;
+	background-color:#EEEEEE;
+	display:none;
+}
+
+.resultMatchStrategy textarea {
+	display:block;
+	margin-left: auto;
+	margin-right: auto;
+	width:95%;
+}
+
+.leftMatchStrategy {
+	position:absolute;
+	left:0;
+	top:0;
+	font-size:12px;
+}
+
+.rightMatchStrategy {
+	position:absolute;
+	right:0;
+	top:0;
+	font-size:12px;
+}
+
+.resultBiasAndCount {
+	position:relative;
+}
+
+.totalRecordCountTitle, .totalRecordCount {
+display: inline-block;
+    top: 0;
+    font-size: 12px;
+    font-weight: bold;
+}
+.totalRecordCountTitle {
+
+    font-weight: normal;
+    display: inline-block;
+    left: 10px;
+}
+
+.toggleSortOrder {
+	font-size:14px;
+}
+
+.resultSortOrder {
+	position:relative;
+	background-color:#EEEEEE;
+	display:none;
+}
+
+.resultSortOrder textarea {
+	display:block;
+	margin-left: auto;
+	margin-right: auto;
+	width:95%;
+}
+
+.leftSortOrder {
+	position:absolute;
+	left:0;
+	top:0;
+	font-size:12px;
+}
+
+.rightSortOrder {
+	position:absolute;
+	right:0;
+	top:0;
+	font-size:12px;
+}
+

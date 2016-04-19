@@ -6,7 +6,7 @@
   <%@include file="includes/siteParams.jsp"%>
   <table width="100%">
     <tr>
-      <td width="160" valign="top">
+      <td width="200" valign="top">
         <div class="navigation">
           <%@include file="includes/navigation.jsp"%>
         </div>
