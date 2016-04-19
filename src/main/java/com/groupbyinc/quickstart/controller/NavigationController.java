@@ -218,6 +218,13 @@ public class NavigationController {
                 query.addExcludedNavigations(name.trim());
             }
         }
+        
+        String pageSize = getCookie(request, "pageSize",
+                "").trim();
+        if (StringUtils.isNotBlank(pageSize)) {
+            int iPageSize = Integer.parseInt(pageSize);
+            query.setPageSize(iPageSize);
+        }
 
         String bringToTop = getCookie(request, "bringToTop", "").trim();
         if (StringUtils.isNotBlank(bringToTop)) {
@@ -267,8 +274,8 @@ public class NavigationController {
         }
 
         // Define the page size.
-        query.setPageSize(ServletRequestUtils
-                .getIntParameter(request, "ps", 50));
+//        query.setPageSize(ServletRequestUtils
+//                .getIntParameter(request, "ps", 50));
 
         // Create a model that we will pass into the rendering JSP
         Map<String, Object> model = new HashMap<String, Object>();
