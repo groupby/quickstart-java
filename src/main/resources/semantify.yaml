@@ -1,0 +1,50 @@
+---
+clientKey: 870a0a0f-23b2-441a-8883-d3c63531b310
+customerId: cabelas
+collection: ProductsProduction
+area: Production
+rewrites:
+  - pattern: '\band\b'
+    replacement: ''
+
+patterns:
+  - id: partnumber
+    patterns:
+      - '\b([0-9]){6}\b'
+  - id: inches
+    patterns:
+      - '([0-9\.]+)\s*(?:in|in.|inches|\"|ins|inch)+'
+
+rules:
+  - id: all
+    apply: [brand, department level 2]
+  - id: weird part numbers
+    apply: [ mediaset ]
+
+
+navigationValues:
+  - id: mediaset
+    refinement: mediaset
+    items:
+      - value: '{partnumber}'
+
+  - id: brand
+    refinement: brand
+    populateFromSearchandiser: true
+    items:
+      - value: The North Face
+        synonyms: [ north face, northface]
+      - value: Cabela's
+        synonyms: [ cabelas, cabela's ]
+  - id: department level 2
+    refinement: categories.categories.categories.value
+    items:
+      - value: Men's Casual Clothing
+        synonyms: [mens, men's]
+
+navigationRanges:
+  - id: look for inches
+    refinement: attr_width_inches
+    patterns: ['between {inches} and {inches}']
+    low: '{inches1}'
+    high: '{inches2}'

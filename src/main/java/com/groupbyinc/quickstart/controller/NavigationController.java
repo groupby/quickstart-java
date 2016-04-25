@@ -2,15 +2,13 @@ package com.groupbyinc.quickstart.controller;
 
 import com.groupbyinc.api.CloudBridge;
 import com.groupbyinc.api.Query;
-import com.groupbyinc.api.model.Navigation;
-import com.groupbyinc.api.model.Refinement;
-import com.groupbyinc.api.model.RefinementsResult;
-import com.groupbyinc.api.model.Results;
-import com.groupbyinc.api.model.Sort;
+import com.groupbyinc.api.model.*;
 import com.groupbyinc.common.apache.commons.io.IOUtils;
 import com.groupbyinc.common.apache.commons.lang3.StringUtils;
 import com.groupbyinc.common.jackson.Mappers;
 import com.groupbyinc.quickstart.helper.Utils;
+import com.groupbyinc.semantic.SemanticConfigurationException;
+import com.groupbyinc.semantic.SemanticLayer;
 import com.groupbyinc.util.UrlBeautifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -43,6 +41,18 @@ public class NavigationController {
     private HashMap<String, Query> queryQueue = new HashMap<String, Query>();
     private HashMap<String, CloudBridge> bridgeQueue = new HashMap<String, CloudBridge>();
 
+    private static SemanticLayer semanticLayer = null;
+
+    static {
+        try {
+            semanticLayer = SemanticLayer.fromConfigFile("./src/main/resources/semantify.yaml");
+        } catch (SemanticConfigurationException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
+
     @RequestMapping(value = "/moreRefinements.html")
     ModelAndView getMoreNavigations(@RequestParam String navigationName, @RequestParam String selectedRefinements,
                                     HttpServletRequest request) throws IOException, JspException {
@@ -66,7 +76,7 @@ public class NavigationController {
         results.setSelectedNavigation(Utils.getSelectedNavigations(selectedRefinements));
         RefinementsResult refinementsResults = bridge.refinements(
                 new Query().setArea(query.getArea()).addRefinementsByString(query.getRefinementString())
-                           .setCollection(query.getCollection()), navigationName);
+                        .setCollection(query.getCollection()), navigationName);
 
         if (refinementsResults != null && refinementsResults.getNavigation() != null) {
             List<Refinement> refinementList = refinementsResults.getNavigation().getRefinements();
@@ -127,6 +137,7 @@ public class NavigationController {
         } else {
             query.addFields("*");
         }
+
 
         // Setup parameters for the bridge
         String customerId = getCookie(request, "customerId", "").trim();
@@ -251,8 +262,9 @@ public class NavigationController {
                 query.setBiasingProfile(profile);
             }
 
+
             // pass the raw json representation of the query into the view regardless of errors
-            model.put("rawQuery" + i, query.setReturnBinary(false).getBridgeJson(clientKey));
+            model.put("rawQuery" + i, i == 1 ? semanticLayer.semantify(query).setReturnBinary(false).getBridgeJson(clientKey) : query.setReturnBinary(false).getBridgeJson(clientKey));
             model.put("originalQuery" + i, query);
             query.setReturnBinary(true);
             try {
@@ -260,14 +272,14 @@ public class NavigationController {
                 Results results = new Results();
                 if (StringUtils.isNotBlank(clientKey)) {
                     long startTime = System.currentTimeMillis();
-                    results = bridge.search(query);
+                    results = i == 1 ? semanticLayer.semantifyAndRun(query) : bridge.search(query);
                     model.put("time" + i, System.currentTimeMillis() - startTime);
                 }
                 // pass the results into the view.
                 model.put("results" + i, results);
                 model.put(
                         "resultsJson" + i, debug ? doDebugQueryThroughUrl(clientKey, customerId, query)
-                                                 : Mappers.writeValueAsString(results));
+                                : Mappers.writeValueAsString(results));
             } catch (Exception e) {
                 // Something went wrong.
                 e.printStackTrace();
@@ -292,7 +304,6 @@ public class NavigationController {
      * @param clientKey
      * @param customerId
      * @param query
-     *
      * @return
      */
     private String doDebugQueryThroughUrl(String clientKey, String customerId, Query query) {
@@ -334,7 +345,6 @@ public class NavigationController {
      * @param pRequest
      * @param pName
      * @param pDefault
-     *
      * @return the value of the named cookie, or default if it was not found.
      */
     private String getCookie(HttpServletRequest pRequest, String pName, String pDefault) {

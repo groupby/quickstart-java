@@ -51,17 +51,27 @@
   <dependencies>
 
     <!-- ### GroupBy -->
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>api-java-flux</artifactId>
-      <version>${groupbyinc.api.version}</version>
-      <classifier>uber</classifier>
-    </dependency>
+      <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>api-java-flux</artifactId>
+          <version>${groupbyinc.api.version}</version>
+          <classifier>uber</classifier>
+      </dependency>
     <dependency>
       <groupId>com.groupbyinc</groupId>
       <artifactId>common-util</artifactId>
       <version>${groupbyinc.common.version}</version>
     </dependency>
+      <dependency>
+          <groupId>org.yaml</groupId>
+          <artifactId>snakeyaml</artifactId>
+          <version>1.17</version>
+      </dependency>
+      <dependency>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+          <version>19.0</version>
+      </dependency>
 
     <!-- ### Servlet/JSP/JSTL -->
     <dependency>

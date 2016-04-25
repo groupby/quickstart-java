@@ -6,7 +6,6 @@
 *.dll
 *.ear
 *.gz
-*.jar
 *.sublime-project
 *.sublime-workspace
 *.tgz
