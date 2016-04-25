@@ -36,25 +36,6 @@
 </c:if>
 <c:if test="${nav.isMoreRefinements()}">
 	<div id="more-${nav.name}">
-		<a style="color:white" href="#" onclick='getMoreNav("${nav.name}")'>More [+]</a>
+		<a style="color:white" href="javascript:;" onclick='getMoreNav("${nav.name}")'>More [+]</a>
 	</div>
 </c:if>
-<script>
-	function getMoreNav(navigationName) {
-		$.post("${pageContext.request.contextPath}/moreRefinements.html", {
-			"navigationName" : navigationName,
-			"selectedRefinements": getSelectedRefinements()
-		}).done(function(data){
-			if (data != "" || data != undefined) {
-				var replace = document.getElementById("nav-"+navigationName);
-				var remove = document.getElementById("more-"+navigationName);
-				var html = document.createElement("div");
-				html.innerHTML = data;
-				replace.parentNode.replaceChild(html, replace);
-				remove.parentNode.removeChild(remove);
-			}else{
-				console.log("No data received.");
-			}
-		});
-	}
-</script>
