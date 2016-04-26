@@ -45,7 +45,7 @@ curl -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pret
         <fmt:formatNumber>${fn:length(resultsJson)}</fmt:formatNumber></span> bytes)
     <a href="javascript:;" onclick="$.cookie('expanded${index}', !$('#rawJsonResponse${index}').is(':visible'));$('#rawJsonResponse${index}').toggle('slide')">show >></a>
     <div id="rawJsonResponse${index}" style="display: none">
-        ${resultsJson}
+        <c:out value="${resultsJson}"/>
     </div>
     <script>
         function sortObject(o) {
