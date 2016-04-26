@@ -10,7 +10,6 @@ import com.groupbyinc.common.jackson.databind.DeserializationFeature;
 import com.groupbyinc.common.jackson.databind.ObjectMapper;
 import com.groupbyinc.util.UrlBeautifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import static java.util.Collections.singletonList;
 
@@ -39,6 +39,7 @@ import static java.util.Collections.singletonList;
 @Controller
 public class NavigationController {
 
+    private static final transient Logger LOG = Logger.getLogger(NavigationController.class.getSimpleName());
 
     private static final ObjectMapper OM = new ObjectMapper();
 
@@ -53,7 +54,7 @@ public class NavigationController {
     private static final Map<String, CloudBridge> BRIDGES = new HashMap<String, CloudBridge>();
 
 
-    @RequestMapping({"**/index.html"})
+    @RequestMapping({"/", "**/index.html"})
     public String handleSearch(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         // Get the action from the request.
         String action = ServletRequestUtils.getStringParameter(request, "action", null);
@@ -242,8 +243,7 @@ public class NavigationController {
                         "resultsJson" + i, debug ? doDebugQueryThroughUrl(clientKey, customerId, query)
                                 : Mappers.writeValueAsString(results));
             } catch (Exception e) {
-                // Something went wrong.
-                e.printStackTrace();
+                LOG.warning(e.getMessage());
                 model.put("error" + i, e.getMessage());
                 model.put("cause" + i, e.getCause());
                 return view;
@@ -298,7 +298,7 @@ public class NavigationController {
     }
 
     private CloudBridge getCloudBridge(String clientKey, String customerId) {
-        String key = new StringBuilder(customerId).append(clientKey).toString();
+        String key = customerId + clientKey;
         if (!BRIDGES.containsKey(key)) {
             BRIDGES.put(key, new CloudBridge(clientKey, customerId));
         }
