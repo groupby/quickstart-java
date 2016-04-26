@@ -8,8 +8,8 @@
 		  <fmt:formatNumber pattern="0.00">${value['low']}</fmt:formatNumber> 
 	      ${empty value['high'] ? '+' : '-'} 
 	      <fmt:formatNumber pattern="0.00">${value['high']}</fmt:formatNumber>
-	      (${value['count'] })
   </a>
+  <span class="count">(<fmt:formatNumber>${value['count'] }</fmt:formatNumber>)</span>
 </div>
 </c:forEach>
 </div>

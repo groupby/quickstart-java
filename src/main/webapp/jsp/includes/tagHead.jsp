@@ -8,8 +8,6 @@
     <script src="<c:url value="/js/jquery-1.11.2.js"/>"></script>
     <script src="<c:url value="/js/jquery-ui-1.10.4.custom.min.js"/>"></script>
     <script src="<c:url value="/js/jquery.cookie.js"/>"></script>
-    <script src="<c:url value="/js/sayt.js"/>"></script>
-    <script src="<c:url value="/js/dust-full-0.3.0.min.js"/>"></script>
     <script src="<c:url value="/js/jquery.jsonview.js"/>" type="text/javascript"></script>
     <script src="<c:url value="/js/numeral.min.js"/>" type="text/javascript"></script>
     <script src="<c:url value="/js/jquery.quicksand.js"/>" type="text/javascript"></script>

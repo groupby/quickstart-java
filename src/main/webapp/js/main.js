@@ -24,6 +24,24 @@ function redoQuery() {
     });
 }
 
+function getMoreNav(navigationName) {
+    $.post("moreRefinements.html", {
+        "navigationName" : navigationName,
+        "originalQuery" : $('#originalQuery').html()
+    }).done(function(data){
+        if (data != "" || data != undefined) {
+            var replace = document.getElementById("nav-"+navigationName);
+            var remove = document.getElementById("more-"+navigationName);
+            var html = document.createElement("div");
+            html.innerHTML = data;
+            replace.parentNode.replaceChild(html, replace);
+            remove.parentNode.removeChild(remove);
+        }else{
+            console.log("No data received.");
+        }
+    });
+}
+
 
 function prettyJson() {
     $('.reformatJson').each(function (index, element) {
@@ -38,19 +56,4 @@ function prettyJson() {
             console.log('parse exception: ', exception);
         }
     });
-}
-
-function getSelectedRefinements(){
-    var selected = $('#refinements').val().split("~");
-    return sanitize(selected).toString();
-}
-
-function sanitize(data){
-    for (var i = 0; i < data.length; i++) {
-        if (data[i] == "") {
-            data.splice(i, 1);
-            i--;
-        }
-    }
-    return data;
 }
