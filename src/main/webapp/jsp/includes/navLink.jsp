@@ -9,12 +9,14 @@
 					<c:if test="${!gc:isRefinementSelected(results, nav.name, value.value)}">
 
 						<div>
-							<a style="color:white" href="<c:url value="${b:toUrlAdd('default', results.query, results.selectedNavigation, nav.name, value)}"/>">&#x2610; ${value.value} (${value['count'] })</a>
+							<a style="color:white" href="<c:url value="${b:toUrlAdd('default', results.query, results.selectedNavigation, nav.name, value)}"/>">&#x2610; ${value.value}</a>
+							<span class="count">(<fmt:formatNumber>${value['count'] }</fmt:formatNumber>)</span>
 						</div>
 					</c:if>
 					<c:if test="${gc:isRefinementSelected(results, nav.name, value.value)}">
 						<div>
-							<a class="selected"  style="color:white" href="<c:url value="${b:toUrlRemove('default', results.query, results.selectedNavigation, nav.name, value)}"/>">&#x2611; ${value.value} (${value['count'] })</a>
+							<a class="selected"  style="color:white" href="<c:url value="${b:toUrlRemove('default', results.query, results.selectedNavigation, nav.name, value)}"/>">&#x2611; ${value.value}</a>
+							<span class="count">(<fmt:formatNumber>${value['count'] }</fmt:formatNumber>)</span>
 						</div>
 					</c:if>
 				</div>
@@ -28,7 +30,8 @@
 		<div class="nav-${nav.name}">
 			<c:forEach items="${nav.refinements}" var="value">
 				<div>
-					<a style="color:white" href="<c:url value="${b:toUrlAdd('default', results.query, results.selectedNavigation, nav.name, value)}"/>">${value.value} (${value['count'] })</a>
+					<a style="color:white" href="<c:url value="${b:toUrlAdd('default', results.query, results.selectedNavigation, nav.name, value)}"/>">${value.value} </a>
+                    <span class="count">(<fmt:formatNumber>${value['count'] }</fmt:formatNumber>)</span>
 				</div>
 			</c:forEach>
 		</div>

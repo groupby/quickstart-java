@@ -33,7 +33,7 @@ Cause: ${cause}
     Raw Query completed in <span
         title="${time > 600 ? 'Response time is very long and might impact user experience' : time > 400 ? 'Response time is not optimal' : 'Response time nominal'}"
         class="number ${time > 600 ? 'largeResponse' : time > 400 ? 'mediumResponse' : 'smallResponse'}">
-        ${time}</span>ms:
+        ${time}</span> ms:
     <a href="javascript:;" onclick="$.cookie('expandedQuery${index}', !$('#expandedQuery${index}').is(':visible'));$('#expandedQuery${index}').toggle('slide')">show >></a>
   <pre id="expandedQuery${index}" style="white-space:normal;font-family:courier;font-size:12px;color:grey;padding:4px;display:none">
 curl -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pretty"
@@ -42,7 +42,7 @@ curl -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pret
     Raw JSON Response (<span
         title="${fn:length(resultsJson) > 50000 ? 'This response is large and could cause network transfer latency.  Try removing the number of fields returned, or reducing the page size' : fn:length(resultsJson) > 25000 ? 'Response size is getting large, might be worth keeping an eye on response times.' : 'Response size nominal.'}"
         class="number ${fn:length(resultsJson) > 50000 ? 'largeResponse' : fn:length(resultsJson) > 25000 ? 'mediumResponse' : 'smallResponse'}">
-        ${fn:length(resultsJson)}</span> bytes)
+        <fmt:formatNumber>${fn:length(resultsJson)}</fmt:formatNumber></span> bytes)
     <a href="javascript:;" onclick="$.cookie('expanded${index}', !$('#rawJsonResponse${index}').is(':visible'));$('#rawJsonResponse${index}').toggle('slide')">show >></a>
     <div id="rawJsonResponse${index}" style="display: none">
         ${resultsJson}

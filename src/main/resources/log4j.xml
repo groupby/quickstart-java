@@ -8,10 +8,7 @@
     </layout>
   </appender>
   <logger name="com.groupbyinc">
-    <level value="debug" />
-  </logger>
-  <logger name="org.elasticsearch">
-    <level value="debug" />
+    <level value="info" />
   </logger>
   <root>
     <priority value="warn" />

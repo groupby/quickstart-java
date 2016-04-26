@@ -2,33 +2,37 @@
 <c:set var="biasingProfileCount" value="${model.biasingProfileCount}"/>
 <c:set var="width" value="${100/biasingProfileCount}"/>
 <div id="scratchArea" style="display: none;"></div>
-<table style="margin-left:10px;"><tr>
+<table style="margin-left:10px;">
+    <tr>
 
-<c:forEach begin="0" end="${biasingProfileCount -1}" varStatus="b">
-<c:set var="name" value="results${b.index}"/>
-<c:set var="results" value="${model[name]}"/>
-<td class="recordColumn" style="padding-right:2px;" valign="top" width="width:${width}%">
+    <c:forEach begin="0" end="${biasingProfileCount -1}" varStatus="b">
+    <c:set var="name" value="results${b.index}"/>
+    <c:set var="results" value="${model[name]}"/>
+    <td class="recordColumn" style="padding-right:2px;" valign="top" width="width:${width}%">
 
-<c:set var="index" value="${b.index}"/>
-<%@include file="debug.jsp"%>
-<input type="text" id="biasing${b.index}" value="${results.biasingProfile}" placeholder="Biasing Profile" style="width:120px;">
-<c:if test="${b.index > 0}">
-<a href="javascript:;" onclick="removeColumn(${b.index});">-</a>
-</c:if>
-<a href="javascript:;" onclick="addColumn(${b.index})">+</a>
-
-
-<ol id="replacementRow${b.index}" style="display: none">
-
-</ol>
+    <c:set var="index" value="${b.index}"/>
+    <%@include file="debug.jsp"%>
+    <input type="text" id="biasing${b.index}" value="${results.biasingProfile}" placeholder="Biasing Profile" style="width:220px;">
+    <c:if test="${b.index > 0}">
+    <a href="javascript:;" onclick="removeColumn(${b.index});">-</a>
+    </c:if>
+    <a href="javascript:;" onclick="addColumn(${b.index})">+</a>
 
 
-<ol id="row${b.index}">
-<%@include file="record.jsp"%>
-</ol>
+    <ol id="replacementRow${b.index}" style="display: none">
 
-</c:forEach>
-  </td>  </tr></table>
+    </ol>
+
+
+    <ol id="row${b.index}">
+    <%@include file="record.jsp"%>
+    </ol>
+
+    </c:forEach>
+    </td>
+    </tr>
+</table>
+
 <script>
 
     $('.highlightCorresponding').mouseenter(function() {

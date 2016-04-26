@@ -15,7 +15,7 @@
     Found redirect: <c:out value="${results.redirect}"/>
   </c:if>
   
-  
+
   <div class="container">
     <div class="controls">
       <c:if test="$!empty param.q}">

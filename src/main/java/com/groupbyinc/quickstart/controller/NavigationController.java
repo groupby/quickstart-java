@@ -45,49 +45,12 @@ public class NavigationController {
         OM.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    @RequestMapping(value = "**/moreRefinements.html")
-    ModelAndView getMoreNavigations(@RequestParam String originalQuery,
-                                    @RequestParam String navigationName,
-                                    HttpServletRequest request) throws IOException {
-        String clientKey = getCookie(request, "clientKey", "").trim();
-        String customerId = getCookie(request, "customerId", "").trim();
+    /**
+     * We hold all the bridges in a map so we're not creating a new one for each request.
+     * Ideally, there should only be one bridge per jvm and they are expensive to create but thread safe.
+     */
+    private static final Map<String, CloudBridge> BRIDGES = new HashMap<String, CloudBridge>();
 
-        /**
-         * DO NOT create a bridge per request.  Create only one.
-         * They are expensive and create HTTP connection pools behind the scenes.
-         */
-        CloudBridge bridge = getCloudBridge(clientKey, customerId);
-
-
-        Query query = OM.readValue(originalQuery, Query.class);
-        navigationName = navigationName.trim();
-        Map<String, Object> model = new HashMap<String, Object>();
-        Navigation availableNavigation = new Navigation().setName(navigationName);
-
-        Results results = new Results();
-        results.setSelectedNavigation(new ArrayList<Navigation>(query.getNavigations().values()));
-        RefinementsResult refinementsResults = bridge.refinements(
-                new Query().setArea(query.getArea()).addRefinementsByString(query.getRefinementString())
-                        .setCollection(query.getCollection()), navigationName);
-
-        if (refinementsResults != null && refinementsResults.getNavigation() != null) {
-            List<Refinement> refinementList = refinementsResults.getNavigation().getRefinements();
-            if (refinementsResults.getNavigation().isOr()) {
-                availableNavigation.setOr(true);
-            }
-            availableNavigation.setDisplayName(refinementsResults.getNavigation().getDisplayName());
-            availableNavigation.setRefinements(refinementList);
-        }
-        results.setQuery(query.getQuery());
-        results.setAvailableNavigation(singletonList(availableNavigation));
-        model.put("results", results);
-        model.put("nav", availableNavigation);
-        return new ModelAndView("/includes/navLink.jsp", model);
-    }
-
-    private CloudBridge getCloudBridge(String clientKey, String customerId) {
-        return new CloudBridge(clientKey, customerId);
-    }
 
     @RequestMapping({"**/index.html"})
     protected ModelAndView handleSearch(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -292,13 +255,57 @@ public class NavigationController {
         return modelAndView;
     }
 
+    @RequestMapping(value = "**/moreRefinements.html")
+    ModelAndView getMoreNavigations(@RequestParam String originalQuery,
+                                    @RequestParam String navigationName,
+                                    HttpServletRequest request) throws IOException {
+        String clientKey = getCookie(request, "clientKey", "").trim();
+        String customerId = getCookie(request, "customerId", "").trim();
+
+        /**
+         * DO NOT create a bridge per request.  Create only one.
+         * They are expensive and create HTTP connection pools behind the scenes.
+         */
+        CloudBridge bridge = getCloudBridge(clientKey, customerId);
+
+
+        Query query = OM.readValue(originalQuery, Query.class);
+        navigationName = navigationName.trim();
+        Map<String, Object> model = new HashMap<String, Object>();
+        Navigation availableNavigation = new Navigation().setName(navigationName);
+
+        Results results = new Results();
+        results.setSelectedNavigation(new ArrayList<Navigation>(query.getNavigations().values()));
+        RefinementsResult refinementsResults = bridge.refinements(
+                new Query().setArea(query.getArea()).addRefinementsByString(query.getRefinementString())
+                        .setCollection(query.getCollection()), navigationName);
+
+        if (refinementsResults != null && refinementsResults.getNavigation() != null) {
+            List<Refinement> refinementList = refinementsResults.getNavigation().getRefinements();
+            if (refinementsResults.getNavigation().isOr()) {
+                availableNavigation.setOr(true);
+            }
+            availableNavigation.setDisplayName(refinementsResults.getNavigation().getDisplayName());
+            availableNavigation.setRefinements(refinementList);
+        }
+        results.setQuery(query.getQuery());
+        results.setAvailableNavigation(singletonList(availableNavigation));
+        model.put("results", results);
+        model.put("nav", availableNavigation);
+        return new ModelAndView("/includes/navLink.jsp", model);
+    }
+
+    private CloudBridge getCloudBridge(String clientKey, String customerId) {
+        String key = new StringBuilder(customerId).append(clientKey).toString();
+        if (!BRIDGES.containsKey(key)) {
+            BRIDGES.put(key, new CloudBridge(clientKey, customerId));
+        }
+        return BRIDGES.get(key);
+    }
+
+
     /**
      * Temporary method for debugging queries.  The debug parameter maybe discontinued without warning.
-     *
-     * @param clientKey
-     * @param customerId
-     * @param query
-     * @return
      */
     private String doDebugQueryThroughUrl(String clientKey, String customerId, Query query) {
         DataOutputStream outputStream = null;
@@ -321,8 +328,7 @@ public class NavigationController {
             outputStream = new DataOutputStream(conn.getOutputStream());
             outputStream.write(postData);
             inputStream = conn.getInputStream();
-            String response = IOUtils.toString(inputStream);
-            return response;
+            return IOUtils.toString(inputStream);
         } catch (Exception e) {
             e.printStackTrace();
             return e.toString();
@@ -335,11 +341,6 @@ public class NavigationController {
     /**
      * Helper method to get cookie values.  We use this for storing the clientKey and customerId, though
      * these values should typically be put in a properties file.
-     *
-     * @param pRequest
-     * @param pName
-     * @param pDefault
-     * @return the value of the named cookie, or default if it was not found.
      */
     private String getCookie(HttpServletRequest pRequest, String pName, String pDefault) {
         Cookie[] cookies = pRequest.getCookies();
