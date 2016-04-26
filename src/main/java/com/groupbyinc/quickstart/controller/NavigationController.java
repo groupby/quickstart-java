@@ -10,11 +10,12 @@ import com.groupbyinc.common.jackson.databind.DeserializationFeature;
 import com.groupbyinc.common.jackson.databind.ObjectMapper;
 import com.groupbyinc.util.UrlBeautifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,7 +54,7 @@ public class NavigationController {
 
 
     @RequestMapping({"**/index.html"})
-    protected ModelAndView handleSearch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public String handleSearch(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         // Get the action from the request.
         String action = ServletRequestUtils.getStringParameter(request, "action", null);
 
@@ -199,9 +200,8 @@ public class NavigationController {
         query.setPageSize(ServletRequestUtils.getIntParameter(request, "ps", 50));
 
         // Create a model that we will pass into the rendering JSP
-        Map<String, Object> model = new HashMap<String, Object>();
-        ModelAndView modelAndView = new ModelAndView("getOrderList".equals(action) ? "orderList.jsp" : "index.jsp");
-        modelAndView.addObject("model", model);
+        String view = "getOrderList".equals(action) ? "orderList" : "index";
+        model.put("model", model);
 
         // put back the customerId
         model.put("customerId", customerId);
@@ -246,53 +246,55 @@ public class NavigationController {
                 e.printStackTrace();
                 model.put("error" + i, e.getMessage());
                 model.put("cause" + i, e.getCause());
-                return modelAndView;
+                return view;
             }
         }
 
 
         // render using index.jsp and the populated model.
-        return modelAndView;
+        return view;
     }
 
-    @RequestMapping(value = "**/moreRefinements.html")
-    ModelAndView getMoreNavigations(@RequestParam String originalQuery,
-                                    @RequestParam String navigationName,
-                                    HttpServletRequest request) throws IOException {
-        String clientKey = getCookie(request, "clientKey", "").trim();
-        String customerId = getCookie(request, "customerId", "").trim();
+    @RequestMapping(method = RequestMethod.POST, value = "**/moreRefinements.html")
+    public String getMoreNavigations(Map<String, Object> model,
+                                     HttpServletRequest request) throws ServletException {
+        try {
+            String clientKey = getCookie(request, "clientKey", "").trim();
+            String customerId = getCookie(request, "customerId", "").trim();
+            String originalQuery = ServletRequestUtils.getRequiredStringParameter(request, "originalQuery");
+            String navigationName = ServletRequestUtils.getRequiredStringParameter(request, "navigationName");
+            /**
+             * DO NOT create a bridge per request.  Create only one.
+             * They are expensive and create HTTP connection pools behind the scenes.
+             */
+            CloudBridge bridge = getCloudBridge(clientKey, customerId);
 
-        /**
-         * DO NOT create a bridge per request.  Create only one.
-         * They are expensive and create HTTP connection pools behind the scenes.
-         */
-        CloudBridge bridge = getCloudBridge(clientKey, customerId);
+            Query query = OM.readValue(originalQuery, Query.class);
+            navigationName = navigationName.trim();
+            Navigation availableNavigation = new Navigation().setName(navigationName);
 
+            Results results = new Results();
+            results.setSelectedNavigation(new ArrayList<Navigation>(query.getNavigations().values()));
+            RefinementsResult refinementsResults = bridge.refinements(
+                    new Query().setArea(query.getArea()).addRefinementsByString(query.getRefinementString())
+                            .setCollection(query.getCollection()), navigationName);
 
-        Query query = OM.readValue(originalQuery, Query.class);
-        navigationName = navigationName.trim();
-        Map<String, Object> model = new HashMap<String, Object>();
-        Navigation availableNavigation = new Navigation().setName(navigationName);
-
-        Results results = new Results();
-        results.setSelectedNavigation(new ArrayList<Navigation>(query.getNavigations().values()));
-        RefinementsResult refinementsResults = bridge.refinements(
-                new Query().setArea(query.getArea()).addRefinementsByString(query.getRefinementString())
-                        .setCollection(query.getCollection()), navigationName);
-
-        if (refinementsResults != null && refinementsResults.getNavigation() != null) {
-            List<Refinement> refinementList = refinementsResults.getNavigation().getRefinements();
-            if (refinementsResults.getNavigation().isOr()) {
-                availableNavigation.setOr(true);
+            if (refinementsResults != null && refinementsResults.getNavigation() != null) {
+                List<Refinement> refinementList = refinementsResults.getNavigation().getRefinements();
+                if (refinementsResults.getNavigation().isOr()) {
+                    availableNavigation.setOr(true);
+                }
+                availableNavigation.setDisplayName(refinementsResults.getNavigation().getDisplayName());
+                availableNavigation.setRefinements(refinementList);
             }
-            availableNavigation.setDisplayName(refinementsResults.getNavigation().getDisplayName());
-            availableNavigation.setRefinements(refinementList);
+            results.setQuery(query.getQuery());
+            results.setAvailableNavigation(singletonList(availableNavigation));
+            model.put("results", results);
+            model.put("nav", availableNavigation);
+            return "/includes/navLink";
+        } catch (IOException e) {
+            throw new ServletException(e);
         }
-        results.setQuery(query.getQuery());
-        results.setAvailableNavigation(singletonList(availableNavigation));
-        model.put("results", results);
-        model.put("nav", availableNavigation);
-        return new ModelAndView("/includes/navLink.jsp", model);
     }
 
     private CloudBridge getCloudBridge(String clientKey, String customerId) {

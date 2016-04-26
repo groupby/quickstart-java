@@ -27,7 +27,7 @@ function redoQuery() {
 function getMoreNav(navigationName) {
     $.post("moreRefinements.html", {
         "navigationName" : navigationName,
-        "originalQuery" : $('#originalQuery').html()
+        "originalQuery" : $('#originalQuery').text()
     }).done(function(data){
         if (data != "" || data != undefined) {
             var replace = document.getElementById("nav-"+navigationName);
