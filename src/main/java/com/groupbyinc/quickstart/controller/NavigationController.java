@@ -54,7 +54,7 @@ public class NavigationController {
     private static final Map<String, CloudBridge> BRIDGES = new HashMap<String, CloudBridge>();
 
 
-    @RequestMapping({"/", "**/index.html"})
+    @RequestMapping({"**/index.html"})
     public String handleSearch(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         // Get the action from the request.
         String action = ServletRequestUtils.getStringParameter(request, "action", null);
