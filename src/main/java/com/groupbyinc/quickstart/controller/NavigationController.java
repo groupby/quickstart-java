@@ -7,8 +7,6 @@ import com.groupbyinc.common.apache.commons.io.IOUtils;
 import com.groupbyinc.common.apache.commons.lang3.StringUtils;
 import com.groupbyinc.common.jackson.Mappers;
 import com.groupbyinc.quickstart.helper.Utils;
-import com.groupbyinc.semantic.SemanticConfigurationException;
-import com.groupbyinc.semantic.SemanticLayer;
 import com.groupbyinc.util.UrlBeautifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -40,17 +38,6 @@ import static java.util.Collections.singletonList;
 public class NavigationController {
     private HashMap<String, Query> queryQueue = new HashMap<String, Query>();
     private HashMap<String, CloudBridge> bridgeQueue = new HashMap<String, CloudBridge>();
-
-    private static SemanticLayer semanticLayer = null;
-
-    static {
-        try {
-            semanticLayer = SemanticLayer.fromConfigFile("./src/main/resources/semantify.yaml");
-        } catch (SemanticConfigurationException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
-    }
 
 
     @RequestMapping(value = "/moreRefinements.html")
@@ -145,6 +132,7 @@ public class NavigationController {
 
         // Create the communications bridge to the cloud service.
         CloudBridge bridge = new CloudBridge(clientKey, customerId);
+        SemanticCloudBridge semanticBridge = new SemanticCloudBridge(clientKey, customerId);
 
         // If a specific area is set in the url params set it on the query.
         // Areas are used to name space rules / query rewrites.
@@ -264,7 +252,7 @@ public class NavigationController {
 
 
             // pass the raw json representation of the query into the view regardless of errors
-            model.put("rawQuery" + i, i == 1 ? semanticLayer.semantify(query).setReturnBinary(false).getBridgeJson(clientKey) : query.setReturnBinary(false).getBridgeJson(clientKey));
+            model.put("rawQuery" + i, query.setReturnBinary(false).getBridgeJson(clientKey));
             model.put("originalQuery" + i, query);
             query.setReturnBinary(true);
             try {
@@ -272,7 +260,7 @@ public class NavigationController {
                 Results results = new Results();
                 if (StringUtils.isNotBlank(clientKey)) {
                     long startTime = System.currentTimeMillis();
-                    results = i == 1 ? semanticLayer.semantifyAndRun(query) : bridge.search(query);
+                    results = i == 1 ? semanticBridge.search(query) : bridge.search(query);
                     model.put("time" + i, System.currentTimeMillis() - startTime);
                 }
                 // pass the results into the view.
