@@ -9,13 +9,15 @@ import java.util.Map;
 public class SemanticCloudBridge extends AbstractBridge{
     private final String urlOveride;
 
-    public SemanticCloudBridge(String clientKey, String pCustomerId) {
-        super(clientKey, "http://130.211.128.46/semanticSearch/" + pCustomerId);
-        this.urlOveride = "http://130.211.128.46/semanticSearch/" + pCustomerId;
+    public SemanticCloudBridge(String clientKey, String pUrl) {
+        super(clientKey, pUrl);
+        this.urlOveride = pUrl;
     }
 
     @Override
     protected InputStream fireRequest(String url, Map<String, String> urlParams, String body, boolean returnBinary) throws IOException {
+        System.out.println("querying: " + url);
+        System.out.println(body);
         return super.fireRequest(urlOveride, urlParams, body, false);
     }
 }

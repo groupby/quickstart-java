@@ -132,7 +132,8 @@ public class NavigationController {
 
         // Create the communications bridge to the cloud service.
         CloudBridge bridge = new CloudBridge(clientKey, customerId);
-        SemanticCloudBridge semanticBridge = new SemanticCloudBridge(clientKey, customerId);
+        SemanticCloudBridge semanticBridge = new SemanticCloudBridge(clientKey, "http://130.211.128.46/semanticSearch/" + customerId);
+//        SemanticCloudBridge semanticBridge = new SemanticCloudBridge(clientKey, "http://localhost:8081/semanticSearch/" + customerId);
 
         // If a specific area is set in the url params set it on the query.
         // Areas are used to name space rules / query rewrites.
@@ -261,6 +262,7 @@ public class NavigationController {
                 if (StringUtils.isNotBlank(clientKey)) {
                     long startTime = System.currentTimeMillis();
                     results = i == 1 ? semanticBridge.search(query) : bridge.search(query);
+
                     model.put("time" + i, System.currentTimeMillis() - startTime);
                 }
                 // pass the results into the view.
