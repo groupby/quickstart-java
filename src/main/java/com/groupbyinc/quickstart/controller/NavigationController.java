@@ -10,7 +10,6 @@ import com.groupbyinc.common.jackson.databind.DeserializationFeature;
 import com.groupbyinc.common.jackson.databind.ObjectMapper;
 import com.groupbyinc.util.UrlBeautifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -78,20 +78,12 @@ public class NavigationController {
 
         // return all fields with each record.
         // If there are specific fields defined, use these, otherwise default to showing all fields.
-        boolean debug = false;
         String fieldString = getCookie(request, "fields", "").trim();
         if (StringUtils.isNotBlank(fieldString)) {
             String[] fields = fieldString.split(",");
             for (String field : fields) {
                 if (StringUtils.isNotBlank(field)) {
                     query.addFields(field.trim());
-                }
-                // this debug endpoint for search is temporary and maybe removed without warning.
-                if (field.trim().equalsIgnoreCase("debug")) {
-                    debug = true;
-                    if (fields.length == 1) {
-                        query.addFields("*");
-                    }
                 }
             }
         } else {
@@ -238,9 +230,7 @@ public class NavigationController {
                 }
                 // pass the results into the view.
                 model.put("results" + i, results);
-                model.put(
-                        "resultsJson" + i, debug ? doDebugQueryThroughUrl(clientKey, customerId, query)
-                                : Mappers.writeValueAsString(results));
+                model.put("resultsJson" + i, Mappers.writeValueAsString(results));
             } catch (Exception e) {
                 // Something went wrong.
                 e.printStackTrace();
@@ -298,46 +288,11 @@ public class NavigationController {
     }
 
     private CloudBridge getCloudBridge(String clientKey, String customerId) {
-        String key = new StringBuilder(customerId).append(clientKey).toString();
+        String key = customerId + clientKey;
         if (!BRIDGES.containsKey(key)) {
             BRIDGES.put(key, new CloudBridge(clientKey, customerId));
         }
         return BRIDGES.get(key);
-    }
-
-
-    /**
-     * Temporary method for debugging queries.  The debug parameter maybe discontinued without warning.
-     */
-    private String doDebugQueryThroughUrl(String clientKey, String customerId, Query query) {
-        DataOutputStream outputStream = null;
-        InputStream inputStream = null;
-        try {
-            query.setReturnBinary(false);
-            byte[] postData = query.getBridgeJson(clientKey).getBytes("UTF-8");
-
-            // this debug endpoint for search is temporary and maybe removed without warning.
-            URL url = new URL("https://" + customerId + ".groupbycloud.com/api/v1/search?debug");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setInstanceFollowRedirects(false);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("charset", "utf-8");
-            conn.setRequestProperty("Content-Length", Integer.toString(postData.length));
-            conn.setUseCaches(false);
-            outputStream = new DataOutputStream(conn.getOutputStream());
-            outputStream.write(postData);
-            inputStream = conn.getInputStream();
-            return IOUtils.toString(inputStream);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return e.toString();
-        } finally {
-            IOUtils.closeQuietly(outputStream);
-            IOUtils.closeQuietly(inputStream);
-        }
     }
 
     /**
@@ -349,7 +304,11 @@ public class NavigationController {
         if (pRequest.getCookies() != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(pName)) {
-                    return URLDecoder.decode(cookie.getValue());
+                    try {
+                        return URLDecoder.decode(cookie.getValue(), "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        throw new IllegalStateException("Couldn't use UTF-8", e);
+                    }
                 }
             }
         }
