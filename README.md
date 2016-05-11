@@ -25,3 +25,4 @@ Getting started
 1. cd quickstart-java
 1. git checkout semantify
 1. mvn tomcat7:run
+2. Open localhost:8080/quickstart-java
