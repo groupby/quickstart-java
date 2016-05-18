@@ -22,7 +22,8 @@
         <groupbyinc.docker.repo>docker.groupbyinc.com</groupbyinc.docker.repo>
         <groupbyinc.docker.image.name>docker.groupbyinc.com/${project.artifactId}</groupbyinc.docker.image.name>
         <groupbyinc.docker.maintainer>"GroupBy Engineering" &lt;eng@groupbyinc.com&gt;</groupbyinc.docker.maintainer>
-        <groupbyinc.docker.java.image>${groupbyinc.docker.repo}/java:${groupbyinc.docker.base.version}</groupbyinc.docker.java.image>
+        <groupbyinc.docker.java.image>${groupbyinc.docker.repo}/java:${groupbyinc.docker.base.version}
+        </groupbyinc.docker.java.image>
         <dollar>$</dollar>
         <environmentSetting>${dollar}{springEnvironment}</environmentSetting>
     </properties>
@@ -131,6 +132,17 @@
                             <goal>push</goal>
                         </goals>
                         <phase>deploy</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase></phase>
                     </execution>
                 </executions>
             </plugin>
