@@ -14,13 +14,17 @@
     <packaging>war</packaging>
 
     <properties>
-        <docker.image.prefix>groupbyinc</docker.image.prefix>
-        <!-- # Build params-->
-        <project.build.jdkVersion>1.6</project.build.jdkVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <project.build.locale>en_US</project.build.locale>
-        <groupbyinc.api.version>2.2.57</groupbyinc.api.version>
+        <java.version>1.8</java.version>
+        <groupbyinc.api.version>2.2.59</groupbyinc.api.version>
+        <groupbyinc.docker.base.version>1.8</groupbyinc.docker.base.version>
+        <groupbyinc.docker.repo>docker.groupbyinc.com</groupbyinc.docker.repo>
+        <groupbyinc.docker.image.name>docker.groupbyinc.com/${project.artifactId}</groupbyinc.docker.image.name>
+        <groupbyinc.docker.maintainer>"GroupBy Engineering" &lt;eng@groupbyinc.com&gt;</groupbyinc.docker.maintainer>
+        <groupbyinc.docker.java.image>${groupbyinc.docker.repo}/java:${groupbyinc.docker.base.version}</groupbyinc.docker.java.image>
+        <dollar>$</dollar>
+        <environmentSetting>${dollar}{springEnvironment}</environmentSetting>
     </properties>
 
 
@@ -61,28 +65,74 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <useSystemClassLoader>false</useSystemClassLoader>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.spotify</groupId>
+                <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
-                <version>0.2.3</version>
+                <version>0.14.1</version>
                 <configuration>
-                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
-                    <dockerDirectory>src/main/docker</dockerDirectory>
-                    <resources>
-                        <resource>
-                            <targetPath>/</targetPath>
-                            <directory>${project.build.directory}</directory>
-                            <include>${project.build.finalName}.war</include>
-                        </resource>
-                    </resources>
+                    <verbose>true</verbose>
+                    <autoPull>always</autoPull>
+                    <useColor>true</useColor>
+                    <images>
+                        <image>
+                            <name>${groupbyinc.docker.image.name}:${project.version}</name>
+                            <alias>${project.artifactId}</alias>
+                            <build>
+                                <maintainer>${groupbyinc.docker.maintainer}</maintainer>
+                                <from>${groupbyinc.docker.java.image}</from>
+                                <assembly>
+                                    <basedir>/</basedir>
+                                    <inline>
+                                        <id>exec-war</id>
+                                        <fileSets>
+                                            <fileSet>
+                                                <directory>${project.build.directory}</directory>
+                                                <includes>
+                                                    <include>${project.build.finalName}.war</include>
+                                                </includes>
+                                                <outputDirectory>.</outputDirectory>
+                                            </fileSet>
+                                        </fileSets>
+                                    </inline>
+                                </assembly>
+                                <ports>
+                                    <port>8080</port>
+                                </ports>
+
+                                <volumes>
+                                    <volume>/tmp</volume>
+                                </volumes>
+                                <cmd>
+                                    <exec>
+                                        <arg>java</arg>
+                                        <arg>-Xmx196m</arg>
+                                        <arg>-Xms196m</arg>
+                                        <arg>-Djava.security.egd=file:/dev/./urandom</arg>
+                                        <arg>-jar</arg>
+                                        <arg>/${project.build.finalName}.war</arg>
+                                    </exec>
+                                </cmd>
+                            </build>
+                        </image>
+                    </images>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>build-docker-image</id>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                    <execution>
+                        <id>push-docker-image</id>
+                        <goals>
+                            <goal>push</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
