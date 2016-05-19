@@ -63,7 +63,6 @@
          });
     });
     function saveForm() {
-        var hashLocation = '';
         $('#cookieForm input').each(function(){
             var myId = $(this).attr('id');
             var type = $(this).attr('type');
@@ -74,6 +73,16 @@
                 if (type === 'checkbox'){
                   $(this).prop("checked", $.cookie(myId) === 'true');
                 }
+            }
+        });
+        generateHash();
+    }
+    function generateHash() {
+        var hashLocation = '';
+        $('#cookieForm input').each(function(){
+            var myId = $(this).attr('id');
+            var type = $(this).attr('type');
+            if ($.cookie(myId)) {
                 hashLocation += myId + '=' + $.cookie($(this).attr('id')) + '&';
             }
         });
@@ -88,7 +97,7 @@
         if (type === 'checkbox') {
             $.cookie($(this).attr('id'), $(this).prop('checked'));
         }
-        saveForm();
+        generateHash();
     });
 
     $('#form').submit(function(e){
