@@ -67,11 +67,10 @@
             var myId = $(this).attr('id');
             var type = $(this).attr('type');
             if ($.cookie(myId)) {
-                if (type === 'text'){
-                  $(this).val($.cookie(myId));
-                }
                 if (type === 'checkbox'){
                   $(this).prop("checked", $.cookie(myId) === 'true');
+                } else {
+                    $(this).val($.cookie(myId));
                 }
             }
         });
@@ -91,11 +90,10 @@
     saveForm();
     $('#cookieForm input').bind('keyup blur click change', function(){
         var type = $(this).attr('type');
-        if (type === 'text'){
-            $.cookie($(this).attr('id'), $(this).val());
-        }
         if (type === 'checkbox') {
             $.cookie($(this).attr('id'), $(this).prop('checked'));
+        } else {
+            $.cookie($(this).attr('id'), $(this).val());
         }
         generateHash();
     });

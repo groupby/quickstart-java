@@ -9,13 +9,10 @@
     <script src="<c:url value="/js/jquery-ui-1.10.4.custom.min.js"/>"></script>
     <script src="<c:url value="/js/jquery.cookie.js"/>"></script>
     <script src="<c:url value="/js/jquery.jsonview.js"/>" type="text/javascript"></script>
-    <script src="<c:url value="/js/numeral.min.js"/>" type="text/javascript"></script>
     <script src="<c:url value="/js/jquery.quicksand.js"/>" type="text/javascript"></script>
     <script>
         $.cookie.defaults['path'] = '/';
         $.cookie.defaults['expires'] = 500;
-
-
     </script>
     <link rel="icon" href="<c:url value="/images/favicon.ico"/>">
 </head>

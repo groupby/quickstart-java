@@ -38,7 +38,7 @@ Cause: ${cause}
   <pre id="expandedQuery${index}" style="white-space:normal;font-family:courier;font-size:12px;color:grey;padding:4px;display:none">
 curl -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pretty"
   </pre>
-    <br>
+    <br>${fn:length(resultsJson)}
     Raw JSON Response (<span
         title="${fn:length(resultsJson) > 50000 ? 'This response is large and could cause network transfer latency.  Try removing the number of fields returned, or reducing the page size' : fn:length(resultsJson) > 25000 ? 'Response size is getting large, might be worth keeping an eye on response times.' : 'Response size nominal.'}"
         class="number ${fn:length(resultsJson) > 50000 ? 'largeResponse' : fn:length(resultsJson) > 25000 ? 'mediumResponse' : 'smallResponse'}">
@@ -65,10 +65,6 @@ curl -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pret
         var obj = JSON.parse($('#rawJsonResponse${index}').html());
         obj = sortObject(obj);
         $('#rawJsonResponse${index}').JSONView(obj, { collapsed: false });
-        $('#debug${index} .number').each(function(){
-            var that = $(this);
-            that.html(numeral(that.html()).format('0,0'));
-        });
 
         var expandedList${index} = $.cookie('maintainExpanded${index}');
         
