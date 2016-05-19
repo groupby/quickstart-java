@@ -102,12 +102,13 @@ public class NavigationController {
         // Setup parameters for the bridge
         String customerId = getCookie(request, "customerId", "").trim();
         String clientKey = getCookie(request, "clientKey", "").trim();
+        boolean skipCache = Boolean.valueOf(getCookie(request, "skipCache", "false"));
 
         /**
          * DO NOT create a bridge per request.  Create only one.
          * They are expensive and create HTTP connection pools behind the scenes.
          */
-        CloudBridge bridge = getCloudBridge(clientKey, customerId);
+        CloudBridge bridge = getCloudBridge(clientKey, customerId, skipCache);
 
         // If a specific area is set in the url params set it on the query.
         // Areas are used to name space rules / query rewrites.
@@ -263,11 +264,12 @@ public class NavigationController {
             String customerId = getCookie(request, "customerId", "").trim();
             String originalQuery = ServletRequestUtils.getRequiredStringParameter(request, "originalQuery");
             String navigationName = ServletRequestUtils.getRequiredStringParameter(request, "navigationName");
+            boolean skipCache = Boolean.valueOf(getCookie(request, "skipCache", "false"));
             /**
              * DO NOT create a bridge per request.  Create only one.
              * They are expensive and create HTTP connection pools behind the scenes.
              */
-            CloudBridge bridge = getCloudBridge(clientKey, customerId);
+            CloudBridge bridge = getCloudBridge(clientKey, customerId, skipCache);
 
             Query query = OM.readValue(originalQuery, Query.class);
             navigationName = navigationName.trim();
@@ -297,10 +299,14 @@ public class NavigationController {
         }
     }
 
-    private CloudBridge getCloudBridge(String clientKey, String customerId) {
-        String key = customerId + clientKey;
+    private CloudBridge getCloudBridge(String clientKey, String customerId, boolean skipCache) {
+        String key = customerId + clientKey + String.valueOf(skipCache);
         if (!BRIDGES.containsKey(key)) {
-            BRIDGES.put(key, new CloudBridge(clientKey, customerId));
+            CloudBridge cb = new CloudBridge(clientKey, customerId);
+            if (!skipCache) {
+                cb.setCachingEnabled(false);
+            }
+            BRIDGES.put(key, cb);
         }
         return BRIDGES.get(key);
     }
