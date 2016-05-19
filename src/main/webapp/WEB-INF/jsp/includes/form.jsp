@@ -11,11 +11,15 @@
   <input type="text" name="collection" id="collection" placeholder="Collection" style="width:80px">
   <input type="text" name="language" id="language" placeholder="Language" style="width:80px"> |
   <input type="text" name="sortField" id="sortField" placeholder="Sort Field" style="width:100px;margin-top:10px">
-  <input type="text" name="sortOrder" id="sortOrder" placeholder="Sort Order (A or D)" style="width:150px;margin-top:10px"><br />
+  <input type="text" name="sortOrder" id="sortOrder" placeholder="Sort Order (A or D)" style="width:150px;margin-top:10px">
+  <label for="skipCache"><input type="checkbox" name="skipCache" id="skipCache">Skip Cache</label>
+  <br />
   <input type="text" name="includedNavigations" id="includedNavigations" placeholder="Included Navigations" style="width:125px;margin-top:10px">
-  <input type="text" name="excludedNavigations" id="excludedNavigations" placeholder="Excluded Navigations" style="width:125px;margin-top:10px"><br />
+  <input type="text" name="excludedNavigations" id="excludedNavigations" placeholder="Excluded Navigations" style="width:125px;margin-top:10px">
+  <br />
   <input type="text" name="fields" id="fields" placeholder="Field List, comma separated" style="width:750px;margin-top:10px"><br />
-  <input type="text" name="bringToTop" id="bringToTop" placeholder="Bring To Top, comma separated list of Product IDs" style="width:750px;margin-top:10px"><br />
+  <input type="text" name="bringToTop" id="bringToTop" placeholder="Bring To Top, comma separated list of Product IDs" style="width:750px;margin-top:10px">
+  <br />
   <input type="hidden" name="biasingProfile" id="biasingProfile">
 </form>
 </div>
@@ -62,8 +66,14 @@
         var hashLocation = '';
         $('#cookieForm input').each(function(){
             var myId = $(this).attr('id');
+            var type = $(this).attr('type');
             if ($.cookie(myId)) {
-                $(this).val($.cookie(myId));
+                if (type === 'text'){
+                  $(this).val($.cookie(myId));
+                }
+                if (type === 'checkbox'){
+                  $(this).prop("checked", $.cookie(myId) === 'true');
+                }
                 hashLocation += myId + '=' + $.cookie($(this).attr('id')) + '&';
             }
         });
@@ -71,7 +81,14 @@
     }
     saveForm();
     $('#cookieForm input').bind('keyup blur click change', function(){
-        $.cookie($(this).attr('id'), $(this).val());
+        var type = $(this).attr('type');
+        if (type === 'text'){
+            $.cookie($(this).attr('id'), $(this).val());
+        }
+        if (type === 'checkbox') {
+            $.cookie($(this).attr('id'), $(this).prop('checked'));
+        }
+        saveForm();
     });
 
     $('#form').submit(function(e){
