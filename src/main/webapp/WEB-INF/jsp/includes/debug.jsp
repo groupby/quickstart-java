@@ -38,7 +38,7 @@ Cause: ${cause}
   <pre id="expandedQuery${index}" style="white-space:normal;font-family:courier;font-size:12px;color:grey;padding:4px;display:none">
 curl -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pretty"
   </pre>
-    <br>${fn:length(resultsJson)}
+    <br>
     Raw JSON Response (<span
         title="${fn:length(resultsJson) > 50000 ? 'This response is large and could cause network transfer latency.  Try removing the number of fields returned, or reducing the page size' : fn:length(resultsJson) > 25000 ? 'Response size is getting large, might be worth keeping an eye on response times.' : 'Response size nominal.'}"
         class="number ${fn:length(resultsJson) > 50000 ? 'largeResponse' : fn:length(resultsJson) > 25000 ? 'mediumResponse' : 'smallResponse'}">
