@@ -11,28 +11,8 @@
 <div style="display:none" id="originalQuery"><c:out value="${model.moreRefinementsQuery}"/></div>
 <%@include file="includes/form.jsp"%>
 
-  <c:if test="${!empty results.redirect}">
-    Found redirect: <c:out value="${results.redirect}"/>
-  </c:if>
-  
-
   <div class="container">
-    <div class="controls">
-      <c:if test="$!empty param.q}">
-      <h1>Search results for ${param.q }</h1>
-      </c:if>
-      <%@include file="includes/didYouMean.jsp"%>
-      <%@include file="includes/refinements.jsp"%>
-
-
-      <br> <br>
-      <%@include file="includes/paging.jsp"%>
-      <%@include file="includes/recordCount.jsp"%>
-    </div>
-            <c:choose>
-      <c:when test="${results.template.name eq 'Famous Person Landing Page'}">
-        <jsp:include  page="famous.jsp"/>
-      </c:when>
+    <c:choose>
       <c:when test="${results.template.name eq 'default' or empty results.template.name}">
         <jsp:include  page="default.jsp"/>
       </c:when>
@@ -43,7 +23,9 @@
     </c:choose>
 
   </div>
-  <script src="<c:url value="/js/main.js"/>"></script>
+  <script>
+  <%@include file="/js/main.js"%>
+  </script>
 </body>
 <%--<%@include file="includes/tracker.jsp"%>--%>
 </html>

@@ -81,6 +81,14 @@ public class NavigationController {
         // If there are specific fields defined, use these, otherwise default to showing all fields.
         boolean debug = false;
         String fieldString = getCookie(request, "fields", "").trim();
+
+        // If an image field is specified, always ask for it with the request.
+        String imageField = getCookie(request, "imageField", "");
+        if (StringUtils.isNotBlank(imageField)) {
+            fieldString += "," + imageField;
+        }
+        fieldString += ",id";
+
         if (StringUtils.isNotBlank(fieldString)) {
             String[] fields = fieldString.split(",");
             for (String field : fields) {
@@ -102,7 +110,7 @@ public class NavigationController {
         // Setup parameters for the bridge
         String customerId = getCookie(request, "customerId", "").trim();
         String clientKey = getCookie(request, "clientKey", "").trim();
-        boolean skipCache = Boolean.valueOf(getCookie(request, "skipCache", "false"));
+        boolean skipCache = !Boolean.valueOf(getCookie(request, "cache", "false"));
 
         /**
          * DO NOT create a bridge per request.  Create only one.
@@ -129,6 +137,16 @@ public class NavigationController {
         String collection = getCookie(request, "collection", "").trim();
         if (StringUtils.isNotBlank(collection)) {
             query.setCollection(collection);
+        }
+
+        // Set the page size
+        String pageSize = getCookie(request, "pageSize", "").trim();
+        if (StringUtils.isNotBlank(pageSize)) {
+            try {
+                query.setPageSize(new Integer(pageSize));
+            } catch (NumberFormatException e) {
+                query.setPageSize(10);
+            }
         }
 
         // You can specify the sort field and order of the results.
@@ -198,9 +216,6 @@ public class NavigationController {
             return null;
         }
 
-        // Define the page size.
-        query.setPageSize(ServletRequestUtils.getIntParameter(request, "ps", 50));
-
         // Create a model that we will pass into the rendering JSP
         String view = "getOrderList".equals(action) ? "orderList" : "index";
         model.put("model", model);
@@ -264,7 +279,7 @@ public class NavigationController {
             String customerId = getCookie(request, "customerId", "").trim();
             String originalQuery = ServletRequestUtils.getRequiredStringParameter(request, "originalQuery");
             String navigationName = ServletRequestUtils.getRequiredStringParameter(request, "navigationName");
-            boolean skipCache = Boolean.valueOf(getCookie(request, "skipCache", "false"));
+            boolean skipCache = !Boolean.valueOf(getCookie(request, "cache", "false"));
             /**
              * DO NOT create a bridge per request.  Create only one.
              * They are expensive and create HTTP connection pools behind the scenes.
