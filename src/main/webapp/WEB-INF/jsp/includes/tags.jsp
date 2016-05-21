@@ -5,3 +5,4 @@
 <%@ taglib prefix="gc" uri="http://www.groupbyinc.com/jsp/jstl"%>
 <%@ taglib prefix="b" uri="http://www.groupbyinc.com/jsp/jstl/beautify"%>
 ${pageContext.ELContext.importHandler.importClass('java.net.URLDecoder')}
+${pageContext.ELContext.importHandler.importClass('com.groupbyinc.common.jackson.Mappers')}

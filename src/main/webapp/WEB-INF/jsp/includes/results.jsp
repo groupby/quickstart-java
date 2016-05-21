@@ -2,7 +2,7 @@
 <c:set var="biasingProfileCount" value="${model.biasingProfileCount}"/>
 <c:set var="width" value="${100/biasingProfileCount}"/>
 <div id="scratchArea" style="display: none;"></div>
-<table style="margin-left:10px;">
+<table width="100%">
     <tr>
 
     <c:forEach begin="0" end="${biasingProfileCount -1}" varStatus="b">

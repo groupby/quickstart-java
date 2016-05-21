@@ -57,7 +57,7 @@ table {
 }
 
 .record {
-    width: 350px;
+    width: 100%;
     border: 1px solid white;
     font-size: 13px;
     word-break: break-all;
@@ -73,7 +73,8 @@ table {
 }
 
 h2 {
-    background-color: #008800;
+    background-color: #007700;
+    border-bottom: 2px solid #005500;
     padding: 4px;
     color: white;
     font-size: 18px;
@@ -105,12 +106,15 @@ form {
     color: white;
     background-color: #007700;
     margin-bottom: 10px;
+    border-bottom:3px solid #005500;
 }
 
 #refinementsDiv {
     margin-bottom: 10px;
 }
-
+.keyValue {
+    margin-top:3px;
+}
 .key, #refinementsDiv b {
     color: #005500;
     font-weight: bold;
@@ -232,6 +236,10 @@ label {
 #cookieForm {
     font-size: 12px;
     background-color: #999999;
+    border-bottom: 3px solid #555555;
+}
+#cookieForm input {
+    margin-top:3px;
 }
 
 .highlight {
@@ -257,4 +265,66 @@ border-bottom: 3px solid #999999;
 
 .id {
     font-size:10px;
+}
+.zone {
+    word-break: break-all;
+    max-width:270px;
+    max-height:270px;
+    overflow:auto;
+    font-size:10px;
+    float:left;
+    margin:5px;
+    padding:5px;
+}
+.zone .zoneName a{
+    color:white;
+}
+.zone .zoneName {
+    color:white;
+    font-size:12px;
+    margin-right:-5px;
+    margin-top:-5px;
+    margin-left:-5px;
+    margin-bottom:3px;
+    padding:4px;
+    display: block;
+    background-color: #007700;
+}
+.RecordZone {
+    background-color: #99FF99;
+}
+.ContentZone {
+    background-color: #55BB55;
+}
+.RichContentZone {
+    overflow: hidden;
+    max-width:10000px;
+    max-height:10000px;
+    background-color: #99FF99;
+}
+#ruleFired {
+  border: 2px solid #007700;
+  border-bottom: 4px solid #005500;
+  margin-bottom:5px;
+}
+#ruleTitle {
+    background-color: #007700;
+    padding:5px;
+    color:white;
+}
+#ruleTitle a {
+    color: white;
+    font-size:12px;
+}
+legend {
+    padding-left: 4px;
+    padding-right: 4px;
+    color: black;
+}
+fieldset {
+    border: 1px solid white;
+}
+
+.jsonview ul {
+    margin: 0 0 0 1em;
 }
