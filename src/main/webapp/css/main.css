@@ -58,7 +58,7 @@ table {
 
 .record {
     width: 100%;
-    border: 1px solid white;
+    border-left: 2px solid white;
     font-size: 13px;
     word-break: break-all;
     margin-top: 10px;
@@ -194,12 +194,12 @@ label {
 }
 
 #raw pre {
-    margin-bottom: 10px;
     white-space:normal;
     font-family:courier;
     font-size:10px;
     color:white;
     padding:4px;
+    word-break: break-all;
 }
 
 #commandCenterLink {
@@ -240,8 +240,8 @@ label {
 }
 
 .highlight {
-    background-color: yellow;
-    border: 1px solid yellow;
+    background-color: #FFFFCC;
+    border-left: 2px solid yellow;
 }
 
 .count {
