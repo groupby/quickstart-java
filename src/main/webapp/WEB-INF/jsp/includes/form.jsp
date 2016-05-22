@@ -54,6 +54,7 @@
           <input type="text" name="sortOrder" id="sortOrder" placeholder="Sort Order (A or D)" style="width:150px"><br>
           <input type="text" name="bringToTop" id="bringToTop" placeholder="Bring To Top, comma separated list of Product IDs" style="width:350px"><br>
           <input type="hidden" name="biasingProfile" id="biasingProfile">
+          <input type="hidden" style="width:400px" name="matchStrategy" id="matchStrategy">
       </fieldset>
   </td>
   </tr></table>

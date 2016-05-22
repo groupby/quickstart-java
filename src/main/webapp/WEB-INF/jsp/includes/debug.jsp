@@ -34,8 +34,8 @@ Cause: ${cause}
         title="${time > 600 ? 'Response time is very long and might impact user experience' : time > 400 ? 'Response time is not optimal' : 'Response time nominal'}"
         class="number ${time > 600 ? 'largeResponse' : time > 400 ? 'mediumResponse' : 'smallResponse'}">
         ${time}</span> ms:
-    <a href="javascript:;" onclick="$.cookie('expandedQuery${index}', !$('#expandedQuery${index}').is(':visible'));$('#expandedQuery${index}').toggle('slide')">show >></a>
-  <pre id="expandedQuery${index}" style="white-space:normal;font-family:courier;font-size:12px;color:grey;padding:4px;display:none">
+    <a href="javascript:;" onclick="showRawQuery()">show >></a>
+  <pre id="expandedQuery${index}" class="rawQuery" style="white-space:normal;font-family:courier;font-size:12px;color:grey;padding:4px;display:${cookie.showRawQuery.value ? 'block' : 'none'}">
 curl -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pretty"
   </pre>
     <br>
@@ -43,10 +43,20 @@ curl -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pret
         title="${fn:length(resultsJson) > 50000 ? 'This response is large and could cause network transfer latency.  Try removing the number of fields returned, or reducing the page size' : fn:length(resultsJson) > 25000 ? 'Response size is getting large, might be worth keeping an eye on response times.' : 'Response size nominal.'}"
         class="number ${fn:length(resultsJson) > 50000 ? 'largeResponse' : fn:length(resultsJson) > 25000 ? 'mediumResponse' : 'smallResponse'}">
         <fmt:formatNumber>${fn:length(resultsJson)}</fmt:formatNumber></span> bytes)
-    <a href="javascript:;" onclick="$.cookie('expanded${index}', !$('#rawJsonResponse${index}').is(':visible'));$('#rawJsonResponse${index}').toggle('slide')">show >></a>
-    <div id="rawJsonResponse${index}" style="display: none">
+    <a href="javascript:;" onclick="showJsonResponse()">show >></a>
+    <div id="rawJsonResponse${index}" class="jsonResponse" style="display: ${cookie.showJsonResponse.value ? 'block' : 'none'}">
         <c:out value="${resultsJson}"/>
     </div>
+    <br>
+    Record count: ${results.totalRecordCount}
+    <br>
+    Original Query: ${results.originalQuery}
+    <br>
+    Corrected Query: ${results.correctedQuery}
+    <br>
+    Did You Means: ${results.didYouMean}
+    <br>
+    Rewrites: ${results.rewrites}
     <script>
         function sortObject(o) {
             var sorted = {}, key, a = [];

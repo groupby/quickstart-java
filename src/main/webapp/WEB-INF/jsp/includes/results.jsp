@@ -12,7 +12,13 @@
 
     <c:set var="index" value="${b.index}"/>
     <%@include file="debug.jsp"%>
-    <input type="text" id="biasing${b.index}" value="${results.biasingProfile}" placeholder="Biasing Profile" style="width:220px;">
+    <input type="text" id="biasing${b.index}" class="biasingInput" value="${results.biasingProfile}" placeholder="Biasing Profile" style="width:220px;">
+    <br>
+    <a href="javascript:;" onclick="showMatchStrategy()">Match Strategy</a>
+    <div style="display:${cookie.showMatchStrategy.value ? 'block' : 'none'}" class="matchStrategyHolder">
+    <textarea style="width:400px;height:200px;font-size:10px;" id="strategy${b.index}" class="strategyInput" placeholder"Match Strategy"><c:out value="${URLDecoder.decode(matchStrategies[b.index], 'UTF-8')}"/></textarea>
+    </div>
+    ${matchStrategyErrors[b.index]}
     <c:if test="${b.index > 0}">
     <a href="javascript:;" onclick="removeColumn(${b.index});">-</a>
     </c:if>
@@ -32,7 +38,6 @@
     </td>
     </tr>
 </table>
-
 <script>
 
     $('.highlightCorresponding').mouseenter(function() {
@@ -42,28 +47,31 @@
         $('.highlightCorresponding').removeClass('highlight');
     });
 
-    $('.recordColumn input').keyup(function(e){
+    $('.strategyInput, .biasingInput').keyup(function(e){
         var code = (e.keyCode ? e.keyCode : e.which);
-        if (code == 13) {
-            e.preventDefault();
-            e.stopPropagation();
-            saveForm();
-            $('#form').submit();
-        } else {
-            var biasings = '';
-            $('.recordColumn input').each(function(){
-                biasings += $(this).val() +  ","
-            });
-            biasings = biasings.substring(0, biasings.length-1);
-            $('#biasingProfile').val(biasings);
-            $('#biasingProfile').trigger('change');
-        }
+        var strategy = '';
+        $('.strategyInput').each(function(){
+            strategy += $(this).val() +  "|"
+        });
+        strategy = strategy.substring(0, strategy.length-1);
+        $('#matchStrategy').val(strategy);
+        $('#matchStrategy').trigger('change');
+
+        var biasings = '';
+        $('.biasingInput').each(function(){
+            biasings += $(this).val() +  ","
+        });
+        biasings = biasings.substring(0, biasings.length-1);
+        $('#biasingProfile').val(biasings);
+        $('#biasingProfile').trigger('change');
+        saveForm();
     });
 
     function removeColumn(pIndex){
         $('#biasing' + pIndex).parent().hide('slide');
         $('#biasing' + pIndex).remove();
-        $('.recordColumn input').trigger('keyup');
+        $('#strategy' + pIndex).remove();
+        $('.strategyInput, .biasingInput').trigger('keyup');
         saveForm();
         $('#form').submit();
     }
@@ -72,6 +80,12 @@
         var newValue = oldValue + ',' + $('#biasing' + pIndex).val();
         $('#biasingProfile').val(newValue);
         $('#biasingProfile').trigger('change');
+
+        var oldValue = $('#matchStrategy').val();
+        var newValue = oldValue + '|' + $('#strategy' + pIndex).val();
+        $('#matchStrategy').val(newValue);
+        $('#matchStrategy').trigger('change');
+
         saveForm();
         $('#form').submit();
     }
