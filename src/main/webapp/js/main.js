@@ -1,3 +1,4 @@
+
 $(document).ready(function () {
     setInterval(redoQuery, 1000);
     prettyJson();
@@ -11,6 +12,12 @@ $(document).ready(function () {
           }
         });
     }
+   $( "#collection" ).autocomplete({
+      source: ${Mappers.writeValueAsString(collections)},
+      delay: 20,
+      minLength:0
+
+    });
 });
 
 function showAdvanced(){
