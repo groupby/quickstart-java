@@ -5,6 +5,12 @@ import com.groupbyinc.api.Query;
 import com.groupbyinc.api.model.*;
 import com.groupbyinc.common.apache.commons.io.IOUtils;
 import com.groupbyinc.common.apache.commons.lang3.StringUtils;
+import com.groupbyinc.common.apache.http.HttpEntity;
+import com.groupbyinc.common.apache.http.client.methods.CloseableHttpResponse;
+import com.groupbyinc.common.apache.http.client.methods.HttpPost;
+import com.groupbyinc.common.apache.http.entity.StringEntity;
+import com.groupbyinc.common.apache.http.impl.client.CloseableHttpClient;
+import com.groupbyinc.common.apache.http.impl.client.HttpClients;
 import com.groupbyinc.common.jackson.Mappers;
 import com.groupbyinc.common.jackson.databind.DeserializationFeature;
 import com.groupbyinc.common.jackson.databind.ObjectMapper;
@@ -21,13 +27,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 import static java.util.Collections.singletonList;
@@ -36,6 +40,7 @@ import static java.util.Collections.singletonList;
  * NavigationController is the single entry point for search and navigation
  * in the quickstart application.
  */
+@SuppressWarnings("WeakerAccess")
 @Controller
 public class NavigationController {
 
@@ -51,7 +56,7 @@ public class NavigationController {
      * We hold all the bridges in a map so we're not creating a new one for each request.
      * Ideally, there should only be one bridge per jvm and they are expensive to create but thread safe.
      */
-    private static final Map<String, CloudBridge> BRIDGES = new HashMap<String, CloudBridge>();
+    private static final Map<String, CloudBridge> BRIDGES = new HashMap<>();
 
 
     @RequestMapping({"**/index.html"})
@@ -223,6 +228,8 @@ public class NavigationController {
         // put back the customerId
         model.put("customerId", customerId);
 
+        model.put("collections", getCollections(customerId, clientKey));
+
         // If a specific biasing profile is set in the url params set it on the query.
         String biasingProfile = getCookie(request, "biasingProfile", "").trim();
 
@@ -271,6 +278,37 @@ public class NavigationController {
         return view;
     }
 
+    @SuppressWarnings("unchecked")
+    public static List<String> getCollections(String customerId, String clientKey) {
+        List<String> collections = new ArrayList<>();
+        if (!StringUtils.isBlank(customerId) && !StringUtils.isBlank(clientKey)) {
+            try {
+                CloseableHttpClient httpClient = HttpClients.createDefault();
+                HttpPost getCollections = new HttpPost("https://" + customerId + ".groupbycloud.com/api/v1/collections");
+                getCollections.setEntity(new StringEntity("{clientKey: '" + clientKey + "'}", "UTF-8"));
+                CloseableHttpResponse response = httpClient.execute(getCollections);
+                HttpEntity responseEntity = response.getEntity();
+                LOG.info(response.getStatusLine().toString());
+                String serverResponse = IOUtils.toString(responseEntity.getContent());
+                LOG.info(serverResponse);
+                Map collectionsMap = Mappers.readValue(serverResponse.getBytes("UTF-8"), Map.class, false);
+                Map collectionMap = (Map) collectionsMap.get("collections");
+                if (collectionMap != null) {
+                    Set<String> set = collectionMap.keySet();
+                    for (String collection : set) {
+                        if (!collection.endsWith("-variants")) {
+                            collections.add(collection);
+                        }
+                    }
+                }
+                return collections;
+            } catch (IOException e) {
+                LOG.warning("Couldn't load collections: " + e.getMessage());
+            }
+        }
+        return collections;
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "**/moreRefinements.html")
     public String getMoreNavigations(Map<String, Object> model,
                                      HttpServletRequest request) throws ServletException {
@@ -291,7 +329,7 @@ public class NavigationController {
             Navigation availableNavigation = new Navigation().setName(navigationName);
 
             Results results = new Results();
-            results.setSelectedNavigation(new ArrayList<Navigation>(query.getNavigations().values()));
+            results.setSelectedNavigation(new ArrayList<>(query.getNavigations().values()));
             RefinementsResult refinementsResults = bridge.refinements(
                     new Query().setArea(query.getArea()).addRefinementsByString(query.getRefinementString())
                             .setCollection(query.getCollection()), navigationName);
@@ -370,7 +408,11 @@ public class NavigationController {
         if (pRequest.getCookies() != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(pName)) {
-                    return URLDecoder.decode(cookie.getValue());
+                    try {
+                        return URLDecoder.decode(cookie.getValue(), "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         }

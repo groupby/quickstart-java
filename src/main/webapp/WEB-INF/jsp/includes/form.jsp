@@ -29,7 +29,7 @@
   </td><td>
       <fieldset>
           <legend>Page Control</legend>
-          <label for="cache"><input type="checkbox" name="cache" id="cache">Cache Results</label><br>
+          <label title="If checked, the cache will be used.  This means changes to data and rules will not appear until the cache expires" for="cache"><input type="checkbox" name="cache" id="cache">Use Cache</label><br>
           <input type="text" name="pageSize" id="pageSize" placeholder="Page Size (max 100)" style="width:60px"><br>
       </fieldset>
   </td><td>

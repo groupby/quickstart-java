@@ -328,3 +328,16 @@ fieldset {
 .jsonview ul {
     margin: 0 0 0 1em;
 }
+
+.ui-helper-hidden-accessible {
+    display:none;
+}
+.ui-autocomplete {
+    background-color:white;
+    display: inline-block;
+    font-size:14px;
+    padding:2px;
+}
+.ui-state-focus {
+    background:#999999;
+}
