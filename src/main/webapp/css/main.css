@@ -195,14 +195,11 @@ label {
 
 #raw pre {
     margin-bottom: 10px;
-}
-
-#raw {
-    background-color: #EEEEEE;
-    padding: 3px;
-    border-bottom: 1px solid #BBBBBB;
-    margin-bottom: 10px;
-    font-size: 12px;
+    white-space:normal;
+    font-family:courier;
+    font-size:10px;
+    color:white;
+    padding:4px;
 }
 
 #commandCenterLink {
@@ -230,7 +227,7 @@ label {
 }
 
 .smallResponse {
-    color: green;
+    color: #99FF99;
 }
 
 #cookieForm {
@@ -329,6 +326,13 @@ fieldset {
     margin: 0 0 0 1em;
 }
 
+.jsonResponse .jsonview .prop {
+    color: black;
+}
+.jsonResponse .jsonview .num, .jsonResponse .jsonview .string, .jsonResponse .jsonview .bool, .jsonResponse .jsonview a{
+    color: white;
+}
+
 .ui-helper-hidden-accessible {
     display:none;
 }
@@ -340,4 +344,23 @@ fieldset {
 }
 .ui-state-focus {
     background:#999999;
+}
+.columnSpecifics a {
+    color:white;
+}
+.columnSpecifics {
+    background-color:#999999;
+    padding:3px;
+    font-size:12px;
+    color:white;
+    border-bottom: 3px solid #555555;
+}
+.error {
+    color:yellow;
+}
+.columnControls a {
+    margin-left:10px;
+}
+.columnControls {
+    float:right;
 }

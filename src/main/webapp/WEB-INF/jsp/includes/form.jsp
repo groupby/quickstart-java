@@ -17,7 +17,7 @@
   </fieldset>
   </td>
   </tr></table>
-  <a href="javascript:;" onclick="showAdvanced()">Advanced</a>
+  <a href="javascript:;" onclick="showAdvanced()">Show Advanced >></a>
   <div style="display:${cookie.showAdvanced.value ? 'block' : 'none' }" id="advanced">
   <table><tr>
   <td>

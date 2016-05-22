@@ -11,19 +11,35 @@
     <td class="recordColumn" style="padding-right:2px;" valign="top" width="width:${width}%">
 
     <c:set var="index" value="${b.index}"/>
+    <div class="columnSpecifics">
+    <div class="columnControls">
+        <c:if test="${b.index > 0}">
+        <a href="javascript:;" onclick="removeColumn(${b.index});">delete</a>
+        </c:if>
+        <a href="javascript:;" onclick="addColumn(${b.index})">copy</a>
+    </div>
+    <a href="javascript:;" onclick="showColumnSpecifics()">Show Column Specifics >></a><br>
+    <span class="error"><pre>${matchStrategyErrors[b.index]}</pre></span>
     <%@include file="debug.jsp"%>
+
+    <fieldset style="display:${cookie.showColumnSpecifics.value ? 'block' : 'none'}">
+    <legend>Relevance & Recall</legend>
     <input type="text" id="biasing${b.index}" class="biasingInput" value="${results.biasingProfile}" placeholder="Biasing Profile" style="width:220px;">
     <br>
-    <a href="javascript:;" onclick="showMatchStrategy()">Match Strategy</a>
-    <div style="display:${cookie.showMatchStrategy.value ? 'block' : 'none'}" class="matchStrategyHolder">
+    <a href="javascript:;" onclick="showMatchStrategy()">Show Match Strategy >></a>
+    <div style="display:${cookie.showMatchStrategy.value or !empty matchStrategyErrors[b.index] ? 'block' : 'none'}" class="matchStrategyHolder">
     <textarea style="width:400px;height:200px;font-size:10px;" id="strategy${b.index}" class="strategyInput" placeholder"Match Strategy"><c:out value="${URLDecoder.decode(matchStrategies[b.index], 'UTF-8')}"/></textarea>
+    <br>
+    <a href="javascript:;" onclick="$('#strategy${b.index}').val($('#exampleMatchStrategy').text());$('.strategyInput, .biasingInput').trigger('keyup');">Insert example strategy</a>
+<div id="exampleMatchStrategy" style="display:none">{rules: [
+  { terms: 2, mustMatch: 1 },
+  { terms: 3, mustMatch: 2 },
+  { terms: 4, mustMatch: 2 },
+  { termsGreaterThan: 4, mustMatch: 50, percentage: true }
+]}</div>
     </div>
-    ${matchStrategyErrors[b.index]}
-    <c:if test="${b.index > 0}">
-    <a href="javascript:;" onclick="removeColumn(${b.index});">-</a>
-    </c:if>
-    <a href="javascript:;" onclick="addColumn(${b.index})">+</a>
-
+    </fieldset>
+    </div>
 
     <ol id="replacementRow${b.index}" style="display: none">
 
@@ -68,7 +84,6 @@
     });
 
     function removeColumn(pIndex){
-        $('#biasing' + pIndex).parent().hide('slide');
         $('#biasing' + pIndex).remove();
         $('#strategy' + pIndex).remove();
         $('.strategyInput, .biasingInput').trigger('keyup');
