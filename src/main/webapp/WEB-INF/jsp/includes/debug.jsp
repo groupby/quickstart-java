@@ -1,4 +1,3 @@
-<div id="debug${index}">
 <c:set var="name" value="error${index}"/>
 <c:set var="error" value="${model[name]}"/>
 
@@ -13,15 +12,19 @@
 
 <c:set var="name" value="time${index}"/>
 <c:set var="time" value="${model[name]}"/>
+    <c:if test="${!empty error or !empty results.errors}">
+        <span class="error">
+            <pre style="white-space:normal">
+            Error ${index}: ${error}
+            ${results.errors}
+            </pre>
+        </span>
+    </c:if>
+<fieldset style="display:${cookie.showColumnSpecifics.value ? 'block' : 'none'}">
+<legend>Query Inspection</legend>
+<div id="debug${index}">
 
-<c:if test="${!empty error or !empty results.errors}">
-    <div id="error">
-<pre style="white-space:normal;font-family:courier;font-size:12px;color:grey;padding:4px;">
-Error: ${error}
-${results.errors}
-</pre>
-    </div>
-</c:if>
+
 <c:if test="${!empty cause}">
     <div id="cause">
 <pre style="white-space:normal;font-family:courier;font-size:12px;color:grey;padding:4px;">
@@ -30,20 +33,20 @@ Cause: ${cause}
     </div>
 </c:if>
 <div id="raw">
-    Raw Query completed in <span
+    Query completed in <span
         title="${time > 600 ? 'Response time is very long and might impact user experience' : time > 400 ? 'Response time is not optimal' : 'Response time nominal'}"
         class="number ${time > 600 ? 'largeResponse' : time > 400 ? 'mediumResponse' : 'smallResponse'}">
         ${time}</span> ms:
-    <a href="javascript:;" onclick="showRawQuery()">show >></a>
-  <pre id="expandedQuery${index}" class="rawQuery" style="white-space:normal;font-family:courier;font-size:12px;color:grey;padding:4px;display:${cookie.showRawQuery.value ? 'block' : 'none'}">
+    <a href="javascript:;" onclick="showRawQuery()">show curl >></a>
+  <pre id="expandedQuery${index}" class="rawQuery" style="display:${cookie.showRawQuery.value ? 'block' : 'none'}">
 curl -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pretty"
   </pre>
     <br>
-    Raw JSON Response (<span
+    JSON Response (<span
         title="${fn:length(resultsJson) > 50000 ? 'This response is large and could cause network transfer latency.  Try removing the number of fields returned, or reducing the page size' : fn:length(resultsJson) > 25000 ? 'Response size is getting large, might be worth keeping an eye on response times.' : 'Response size nominal.'}"
         class="number ${fn:length(resultsJson) > 50000 ? 'largeResponse' : fn:length(resultsJson) > 25000 ? 'mediumResponse' : 'smallResponse'}">
         <fmt:formatNumber>${fn:length(resultsJson)}</fmt:formatNumber></span> bytes)
-    <a href="javascript:;" onclick="showJsonResponse()">show >></a>
+    <a href="javascript:;" onclick="showJsonResponse()">show json >></a>
     <div id="rawJsonResponse${index}" class="jsonResponse" style="display: ${cookie.showJsonResponse.value ? 'block' : 'none'}">
         <c:out value="${resultsJson}"/>
     </div>
@@ -115,3 +118,4 @@ curl -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pret
 </div>
 
 </div>
+</fieldset>

@@ -293,7 +293,6 @@ public class NavigationController {
                 LOG.warning(e.getMessage());
                 model.put("error" + i, e.getMessage());
                 model.put("cause" + i, e.getCause());
-                return view;
             }
         }
 

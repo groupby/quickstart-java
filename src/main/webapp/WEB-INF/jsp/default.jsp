@@ -25,8 +25,8 @@
                 <%@include file="includes/paging.jsp"%>
                 </td></tr></table>
             </div>
+            <%@include file="includes/results.jsp"%>
         </div>
-        <%@include file="includes/results.jsp"%>
       </td>
     </tr>
   </table>

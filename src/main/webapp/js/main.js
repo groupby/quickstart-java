@@ -167,3 +167,8 @@ function showJsonResponse(){
         $.cookie('showJsonResponse', $('.jsonResponse').is(":visible"));
     });
 }
+function showColumnSpecifics(){
+    $('.columnSpecifics fieldset').toggle('slide', function(){
+        $.cookie('showColumnSpecifics', $('.columnSpecifics fieldset').is(":visible"));
+    });
+}
