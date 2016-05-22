@@ -86,8 +86,8 @@ if (currentHash){
     hashes.forEach(function(pItem){
         var keyValue = pItem.split('=');
         if (keyValue && keyValue.length == 2 && keyValue[0] && keyValue[1] && keyValue[1] !== 'undefined') {
-            $('#' + keyValue[0]).attr('value', keyValue[1]);
-            $.cookie(keyValue[0], keyValue[1]);
+            $('#' + keyValue[0]).attr('value', decodeURIComponent(keyValue[1]));
+            $.cookie(keyValue[0], decodeURIComponent(keyValue[1]));
         }
     });
 }
@@ -149,5 +149,21 @@ $('#form').submit(function(e){
 function showZones(){
     $('#allZones').toggle('slide', function(){
         $.cookie('showZones', $('#allZones').is(":visible"));
+    });
+}
+
+function showMatchStrategy(){
+    $('.matchStrategyHolder').toggle('slide', function(){
+        $.cookie('showMatchStrategy', $('.matchStrategyHolder').is(":visible"));
+    });
+}
+function showRawQuery(){
+    $('.rawQuery').toggle('slide', function(){
+        $.cookie('showRawQuery', $('.rawQuery').is(":visible"));
+    });
+}
+function showJsonResponse(){
+    $('.jsonResponse').toggle('slide', function(){
+        $.cookie('showJsonResponse', $('.jsonResponse').is(":visible"));
     });
 }

@@ -34,6 +34,8 @@ import java.net.URLDecoder;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static com.groupbyinc.common.jackson.core.JsonParser.Feature.ALLOW_SINGLE_QUOTES;
+import static com.groupbyinc.common.jackson.core.JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES;
 import static java.util.Collections.singletonList;
 
 /**
@@ -47,9 +49,10 @@ public class NavigationController {
     private static final transient Logger LOG = Logger.getLogger(NavigationController.class.getSimpleName());
 
     private static final ObjectMapper OM = new ObjectMapper();
-
+    private static final ObjectMapper OM_MATCH_STRATEGY = new ObjectMapper();
     static {
         OM.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        OM_MATCH_STRATEGY.enable(ALLOW_UNQUOTED_FIELD_NAMES).enable(ALLOW_SINGLE_QUOTES);
     }
 
     /**
@@ -240,12 +243,33 @@ public class NavigationController {
         }
         model.put("biasingProfileCount", biasingProfiles.length);
 
+
+        // If a specific match strategy is set.
+        String matchStrategy = getCookie(request, "matchStrategy", "").trim();
+        // We will run this query multiple times for each biasing profile found
+        String[] matchStrategies = matchStrategy.split("\\|", -1);
+        if (matchStrategies.length != biasingProfiles.length) {
+            matchStrategies = new String[biasingProfiles.length];
+            for (int i = 0; i < matchStrategies.length; i++) {
+                matchStrategies[i] = "";
+            }
+        }
+        // Put match strategies back in request
+        model.put("matchStrategies", matchStrategies);
+        List<String> matchStrategyErrors = new ArrayList<>();
+        model.put("matchStrategyErrors", matchStrategyErrors);
+
         model.put("moreRefinementsQuery", OM.writeValueAsString(query));
         for (int i = 0; i < biasingProfiles.length; i++) {
             String profile = biasingProfiles[i].trim();
+            String strategy = matchStrategies[i].trim();
             query.setBiasingProfile(null);
+            query.setMatchStrategy(null);
             if (StringUtils.isNotBlank(profile)) {
                 query.setBiasingProfile(profile);
+            }
+            if (StringUtils.isNotBlank(strategy)) {
+                query.setMatchStrategy(createMatchStrategy(matchStrategyErrors, strategy));
             }
 
             // pass the raw json representation of the query into the view regardless of errors
@@ -276,6 +300,23 @@ public class NavigationController {
 
         // render using index.jsp and the populated model.
         return view;
+    }
+
+    private MatchStrategy createMatchStrategy(List<String> matchStrategyErrors, String strategy) {
+        try {
+            Map ms = OM_MATCH_STRATEGY.readValue(strategy, Map.class);
+            MatchStrategy matchStrategy = new MatchStrategy();
+            List rules = (List) ms.get("rules");
+            for (Object rule : rules) {
+                matchStrategy.getRules().add(OM_MATCH_STRATEGY.readValue(OM_MATCH_STRATEGY.writeValueAsString(rule), PartialMatchRule.class));
+            }
+            matchStrategyErrors.add("");
+            return matchStrategy;
+        } catch (Exception e) {
+            e.printStackTrace();
+            matchStrategyErrors.add(e.getMessage());
+            return null;
+        }
     }
 
     @SuppressWarnings("unchecked")
