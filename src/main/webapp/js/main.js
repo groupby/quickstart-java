@@ -157,6 +157,11 @@ function showMatchStrategy(){
         $.cookie('showMatchStrategy', $('.matchStrategyHolder').is(":visible"));
     });
 }
+function showSort(){
+    $('.sortHolder').toggle('slide', function(){
+        $.cookie('showSort', $('.sortHolder').is(":visible"));
+    });
+}
 function showRawQuery(){
     $('.rawQuery').toggle('slide', function(){
         $.cookie('showRawQuery', $('.rawQuery').is(":visible"));

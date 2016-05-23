@@ -3,6 +3,7 @@ package com.groupbyinc.quickstart.controller;
 import com.groupbyinc.api.CloudBridge;
 import com.groupbyinc.api.Query;
 import com.groupbyinc.api.model.*;
+import com.groupbyinc.api.request.RestrictNavigation;
 import com.groupbyinc.common.apache.commons.io.IOUtils;
 import com.groupbyinc.common.apache.commons.lang3.StringUtils;
 import com.groupbyinc.common.apache.http.HttpEntity;
@@ -140,6 +141,40 @@ public class NavigationController {
             query.setLanguage(language);
         }
 
+        // User id is used in personalized relevance.
+        String userId = getCookie(request, "userId", "").trim();
+        if (StringUtils.isNotBlank(userId)) {
+            query.setUserId(userId);
+        }
+
+        // Restrict Navigation (this performs two queries so may be slow)
+        String restrictNavigationName = getCookie(request, "restrictNavigationName", "").trim();
+        if (StringUtils.isNotBlank(restrictNavigationName)) {
+            RestrictNavigation restrictNavigation = new RestrictNavigation().setName(restrictNavigationName);
+            String restrictNavigationCount = getCookie(request, "restrictNavigationCount", "").trim();
+            if (StringUtils.isNotBlank(restrictNavigationCount)) {
+                try {
+                    restrictNavigation.setCount(new Integer(restrictNavigationCount));
+                } catch (Exception e) {
+                    LOG.warning("Couldn't parse restrictNavigation count: " + restrictNavigationCount + " " + e.getMessage());
+                }
+            }
+            query.setRestrictNavigation(restrictNavigation);
+        }
+
+        // By default refinements that
+        boolean dontPruneRefinements = Boolean.valueOf(getCookie(request, "dontPruneRefinements", "false"));
+        if (dontPruneRefinements) {
+            query.setPruneRefinements(false);
+        }
+
+        // By default refinements that
+        boolean disableAutocorrection= Boolean.valueOf(getCookie(request, "disableAutocorrection", "false"));
+        if (disableAutocorrection) {
+            query.setDisableAutocorrection(true);
+        }
+
+
         // If you have data in different collections you can specify the specific
         // collection you wish to query against.
         String collection = getCookie(request, "collection", "").trim();
@@ -259,6 +294,9 @@ public class NavigationController {
         List<String> matchStrategyErrors = new ArrayList<>();
         model.put("matchStrategyErrors", matchStrategyErrors);
 
+        // deal with column sorts.
+        List<List<Sort>> colSorts = getColSorts(request, biasingProfiles.length, model);
+
         model.put("moreRefinementsQuery", OM.writeValueAsString(query));
         for (int i = 0; i < biasingProfiles.length; i++) {
             String profile = biasingProfiles[i].trim();
@@ -271,7 +309,10 @@ public class NavigationController {
             if (StringUtils.isNotBlank(strategy)) {
                 query.setMatchStrategy(createMatchStrategy(matchStrategyErrors, strategy));
             }
-
+            if (colSorts.get(i)!= null) {
+                query.getSort().clear();
+                query.getSort().addAll(colSorts.get(i));
+            }
             // pass the raw json representation of the query into the view regardless of errors
             model.put("rawQuery" + i, query.setReturnBinary(false).getBridgeJson(clientKey));
             model.put("originalQuery" + i, query);
@@ -299,6 +340,57 @@ public class NavigationController {
 
         // render using index.jsp and the populated model.
         return view;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<List<Sort>> getColSorts(HttpServletRequest request, int length, Map model) {
+        String colSort1 = getCookie(request, "colSort1", "");
+        String colDir1 = getCookie(request, "colDir1", "");
+        String colSort2 = getCookie(request, "colSort2", "");
+        String colDir2 = getCookie(request, "colDir2", "");
+
+        String[] colSorts1 = colSort1.split("\\|", -1);
+        model.put("sort1", colSorts1);
+        String[] colDirs1 = colDir1.split("\\|", -1);
+        model.put("sort1Direction", colDirs1);
+        String[] colSorts2 = colSort2.split("\\|", -1);
+        model.put("sort2", colSorts2);
+        String[] colDirs2 = colDir2.split("\\|", -1);
+        model.put("sort2Direction", colDirs2);
+        List<List<Sort>> colSorts = new ArrayList<>();
+        for (int i = 0; i < length; i++) {
+            List<Sort> sorts = null;
+            if (colSorts1.length > i) {
+                if (StringUtils.isNotBlank(colSorts1[i])) {
+                    if (sorts == null) {
+                        sorts = new ArrayList<>();
+                    }
+                    Sort sort = new Sort();
+                    sort.setField(colSorts1[i]);
+                    if (StringUtils.isNotBlank(colDirs1[i]) && colDirs1[i].toLowerCase().startsWith("d")) {
+                        sort.setOrder(Sort.Order.Descending);
+                    } else {
+                        sort.setOrder(Sort.Order.Ascending);
+                    }
+                    sorts.add(sort);
+                }
+                if (StringUtils.isNotBlank(colSorts2[i])) {
+                    if (sorts == null) {
+                        sorts = new ArrayList<>();
+                    }
+                    Sort sort = new Sort();
+                    sort.setField(colSorts2[i]);
+                    if (StringUtils.isNotBlank(colDirs2[i]) && colDirs2[i].toLowerCase().startsWith("d")) {
+                        sort.setOrder(Sort.Order.Descending);
+                    } else {
+                        sort.setOrder(Sort.Order.Ascending);
+                    }
+                    sorts.add(sort);
+                }
+            }
+            colSorts.add(sorts);
+        }
+        return colSorts;
     }
 
     private MatchStrategy createMatchStrategy(List<String> matchStrategyErrors, String strategy) {
