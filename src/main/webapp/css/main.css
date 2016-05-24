@@ -364,3 +364,11 @@ fieldset {
 .columnControls {
     float:right;
 }
+.customerToolbar span {
+    color:black;
+    margin-left:10px;
+}
+.customerToolbar {
+float:right;
+margin-right:10px;
+}
