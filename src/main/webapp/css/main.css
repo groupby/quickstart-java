@@ -14,7 +14,7 @@ fieldset {
     margin:4px;
 }
 .state  {
-    margin-left:10px;
+    margin-left:5px;
 }
 body {
     margin: 2px;
@@ -87,8 +87,9 @@ select {
 }
 
 .navigation b {
-    display: block;
-    margin-bottom: 10px;
+    display: inline-block;
+    font-size:12px;
+    margin-bottom: 4px;
 }
 
 .navigation {
@@ -99,6 +100,9 @@ select {
 
 .page {
     float: right
+}
+.page a  {
+    color: #555555;
 }
 
 form {
@@ -171,7 +175,6 @@ label {
     max-height: 200px;
     overflow: auto;
     padding-top: 10px;
-    padding-bottom: 10px;
     border-top: 10px solid #007700;
     line-height: 12px;
     font-size: 11px;
@@ -246,6 +249,7 @@ label {
 
 .count {
 font-size: 8px;
+color:black;
 }
 
 #q {
@@ -369,6 +373,10 @@ fieldset {
     margin-left:10px;
 }
 .customerToolbar {
-float:right;
-margin-right:10px;
+    float:right;
+    margin-right:10px;
+}
+.attribute, .id {
+    font-size: 9px;
+    color:black;
 }

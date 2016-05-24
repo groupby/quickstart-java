@@ -2,8 +2,8 @@
 <form id="cookieForm">
 <div class="customerToolbar">
 <span>Customer:</span> ${empty cookie.customerId.value ? 'not set' : cookie.customerId.value}
-<span>Area:</span> ${empty cookie.area.value ? 'not set' : cookie.area.value}
-<span>Collection:</span> ${empty cookie.collection.value ? 'not set' : cookie.collection.value}</a>
+<span>Area:</span> ${empty cookie.area.value ? 'Production' : cookie.area.value}
+<span>Collection:</span> ${empty cookie.collection.value ? 'default' : cookie.collection.value}</a>
 </div>
 <a href="javascript:;" onclick="showForm()">Show form >></a>
 <div id="settings" style="display: ${cookie.showForm.value or empty cookie.clientKey.value or empty cookie.customerId.value ? 'block' : 'none'}">
