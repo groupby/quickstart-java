@@ -54,7 +54,7 @@
       <fieldset>
           <legend>Result Control</legend>
           <input type="text" name="sortField" id="sortField" placeholder="Sort Field" style="width:100px">
-          <input type="text" name="sortOrder" id="sortOrder" placeholder="Sort Order (A or D)" style="width:50px"><br>
+          <input type="text" name="sortOrder" id="sortOrder" placeholder="Order A/D" style="width:60px"><br>
           <input type="text" name="bringToTop" id="bringToTop" placeholder="Bring To Top, comma separated list of Product IDs" style="width:350px"><br>
           <label for="disableAutocorrection"><input type="checkbox" name="disableAutocorrection" id="disableAutocorrection">Disable Autocorrection</label><br>
           <input type="hidden" name="biasingProfile" id="biasingProfile">
