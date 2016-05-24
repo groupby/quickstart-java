@@ -491,7 +491,7 @@ public class NavigationController {
         String key = customerId + clientKey + String.valueOf(skipCache);
         if (!BRIDGES.containsKey(key)) {
             CloudBridge cb = new CloudBridge(clientKey, customerId);
-            if (!skipCache) {
+            if (skipCache) {
                 cb.setCachingEnabled(false);
             }
             BRIDGES.put(key, cb);
