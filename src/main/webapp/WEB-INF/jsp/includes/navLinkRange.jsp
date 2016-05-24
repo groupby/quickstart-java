@@ -1,7 +1,7 @@
 <%@include file="tags.jsp"%>
 
 <div class="navLink">
-<b>${nav.displayName}</b>
+<b>${nav.displayName}</b> <span class="attribute">(${nav.name})</span>
 <c:forEach items="${nav.refinements}" var="value">
 <div>
   <a style="color:white" href="<c:url value="${b:toUrlAdd('default', results.query, results.selectedNavigation, nav.name, value)}"/>">

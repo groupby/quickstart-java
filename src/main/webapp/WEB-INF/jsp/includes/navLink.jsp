@@ -2,7 +2,7 @@
 
 <c:if test="${nav['or']}">
 	<div id="nav-${nav.name}" class="navLink">
-		<b>${nav.displayName} (OR) </b>
+		<b>${nav.displayName}</b> <span class="attribute">OR (${nav.name})</span>
 		<div class="nav-${nav.name}">
 			<c:forEach items="${nav.refinements}" var="value">
 				<div>
@@ -26,7 +26,7 @@
 </c:if>
 <c:if test="${!nav['or']}">
 	<div id="nav-${nav.name}" class="navLink">
-		<b>${nav.displayName} </b>
+		<b>${nav.displayName}</b> <span class="attribute">(${nav.name})</span>
 		<div class="nav-${nav.name}">
 			<c:forEach items="${nav.refinements}" var="value">
 				<div>

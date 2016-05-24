@@ -56,7 +56,10 @@
     $('.strategyInput, .biasingInput, .sort1Input, .sort1Dir, .sort2Input, .sort2Dir').keyup(function(e){
         var code = (e.keyCode ? e.keyCode : e.which);
 
-
+        if (code == 13 && !$(this).hasClass('strategyInput')){
+            $('#form').submit();
+            return;
+        }
         var sort1 = '';
         $('.sort1Input').each(function(){
             sort1 += $(this).val() +  "|"
@@ -109,14 +112,14 @@
         biasings = biasings.substring(0, biasings.length-1);
         $('#biasingProfile').val(biasings);
         $('#biasingProfile').trigger('change');
-        saveForm();
+        generateHash();
     });
 
     function removeColumn(pIndex){
         $('#biasing' + pIndex).remove();
         $('#strategy' + pIndex).remove();
         $('.strategyInput, .biasingInput, .sortInput').trigger('keyup');
-        saveForm();
+        generateHash();
         $('#form').submit();
     }
     function addColumn(pIndex){
@@ -130,7 +133,7 @@
         $('#matchStrategy').val(newValue);
         $('#matchStrategy').trigger('change');
 
-        saveForm();
+        generateHash();
         $('#form').submit();
     }
 </script>
