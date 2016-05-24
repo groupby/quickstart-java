@@ -15,7 +15,7 @@
     <c:if test="${!empty error or !empty results.errors}">
         <span class="error">
             <pre style="white-space:normal">
-            Error ${index}: ${error}
+            ${error}
             ${results.errors}
             </pre>
         </span>

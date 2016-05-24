@@ -422,15 +422,17 @@ public class NavigationController {
                 CloseableHttpResponse response = httpClient.execute(getCollections);
                 HttpEntity responseEntity = response.getEntity();
                 LOG.info(response.getStatusLine().toString());
-                String serverResponse = IOUtils.toString(responseEntity.getContent());
-                LOG.info(serverResponse);
-                Map collectionsMap = Mappers.readValue(serverResponse.getBytes("UTF-8"), Map.class, false);
-                Map collectionMap = (Map) collectionsMap.get("collections");
-                if (collectionMap != null) {
-                    Set<String> set = collectionMap.keySet();
-                    for (String collection : set) {
-                        if (!collection.endsWith("-variants")) {
-                            collections.add(collection);
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    String serverResponse = IOUtils.toString(responseEntity.getContent());
+                    LOG.info(serverResponse);
+                    Map collectionsMap = Mappers.readValue(serverResponse.getBytes("UTF-8"), Map.class, false);
+                    Map collectionMap = (Map) collectionsMap.get("collections");
+                    if (collectionMap != null) {
+                        Set<String> set = collectionMap.keySet();
+                        for (String collection : set) {
+                            if (!collection.endsWith("-variants")) {
+                                collections.add(collection);
+                            }
                         }
                     }
                 }
