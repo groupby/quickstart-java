@@ -146,6 +146,11 @@ $('#form').submit(function(e){
     saveForm();
 });
 
+function showForm(){
+    $('#settings').toggle('slide', function(){
+        $.cookie('showForm', $('#settings').is(":visible"));
+    });
+}
 function showZones(){
     $('#allZones').toggle('slide', function(){
         $.cookie('showZones', $('#allZones').is(":visible"));
