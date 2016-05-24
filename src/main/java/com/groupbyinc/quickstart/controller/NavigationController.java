@@ -295,12 +295,14 @@ public class NavigationController {
         model.put("matchStrategyErrors", matchStrategyErrors);
 
         // deal with column sorts.
+        List<Sort> originalSorts = new ArrayList<>(query.getSort());
         List<List<Sort>> colSorts = getColSorts(request, biasingProfiles.length, model);
-
         model.put("moreRefinementsQuery", OM.writeValueAsString(query));
         for (int i = 0; i < biasingProfiles.length; i++) {
             String profile = biasingProfiles[i].trim();
             String strategy = matchStrategies[i].trim();
+            query.getSort().clear();
+            query.getSort().addAll(originalSorts);
             query.setBiasingProfile(null);
             query.setMatchStrategy(null);
             if (StringUtils.isNotBlank(profile)) {
@@ -336,7 +338,6 @@ public class NavigationController {
                 model.put("cause" + i, e.getCause());
             }
         }
-
 
         // render using index.jsp and the populated model.
         return view;

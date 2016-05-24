@@ -26,11 +26,14 @@
           <legend>Language</legend>
           <input type="text" name="language" id="language" placeholder="Language" style="width:80px">
       </fieldset>
-  </td><td>
       <fieldset>
           <legend>Page Control</legend>
           <label title="If checked, the cache will be used.  This means changes to data and rules will not appear until the cache expires" for="cache"><input type="checkbox" name="cache" id="cache">Use Cache</label><br>
           <input type="text" name="pageSize" id="pageSize" placeholder="Page Size (max 100)" style="width:60px"><br>
+      </fieldset>
+      <fieldset>
+          <legend>Personalized Relevance</legend>
+          <input type="text" name="userId" id="userId" placeholder="User ID" style="width:100px"><br>
       </fieldset>
   </td><td>
       <fieldset>
@@ -40,14 +43,6 @@
           <input type="text" name="imageField" id="imageField" placeholder="Image Attribute" style="width:120px"><br>
           <input type="text" name="imagePrefix" id="imagePrefix" placeholder="Image Prefix" style="width:120px"><br>
           <input type="text" name="imageSuffix" id="imageSuffix" placeholder="Image Suffix" style="width:120px"><br>
-      </fieldset>
-  </td><td>
-      <fieldset>
-          <legend>Navigation Control</legend>
-          <input type="text" name="includedNavigations" id="includedNavigations" placeholder="Included Navigations" style="width:125px"><br>
-          <input type="text" name="restrictNavigationName" id="restrictNavigationName" placeholder="Restrict by Navigation" style="width:135px">
-          <input type="text" name="restrictNavigationCount" id="restrictNavigationCount" placeholder="Count" style="width:55px"><br>
-          <label for="dontPruneRefinements"><input type="checkbox" name="dontPruneRefinements" id="dontPruneRefinements">Do not Prune Refinements</label><br>
       </fieldset>
   </td><td>
       <fieldset>
@@ -63,9 +58,13 @@
           <input type="hidden" name="colSort2" id="colSort2">
           <input type="hidden" name="colDir2" id="colDir2">
       </fieldset>
+
       <fieldset>
-          <legend>Personalized Relevance</legend>
-          <input type="text" name="userId" id="userId" placeholder="User ID" style="width:100px"><br>
+          <legend>Navigation Control</legend>
+          <input type="text" name="includedNavigations" id="includedNavigations" placeholder="Included Navigations" style="width:125px"><br>
+          <input type="text" name="restrictNavigationName" id="restrictNavigationName" placeholder="Restrict by Navigation" style="width:135px">
+          <input type="text" name="restrictNavigationCount" id="restrictNavigationCount" placeholder="Count" style="width:55px"><br>
+          <label for="dontPruneRefinements"><input type="checkbox" name="dontPruneRefinements" id="dontPruneRefinements">Do not Prune Refinements</label><br>
       </fieldset>
   </td>
   </tr></table>
