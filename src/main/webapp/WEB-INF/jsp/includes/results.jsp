@@ -8,7 +8,7 @@
     <c:forEach begin="0" end="${biasingProfileCount -1}" varStatus="b">
     <c:set var="name" value="results${b.index}"/>
     <c:set var="results" value="${model[name]}"/>
-    <td class="recordColumn" style="padding-right:2px;" valign="top" width="width:${width}%">
+    <td class="recordColumn recordColumn${b.index}" style="padding-right:2px;" valign="top" width="width:${width}%">
 
     <c:set var="index" value="${b.index}"/>
     <div class="columnSpecifics">
@@ -46,10 +46,10 @@
 </table>
 <script>
 
-    $('.highlightCorresponding').mouseenter(function() {
+    $('.highlightCorresponding').hover(function() {
         var matchingRecords = $(this).attr('data-id').substring(5);
         $('.' + matchingRecords).addClass('highlight');
-    }).mouseleave(function(){
+    }, function(){
         $('.highlightCorresponding').removeClass('highlight');
     });
 

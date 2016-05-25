@@ -16,8 +16,23 @@ $(document).ready(function () {
       source: ${Mappers.writeValueAsString(collections)},
       delay: 20,
       minLength:0
-
     });
+    if (${biasingProfileCount} > 1) {
+      $('.highlightCorresponding').each(function(index, value){
+        var text = '| ';
+        for (var i = 0; i < ${biasingProfileCount}; i++) {
+          console.log(i);
+          var matchingRecords = $(this).attr('data-id').substring(5);
+          var matchingRow = $('.recordColumn' + i + ' .' + matchingRecords);
+          if (matchingRow.length) {
+            text += $('h2', matchingRow).attr('data-id') + '&nbsp;|&nbsp;';
+          } else {
+            text += '&nbsp;|&nbsp;';
+          }
+          $('.otherColumns',this).html(text);
+        }
+      });
+    }
 });
 
 function showAdvanced(){
@@ -182,3 +197,4 @@ function showColumnSpecifics(){
         $.cookie('showColumnSpecifics', $('.columnSpecifics fieldset').is(":visible"));
     });
 }
+

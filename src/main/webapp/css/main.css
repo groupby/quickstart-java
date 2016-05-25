@@ -16,9 +16,6 @@ fieldset {
 .state  {
     margin-left:5px;
 }
-body {
-    margin: 2px;
-}
 
 
 /* HTML5 display-role reset for older browsers */
@@ -55,7 +52,6 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
-
 .record {
     width: 100%;
     border-left: 2px solid white;
@@ -379,4 +375,9 @@ fieldset {
 .attribute, .id {
     font-size: 9px;
     color:black;
+}
+.otherColumns {
+  float:right;
+  font-family: courier;
+  font-size:10px;
 }
