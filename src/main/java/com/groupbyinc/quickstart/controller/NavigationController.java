@@ -53,9 +53,23 @@ public class NavigationController {
     private static final ObjectMapper OM = new ObjectMapper();
     private static final ObjectMapper OM_MATCH_STRATEGY = new ObjectMapper();
 
+
+    // The UrlBeautifier deconstructs a URL into a query object.  You can create as many url
+    // beautifiers as you want which may correspond to different kinds of urls that you want
+    // to generate.  Here we construct one called 'default' that we use for every search and
+    // navigation URL.
+    private static UrlBeautifier defaultUrlBeautifier = null;
+
     static {
         OM.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         OM_MATCH_STRATEGY.enable(ALLOW_UNQUOTED_FIELD_NAMES).enable(ALLOW_SINGLE_QUOTES);
+        UrlBeautifier.createUrlBeautifier("default");
+        defaultUrlBeautifier = UrlBeautifier.getUrlBeautifiers().get("default");
+        defaultUrlBeautifier.addRefinementMapping('s', "size");
+        defaultUrlBeautifier.setSearchMapping('q');
+        defaultUrlBeautifier.setAppend("/index.html");
+        defaultUrlBeautifier.addReplacementRule('/', ' ');
+        defaultUrlBeautifier.addReplacementRule('\\', ' ');
     }
 
     /**
@@ -67,23 +81,10 @@ public class NavigationController {
 
     @RequestMapping({"**/index.html"})
     public String handleSearch(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
         // Get the action from the request.
         String action = ServletRequestUtils.getStringParameter(request, "action", null);
 
-        // The UrlBeautifier deconstructs a URL into a query object.  You can create as many url
-        // beautifiers as you want which may correspond to different kinds of urls that you want
-        // to generate.  Here we construct one called 'default' that we use for every search and
-        // navigation URL.
-        UrlBeautifier defaultUrlBeautifier = UrlBeautifier.getUrlBeautifiers().get("default");
-        if (defaultUrlBeautifier == null) {
-            UrlBeautifier.createUrlBeautifier("default");
-            defaultUrlBeautifier = UrlBeautifier.getUrlBeautifiers().get("default");
-            defaultUrlBeautifier.addRefinementMapping('s', "size");
-            defaultUrlBeautifier.setSearchMapping('q');
-            defaultUrlBeautifier.setAppend("/index.html");
-            defaultUrlBeautifier.addReplacementRule('/', ' ');
-            defaultUrlBeautifier.addReplacementRule('\\', ' ');
-        }
 
         // Create the query object from the beautifier
         Query query = defaultUrlBeautifier.fromUrl(request.getRequestURI(), new Query());
