@@ -39,7 +39,7 @@
       </fieldset>
       <fieldset>
           <legend>Personalized Relevance</legend>
-          <input type="text" name="userId" id="userId" placeholder="User ID" style="width:100px"><br>
+          <input type="text" name="visitorId" id="visitorId" placeholder="Visitor ID" style="width:100px"><br>
       </fieldset>
   </td><td>
       <fieldset>
