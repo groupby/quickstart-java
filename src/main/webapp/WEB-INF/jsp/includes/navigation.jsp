@@ -19,7 +19,6 @@
   </c:forEach>  
 </c:set>
 <c:if test="${!empty navString}">
-  <b>Refine Results</b>
   ${navString}
 </c:if>
 <c:if test="${empty navString}">

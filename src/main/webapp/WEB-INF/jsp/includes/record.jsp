@@ -3,12 +3,10 @@
     id, title, ${!empty cookie.imageField.value ? cookie.imageField.value : ''}${!empty cookie.imageField.value ? ',' : ''}</c:set>
     <li class="record highlightCorresponding h${record.id}" data-id="row${b.index}.h${record.id}">
         <h2 data-id="${i.count}">Record ${i.index + results.pageInfo.recordStart}
-            <span class="id">(id: <c:out value="${record.allMeta['id']}"/>)</span>
+            <span class="id">id: <c:out value="${record.allMeta['id']}"/></span>
             <span class="otherColumns" style="display:inline-block"></span>
         </h2>
         <div class="details">
-
-            <div class="keyValue"><span class="key">id</span>:<span class="value">${record.allMeta['id'] }</span></div>
             <div class="keyValue"><span class="key">title</span>:<span class="value">${record.allMeta['title'] }</span></div>
             <c:forEach items="${record.allMeta}" var="entry">
               <c:set var="entryKey">${entry.key},</c:set>
