@@ -27,7 +27,7 @@ $(document).ready(function () {
           if (matchingRow.length) {
             text += $('h2', matchingRow).attr('data-id') + '&nbsp;|&nbsp;';
           } else {
-            text += '&nbsp;|&nbsp;';
+            text += '&nbsp;&nbsp;|&nbsp;';
           }
           $('.otherColumns',this).html(text);
         }
@@ -62,19 +62,14 @@ function redoQuery() {
 }
 
 function getMoreNav(navigationName) {
-    $.post("moreRefinements.html", {
-        "navigationName" : navigationName,
-        "originalQuery" : $('#originalQuery').text()
+    $.post('moreRefinements.html', {
+        'navigationName' : navigationName,
+        'originalQuery' : $('#originalQuery').text()
     }).done(function(data){
-        if (data != "" || data != undefined) {
-            var replace = document.getElementById("nav-"+navigationName);
-            var remove = document.getElementById("more-"+navigationName);
-            var html = document.createElement("div");
-            html.innerHTML = data;
-            replace.parentNode.replaceChild(html, replace);
-            remove.parentNode.removeChild(remove);
-        }else{
-            console.log("No data received.");
+        if (data != '' || data != undefined) {
+            $('#nav-' + navigationName).html(data);
+        } else {
+            console.log('No data received.');
         }
     });
 }
