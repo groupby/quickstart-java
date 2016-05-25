@@ -366,7 +366,7 @@ public class NavigationController {
             if (cs.get("colSorts1").length > i) {
 
                 for (int k = 1; k < 6; k++) {
-                    if (StringUtils.isNotBlank(cs.get("colSorts" + k)[i])) {
+                    if (cs.get("colSorts" + k).length > k && StringUtils.isNotBlank(cs.get("colSorts" + k)[i])) {
                         if (sorts == null) {
                             sorts = new ArrayList<>();
                         }
