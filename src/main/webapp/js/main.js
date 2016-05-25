@@ -65,7 +65,8 @@ function getMoreNav(navigationName) {
         'originalQuery' : $('#originalQuery').text()
     }).done(function(data){
         if (data != '' || data != undefined) {
-            $('#nav-' + navigationName).html(data);
+            var navElement = document.getElementById("nav-"+navigationName);
+            $(navElement).html(data);
         } else {
             console.log('No data received.');
         }

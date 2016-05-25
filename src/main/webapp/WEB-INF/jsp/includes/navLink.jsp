@@ -45,8 +45,8 @@
 </c:if>
 
 <c:if test="${nav.isMoreRefinements()}">
-	<div class="moreLink" id="more-${nav.name}">
-		<a href="javascript:;" onclick='getMoreNav("${nav.name}")'>More [+]</a>
+	<div class="moreLink" id="more-${nav.id}">
+		<a href="javascript:;" onclick="getMoreNav('${nav.name}')">More [+]</a>
 	</div>
 </c:if>
 </div>
