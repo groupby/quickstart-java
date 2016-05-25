@@ -53,49 +53,31 @@
         $('.highlightCorresponding').removeClass('highlight');
     });
 
-    $('.strategyInput, .biasingInput, .sort1Input, .sort1Dir, .sort2Input, .sort2Dir').keyup(function(e){
+    $('.strategyInput, .biasingInput, .sortInput, .sortDir').keyup(function(e){
         var code = (e.keyCode ? e.keyCode : e.which);
 
         if (code == 13 && !$(this).hasClass('strategyInput')){
             $('#form').submit();
             return;
         }
-        var sort1 = '';
-        $('.sort1Input').each(function(){
-            sort1 += $(this).val() +  "|"
-        });
-        sort1 = sort1.substring(0, sort1.length-1);
-        $('#colSort1').val(sort1);
-        $('#colSort1').trigger('change');
 
+        for (var i = 1; i < 6; i++){
+          var sort = '';
+          $('.sort' + i + 'Input').each(function(){
+              sort += $(this).val() +  "|"
+          });
+          sort = sort.substring(0, sort.length-1);
+          $('#colSort' + i).val(sort);
+          $('#colSort' + i).trigger('change');
 
-        var sort2 = '';
-        $('.sort2Input').each(function(){
-            sort2 += $(this).val() +  "|"
-        });
-        sort2 = sort2.substring(0, sort2.length-1);
-        $('#colSort2').val(sort2);
-        $('#colSort2').trigger('change');
-
-
-        var sort1 = '';
-        $('.sort1Dir').each(function(){
-            sort1 += $(this).val() +  "|"
-        });
-        sort1 = sort1.substring(0, sort1.length-1);
-        $('#colDir1').val(sort1);
-        $('#colDir1').trigger('change');
-
-
-        var sort2 = '';
-        $('.sort2Dir').each(function(){
-            sort2 += $(this).val() +  "|"
-        });
-        sort2 = sort2.substring(0, sort2.length-1);
-        $('#colDir2').val(sort2);
-        $('#colDir2').trigger('change');
-
-
+          var sort = '';
+          $('.sort' + i + 'Dir').each(function(){
+              sort += $(this).val() +  "|"
+          });
+          sort = sort.substring(0, sort.length-1);
+          $('#colDir' + i).val(sort);
+          $('#colDir' + i).trigger('change');
+        }
 
         var strategy = '';
         $('.strategyInput').each(function(){
