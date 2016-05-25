@@ -3,16 +3,12 @@ kind: "Deployment"
 metadata:
   name: "refapp"
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
         component: "refapp"
     spec:
-      volumes:
-      - name: semantic-configs
-        hostPath:
-          path: /semantic
       imagePullSecrets:
       - name: "groupby-registry"
       containers:
