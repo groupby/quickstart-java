@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
     setInterval(redoQuery, 1000);
     prettyJson();
