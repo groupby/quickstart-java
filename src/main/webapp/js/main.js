@@ -21,7 +21,6 @@ $(document).ready(function () {
       $('.highlightCorresponding').each(function(index, value){
         var text = '| ';
         for (var i = 0; i < ${biasingProfileCount}; i++) {
-          console.log(i);
           var matchingRecords = $(this).attr('data-id').substring(5);
           var matchingRow = $('.recordColumn' + i + ' .' + matchingRecords);
           if (matchingRow.length) {

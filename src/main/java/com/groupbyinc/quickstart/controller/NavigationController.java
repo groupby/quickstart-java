@@ -38,6 +38,7 @@ import java.util.logging.Logger;
 import static com.groupbyinc.common.jackson.core.JsonParser.Feature.ALLOW_SINGLE_QUOTES;
 import static com.groupbyinc.common.jackson.core.JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES;
 import static java.util.Collections.singletonList;
+import static org.bouncycastle.asn1.x500.style.RFC4519Style.c;
 
 /**
  * NavigationController is the single entry point for search and navigation
@@ -51,6 +52,7 @@ public class NavigationController {
 
     private static final ObjectMapper OM = new ObjectMapper();
     private static final ObjectMapper OM_MATCH_STRATEGY = new ObjectMapper();
+
     static {
         OM.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         OM_MATCH_STRATEGY.enable(ALLOW_UNQUOTED_FIELD_NAMES).enable(ALLOW_SINGLE_QUOTES);
@@ -169,7 +171,7 @@ public class NavigationController {
         }
 
         // By default refinements that
-        boolean disableAutocorrection= Boolean.valueOf(getCookie(request, "disableAutocorrection", "false"));
+        boolean disableAutocorrection = Boolean.valueOf(getCookie(request, "disableAutocorrection", "false"));
         if (disableAutocorrection) {
             query.setDisableAutocorrection(true);
         }
@@ -311,7 +313,7 @@ public class NavigationController {
             if (StringUtils.isNotBlank(strategy)) {
                 query.setMatchStrategy(createMatchStrategy(matchStrategyErrors, strategy));
             }
-            if (colSorts.get(i)!= null) {
+            if (colSorts.get(i) != null) {
                 query.getSort().clear();
                 query.getSort().addAll(colSorts.get(i));
             }
@@ -345,48 +347,38 @@ public class NavigationController {
 
     @SuppressWarnings("unchecked")
     private List<List<Sort>> getColSorts(HttpServletRequest request, int length, Map model) {
-        String colSort1 = getCookie(request, "colSort1", "");
-        String colDir1 = getCookie(request, "colDir1", "");
-        String colSort2 = getCookie(request, "colSort2", "");
-        String colDir2 = getCookie(request, "colDir2", "");
+        Map<String, String[]> cs = new HashMap<>();
+        Map<String, String[]> cd = new HashMap<>();
+        for (int i = 1; i < 6; i++) {
+            String colSort = getCookie(request, "colSort" + i, "");
+            cs.put("colSorts" + i, colSort.split("\\|", -1));
+            String colDir = getCookie(request, "colDir" + i, "");
+            cd.put("colDirs" + i, colDir.split("\\|", -1));
+            model.put("sort" + i, cs.get("colSorts" + i));
+            model.put("sort" + i + "Direction", cd.get("colDirs" + i));
+        }
 
-        String[] colSorts1 = colSort1.split("\\|", -1);
-        model.put("sort1", colSorts1);
-        String[] colDirs1 = colDir1.split("\\|", -1);
-        model.put("sort1Direction", colDirs1);
-        String[] colSorts2 = colSort2.split("\\|", -1);
-        model.put("sort2", colSorts2);
-        String[] colDirs2 = colDir2.split("\\|", -1);
-        model.put("sort2Direction", colDirs2);
+
         List<List<Sort>> colSorts = new ArrayList<>();
         for (int i = 0; i < length; i++) {
             List<Sort> sorts = null;
-            if (colSorts1.length > i) {
-                if (StringUtils.isNotBlank(colSorts1[i])) {
-                    if (sorts == null) {
-                        sorts = new ArrayList<>();
+            if (cs.get("colSorts1").length > i) {
+
+                for (int k = 1; k < 6; k++) {
+                    if (StringUtils.isNotBlank(cs.get("colSorts" + k)[i])) {
+                        if (sorts == null) {
+                            sorts = new ArrayList<>();
+                        }
+                        Sort sort = new Sort();
+                        sort.setField(cs.get("colSorts" + k)[i]);
+                        if (StringUtils.isNotBlank(cd.get("colDirs" + k)[i])
+                                && cd.get("colDirs" + k)[i].toLowerCase().startsWith("d")) {
+                            sort.setOrder(Sort.Order.Descending);
+                        } else {
+                            sort.setOrder(Sort.Order.Ascending);
+                        }
+                        sorts.add(sort);
                     }
-                    Sort sort = new Sort();
-                    sort.setField(colSorts1[i]);
-                    if (StringUtils.isNotBlank(colDirs1[i]) && colDirs1[i].toLowerCase().startsWith("d")) {
-                        sort.setOrder(Sort.Order.Descending);
-                    } else {
-                        sort.setOrder(Sort.Order.Ascending);
-                    }
-                    sorts.add(sort);
-                }
-                if (StringUtils.isNotBlank(colSorts2[i])) {
-                    if (sorts == null) {
-                        sorts = new ArrayList<>();
-                    }
-                    Sort sort = new Sort();
-                    sort.setField(colSorts2[i]);
-                    if (StringUtils.isNotBlank(colDirs2[i]) && colDirs2[i].toLowerCase().startsWith("d")) {
-                        sort.setOrder(Sort.Order.Descending);
-                    } else {
-                        sort.setOrder(Sort.Order.Ascending);
-                    }
-                    sorts.add(sort);
                 }
             }
             colSorts.add(sorts);
