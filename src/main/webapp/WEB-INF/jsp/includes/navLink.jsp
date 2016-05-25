@@ -2,7 +2,12 @@
 
 <div id="nav-${nav.name}" class="navLink">
 <c:if test="${nav['or']}">
-		<b>${nav.displayName} <span class="attribute">${nav.name} (OR)</span></b>
+		<b>${nav.displayName}
+		<span class="attribute">${nav.name} (OR)</span>
+		<%@include file="navMetadata.jsp"%>
+		</b>
+
+
 		<div class="nav-${nav.name} refinementsHolder">
 			<c:forEach items="${nav.refinements}" var="value">
 				<div>
@@ -25,7 +30,10 @@
 	</div>
 </c:if>
 <c:if test="${!nav['or']}">
-		<b>${nav.displayName} <span class="attribute">${nav.name}</span></b>
+		<b>${nav.displayName}
+		<span class="attribute">${nav.name}</span>
+		<%@include file="navMetadata.jsp"%>
+		</b>
 		<div class="nav-${nav.name} refinementsHolder">
 			<c:forEach items="${nav.refinements}" var="value">
 				<div>

@@ -139,13 +139,14 @@ label {
 }
 
 .navigationMetadataTitle {
-    margin-left: 5px;
-    font-size: 12px;
+    color:#009900;
+    font-size: 10px;
 }
 
 .navigationMetadata {
-    margin-left: 15px;
-    font-size: 10px;
+    margin-left: 5px;
+    color:#009900;
+    font-size: 9px;
 }
 
 .sitewideMetadata {
@@ -392,7 +393,6 @@ fieldset {
 .attribute {
     font-size: 9px;
     color:#009900;
-    font-weight: normal;
 }
 .otherColumns {
   float:right;
