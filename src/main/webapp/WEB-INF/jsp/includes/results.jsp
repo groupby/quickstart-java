@@ -105,7 +105,8 @@
 
     function removeColumn(pIndex){
         $('#biasing' + pIndex).remove();
-        $('.strategyInput, .biasingInput, .sortInput').trigger('keyup');
+        $('#matchStrategy' + pIndex).remove();
+        $('.strategyInput, .biasingInput, .sortInput').trigger('change');
         generateHash();
         $('#form').submit();
     }

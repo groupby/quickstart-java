@@ -144,10 +144,10 @@ public class NavigationController {
             query.setLanguage(language);
         }
 
-        // User id is used in personalized relevance.
-        String userId = getCookie(request, "userId", "").trim();
-        if (StringUtils.isNotBlank(userId)) {
-            query.setUserId(userId);
+        // Visitor is used in personalized relevance.
+        String visitorId = getCookie(request, "visitorId", "").trim();
+        if (StringUtils.isNotBlank(visitorId)) {
+            query.setVisitorId(visitorId);
         }
 
         // Restrict Navigation (this performs two queries so may be slow)
