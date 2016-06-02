@@ -15,7 +15,7 @@
 
   <c:if test="${!empty results.query}">
       <b>
-        <a class="deleteCheckbox" href="<c:url value="${b:toUrlAdd('default', '', results.selectedNavigation, 'selected', null)}"/>">x</a>
+        <a class="deleteCheckbox" href="<c:url value="${b:toUrlAdd('default', '', results.selectedNavigation, navigation.name, null)}"/>">x</a>
         <c:out value="${results.query}"/>
   	  </b>
 

@@ -1,6 +1,6 @@
 <%@include file="tags.jsp"%>
 
-<div class="navLink">
+<div class="navLink refinementsHolder">
 <b>${nav.displayName}
 <span class="attribute">${nav.name}</span>
 <%@include file="navMetadata.jsp"%>

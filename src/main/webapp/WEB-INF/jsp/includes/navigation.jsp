@@ -1,5 +1,4 @@
 <%@include file="tags.jsp"%>
-
 <c:set var="navString">
   <c:forEach items="${results.availableNavigation}" var="nav">
     <c:set var="nav" value="${nav }" scope="request"/>
