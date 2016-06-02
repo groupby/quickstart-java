@@ -143,10 +143,17 @@ label {
     font-size: 10px;
 }
 
-.navigationMetadata {
-    margin-left: 5px;
+.navigationMetadata,{
     color:#009900;
     font-size: 9px;
+}
+.navigationMetadata b {
+   display: inline-block;
+    color:#00CC00;
+    font-size: 9px;
+    margin:0;
+    margin-left:5px;
+    padding:0;
 }
 
 .sitewideMetadata {
@@ -398,4 +405,17 @@ fieldset {
   float:right;
   font-size:10px;
   color: #00dd00;
+}
+
+.specialNav {
+  display: block;
+  margin:0;
+}
+.specialNav a{
+  background-color: #005500;
+  margin:0;
+  text-decoration:none;
+  padding:5px;
+  display:inline-block;
+  float:right;
 }

@@ -32,7 +32,14 @@ $(document).ready(function () {
       });
     }
 });
-
+function addAnyNav(){
+  var newNav = window.prompt("Enter a new refinement to add","attribute=value or range:20..50");
+  if (newNav != null) {
+    var refinements=$('#refinements').val();
+    $('#refinements').val(refinements + '~' + newNav);
+    $('#form').submit();
+  }
+}
 function showAdvanced(){
     $('#advanced').toggle('slide', function(){
         $.cookie('showAdvanced', $('#advanced').is(":visible"));
