@@ -29,8 +29,9 @@
   <td>
 
       <fieldset>
-          <legend>Language</legend>
-          <input type="text" name="language" id="language" placeholder="Language" style="width:80px">
+          <legend>Misc</legend>
+          <input type="text" name="language" id="language" placeholder="Language" style="width:80px"><br>
+          <input title="Custom Parameters, name=value & separated" type="text" name="customUrlParameters" id="customUrlParameters" placeholder="Custom Parameters" style="width:280px">
       </fieldset>
       <fieldset>
           <legend>Page Control</legend>

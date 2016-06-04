@@ -169,6 +169,11 @@ public class NavigationController {
       query.setDisableAutocorrection(true);
     }
 
+    // By default refinements that
+    String customUrlParameters = getCookie(request, "customUrlParameters", "");
+    if (StringUtils.isNotBlank(customUrlParameters)) {
+      query.addCustomUrlParamsByString(customUrlParameters);
+    }
 
     // If you have data in different collections you can specify the specific
     // collection you wish to query against.
