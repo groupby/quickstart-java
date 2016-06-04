@@ -30,8 +30,12 @@
                 </c:forEach>
             </c:if>
             <c:if test="${!empty cookie.imageField.value}">
-                <div class="keyValue"><span class="key">${cookie.imageField.value}</span>: <span class="value">${URLDecoder.decode(cookie.imagePrefix.value)}${record.allMeta[cookie.imageField.value]}${URLDecoder.decode(cookie.imageSuffix.value)}</span></div>
-                <img style="display: inline-block; max-width: 200px; max-height: 200px; margin: 5px;" src="${URLDecoder.decode(cookie.imagePrefix.value)}${record.allMeta[cookie.imageField.value]}${URLDecoder.decode(cookie.imageSuffix.value)}"/>
+                <c:set var="imageSrc" value="${record.allMeta}"/>
+                <c:forEach items="${fn:split(cookie.imageField.value, '.')}" var="piece">
+                  <c:set var="imageSrc" value="${imageSrc[piece]}"/>
+                </c:forEach>
+                <div class="keyValue"><span class="key">${cookie.imageField.value}</span>: <span class="value">${URLDecoder.decode(cookie.imagePrefix.value)}${imageSrc}${URLDecoder.decode(cookie.imageSuffix.value)}</span></div>
+                <img style="display: inline-block; max-width: 200px; max-height: 200px; margin: 5px;" src="${URLDecoder.decode(cookie.imagePrefix.value)}${imageSrc}${URLDecoder.decode(cookie.imageSuffix.value)}"/>
             </c:if>
         </div>
     </li>
