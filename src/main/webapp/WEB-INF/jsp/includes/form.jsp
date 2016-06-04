@@ -11,7 +11,7 @@
   <td>
   <fieldset>
       <legend>Connection</legend>
-      <input type="text" name="customerId" id="customerId" placeholder="Customer ID" style="width:120px">
+      <input type="text" name="customerId" id="customerId" placeholder="Customer ID / Domain" style="width:120px">
       <input type="text" name="clientKey" id="clientKey" placeholder="Client Key" style="width:260px;"><br>
       <input type="text" name="collection" id="collection" placeholder="Collection" style="width:180px">
   </fieldset>
