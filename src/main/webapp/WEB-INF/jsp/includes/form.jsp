@@ -27,7 +27,6 @@
   <div style="display:${cookie.showAdvanced.value ? 'block' : 'none' }" id="advanced">
   <table><tr>
   <td>
-
       <fieldset>
           <legend>Misc</legend>
           <input type="text" name="language" id="language" placeholder="Language" style="width:80px"><br>
