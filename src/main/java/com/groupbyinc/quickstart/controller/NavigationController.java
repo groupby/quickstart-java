@@ -12,10 +12,12 @@ import com.groupbyinc.common.apache.http.client.methods.HttpPost;
 import com.groupbyinc.common.apache.http.entity.StringEntity;
 import com.groupbyinc.common.apache.http.impl.client.CloseableHttpClient;
 import com.groupbyinc.common.apache.http.impl.client.HttpClients;
+import com.groupbyinc.common.blip.BlipClient;
 import com.groupbyinc.common.jackson.Mappers;
 import com.groupbyinc.common.jackson.databind.DeserializationFeature;
 import com.groupbyinc.common.jackson.databind.ObjectMapper;
 import com.groupbyinc.util.UrlBeautifier;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,6 +74,13 @@ public class NavigationController {
    * Ideally, there should only be one bridge per jvm and they are expensive to create but thread safe.
    */
   private static final Map<String, CloudBridge> BRIDGES = new HashMap<>();
+
+  private final BlipClient blipClient;
+
+  @Autowired
+  public NavigationController(BlipClient blipClient) {
+    this.blipClient = blipClient;
+  }
 
 
   @RequestMapping({"**/index.html"})
@@ -320,12 +329,21 @@ public class NavigationController {
         if (StringUtils.isNotBlank(clientKey)) {
           long startTime = System.currentTimeMillis();
           results = bridge.search(query);
-          model.put("time" + i, System.currentTimeMillis() - startTime);
+          long duration = System.currentTimeMillis() - startTime;
+          model.put("time" + i, duration);
+
+          blipClient.send("customerId", customerId,
+              "eventType", "query",
+              "columns", String.valueOf(biasingProfiles.length),
+              "durationMillis", String.valueOf(duration));
         }
         // pass the results into the view.
         model.put("results" + i, results);
         model.put("resultsJson" + i, Mappers.writeValueAsString(results));
       } catch (Exception e) {
+        blipClient.send("customerId", customerId,
+            "eventType", "error",
+            "message", e.getMessage());
         LOG.warning(e.getMessage());
         model.put("error" + i, e.getMessage());
         model.put("cause" + i, e.getCause());
