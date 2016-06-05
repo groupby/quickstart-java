@@ -25,12 +25,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.util.*;
 import java.util.logging.Logger;
@@ -38,7 +34,6 @@ import java.util.logging.Logger;
 import static com.groupbyinc.common.jackson.core.JsonParser.Feature.ALLOW_SINGLE_QUOTES;
 import static com.groupbyinc.common.jackson.core.JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES;
 import static java.util.Collections.singletonList;
-import static org.bouncycastle.asn1.x500.style.RFC4519Style.c;
 
 /**
  * NavigationController is the single entry point for search and navigation
