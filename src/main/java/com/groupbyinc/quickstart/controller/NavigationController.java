@@ -466,9 +466,7 @@ public class NavigationController {
 
       Results results = new Results();
       results.setSelectedNavigation(new ArrayList<>(query.getNavigations().values()));
-      RefinementsResult refinementsResults = bridge.refinements(
-          new Query().setArea(query.getArea()).addRefinementsByString(query.getRefinementString())
-              .setCollection(query.getCollection()), navigationName);
+      RefinementsResult refinementsResults = bridge.refinements(query, navigationName);
 
       if (refinementsResults != null && refinementsResults.getNavigation() != null) {
         List<Refinement> refinementList = refinementsResults.getNavigation().getRefinements();
