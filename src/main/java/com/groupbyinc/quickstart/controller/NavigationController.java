@@ -95,7 +95,7 @@ public class NavigationController {
 
     // return all fields with each record.
     // If there are specific fields defined, use these, otherwise default to showing all fields.
-    String fieldString = getCookie(request, "fields", "").trim();
+    String fieldString = getCookie(request, "fields", "*").trim();
 
     // If an image field is specified, always ask for it with the request.
     String imageField = getCookie(request, "imageField", "");
@@ -111,8 +111,6 @@ public class NavigationController {
           query.addFields(field.trim());
         }
       }
-    } else {
-      query.addFields("*");
     }
 
     // Setup parameters for the bridge
