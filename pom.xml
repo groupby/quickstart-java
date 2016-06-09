@@ -39,7 +39,7 @@
     <dependency>
       <groupId>com.groupbyinc</groupId>
       <artifactId>common-blip-client</artifactId>
-      <version>57</version>
+      <version>56</version>
     </dependency>
 
     <dependency>
