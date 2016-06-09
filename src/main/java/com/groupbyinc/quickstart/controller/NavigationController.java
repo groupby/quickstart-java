@@ -330,7 +330,7 @@ public class NavigationController {
           long duration = System.currentTimeMillis() - startTime;
           model.put("time" + i, duration);
 
-          blipClient.send("customerId", customerId,
+          blipClient.send("customerId", customerId.toLowerCase(),
               "eventType", "query",
               "columns", String.valueOf(biasingProfiles.length),
               "durationMillis", String.valueOf(duration));
@@ -339,8 +339,9 @@ public class NavigationController {
         model.put("results" + i, results);
         model.put("resultsJson" + i, Mappers.writeValueAsString(results));
       } catch (Exception e) {
-        blipClient.send("customerId", customerId,
+        blipClient.send("customerId", customerId.toLowerCase(),
             "eventType", "error",
+            "errorType", "searchError",
             "message", e.getMessage());
         LOG.warning(e.getMessage());
         model.put("error" + i, e.getMessage());
@@ -446,9 +447,9 @@ public class NavigationController {
   @RequestMapping(method = RequestMethod.POST, value = "**/moreRefinements.html")
   public String getMoreNavigations(Map<String, Object> model,
                                    HttpServletRequest request) throws ServletException {
+    String customerId = getCookie(request, "customerId", "").trim();
     try {
       String clientKey = getCookie(request, "clientKey", "").trim();
-      String customerId = getCookie(request, "customerId", "").trim();
       String originalQuery = ServletRequestUtils.getRequiredStringParameter(request, "originalQuery");
       String navigationName = ServletRequestUtils.getRequiredStringParameter(request, "navigationName");
       boolean skipCache = !Boolean.valueOf(getCookie(request, "cache", "false"));
@@ -464,7 +465,13 @@ public class NavigationController {
 
       Results results = new Results();
       results.setSelectedNavigation(new ArrayList<>(query.getNavigations().values()));
+      long start = System.currentTimeMillis();
       RefinementsResult refinementsResults = bridge.refinements(query, navigationName);
+      long duration = System.currentTimeMillis() - start;
+      blipClient.send("eventType", "moreRefinements",
+          "customerId", customerId.toLowerCase(),
+          "navigationName", navigationName,
+          "durationMillis", String.valueOf(duration));
 
       if (refinementsResults != null && refinementsResults.getNavigation() != null) {
         List<Refinement> refinementList = refinementsResults.getNavigation().getRefinements();
@@ -480,6 +487,10 @@ public class NavigationController {
       model.put("nav", availableNavigation);
       return "/includes/navLink";
     } catch (IOException e) {
+      blipClient.send("customerId", customerId.toLowerCase(),
+          "eventType", "error",
+          "errorType", "moreRefinements",
+          "message", e.getMessage());
       throw new ServletException(e);
     }
   }
