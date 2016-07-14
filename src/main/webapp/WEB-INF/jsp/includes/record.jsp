@@ -34,8 +34,18 @@
                 <c:forEach items="${fn:split(cookie.imageField.value, '.')}" var="piece">
                   <c:set var="imageSrc" value="${imageSrc[piece]}"/>
                 </c:forEach>
-                <div class="keyValue"><span class="key">${cookie.imageField.value}</span>: <span class="value">${URLDecoder.decode(cookie.imagePrefix.value)}${imageSrc}${URLDecoder.decode(cookie.imageSuffix.value)}</span></div>
-                <img style="display: inline-block; max-width: 200px; max-height: 200px; margin: 5px;" src="${URLDecoder.decode(cookie.imagePrefix.value)}${imageSrc}${URLDecoder.decode(cookie.imageSuffix.value)}"/>
+                <c:if test="${imageSrc.getClass().simpleName != 'ArrayList'}">
+                  <div class="keyValue"><span class="key">${cookie.imageField.value}</span>: <span class="value">${URLDecoder.decode(cookie.imagePrefix.value)}${imageSrc}${URLDecoder.decode(cookie.imageSuffix.value)}</span></div>
+                  <img style="display: inline-block; max-width: 200px; max-height: 200px; margin: 5px;" src="${URLDecoder.decode(cookie.imagePrefix.value)}${imageSrc}${URLDecoder.decode(cookie.imageSuffix.value)}"/>
+                </c:if>
+                <c:if test="${imageSrc.getClass().simpleName == 'ArrayList'}">
+                  <c:set var="imageSrcs" value="${imageSrc}"/>
+                   <c:forEach items="${imageSrcs}" var="imageSrc">
+                     <div class="keyValue"><span class="key">${cookie.imageField.value}</span>: <span class="value">${URLDecoder.decode(cookie.imagePrefix.value)}${imageSrc}${URLDecoder.decode(cookie.imageSuffix.value)}</span></div>
+                      <img style="display: inline-block; max-width: 200px; max-height: 200px; margin: 5px;" src="${URLDecoder.decode(cookie.imagePrefix.value)}${imageSrc}${URLDecoder.decode(cookie.imageSuffix.value)}"/>
+                   </c:forEach>
+                </c:if>
+
             </c:if>
         </div>
     </li>
