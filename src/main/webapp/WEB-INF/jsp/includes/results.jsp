@@ -28,6 +28,7 @@
     <br>
     <%@include file="matchStrategy.jsp"%>
     <%@include file="sort.jsp"%>
+    <%@include file="semantish.jsp"%>
     </fieldset>
     </div>
 
@@ -91,6 +92,16 @@
         strategy = strategy.substring(0, strategy.length-1);
         $('#matchStrategy').val(strategy);
         $('#matchStrategy').trigger('change');
+    });
+
+    $('.skipSemantishInput').change(function(){
+      var skipSemantishes = '';
+      $('.skipSemantishInput').each(function(){
+          skipSemantishes += $(this).is(':checked') +  ","
+      });
+      skipSemantishes = skipSemantishes.substring(0, skipSemantishes.length-1);
+      $('#skipSemantish').val(skipSemantishes);
+      $('#skipSemantish').trigger('change');
     });
 
     $('.biasingInput').change(function(e){

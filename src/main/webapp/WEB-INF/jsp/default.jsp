@@ -2,7 +2,6 @@
 <%@include file="includes/tags.jsp"%>
 <div class="results">
 
-  <%@include file="includes/siteParams.jsp"%>
   <table width="100%">
     <tr>
       <td width="160" valign="top">

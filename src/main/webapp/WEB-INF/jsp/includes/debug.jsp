@@ -60,6 +60,8 @@ curl -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pret
     Did You Means: ${results.didYouMean}
     <br>
     Rewrites: ${results.rewrites}
+    <br>
+    <%@include file="../includes/siteParams.jsp"%>
     <script>
         function sortObject(o) {
             var sorted = {}, key, a = [];

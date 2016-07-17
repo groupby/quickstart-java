@@ -6,12 +6,14 @@ import com.groupbyinc.api.model.*;
 import com.groupbyinc.api.request.RestrictNavigation;
 import com.groupbyinc.common.apache.commons.io.IOUtils;
 import com.groupbyinc.common.apache.commons.lang3.StringUtils;
+import com.groupbyinc.common.apache.http.Header;
 import com.groupbyinc.common.apache.http.HttpEntity;
 import com.groupbyinc.common.apache.http.client.methods.CloseableHttpResponse;
 import com.groupbyinc.common.apache.http.client.methods.HttpPost;
 import com.groupbyinc.common.apache.http.entity.StringEntity;
 import com.groupbyinc.common.apache.http.impl.client.CloseableHttpClient;
 import com.groupbyinc.common.apache.http.impl.client.HttpClients;
+import com.groupbyinc.common.apache.http.message.BasicHeader;
 import com.groupbyinc.common.blip.BlipClient;
 import com.groupbyinc.common.jackson.Mappers;
 import com.groupbyinc.common.jackson.databind.DeserializationFeature;
@@ -296,6 +298,17 @@ public class NavigationController {
     List<String> matchStrategyErrors = new ArrayList<>();
     model.put("matchStrategyErrors", matchStrategyErrors);
 
+    // If skip semantish is on.
+    String skipSemantish = getCookie(request, "skipSemantish", "").trim();
+    String[] skipSemantishStrings = skipSemantish.split(",", -1);
+    model.put("skipSemantish", skipSemantishStrings);
+    if (skipSemantishStrings.length != skipSemantishStrings.length) {
+      skipSemantishStrings = new String[biasingProfiles.length];
+      for (int i = 0; i < skipSemantishStrings.length; i++) {
+        skipSemantishStrings[i] = "false";
+      }
+    }
+
     // deal with column sorts.
     List<Sort> originalSorts = new ArrayList<>(query.getSort());
     List<List<Sort>> colSorts = getColSorts(request, biasingProfiles.length, model);
@@ -326,6 +339,8 @@ public class NavigationController {
         Results results = new Results();
         if (StringUtils.isNotBlank(clientKey)) {
           long startTime = System.currentTimeMillis();
+          ensureHeader(bridge, "Skip-Semantish", skipSemantishStrings[i]);
+          logQuery(bridge, query);
           results = bridge.search(query);
           long duration = System.currentTimeMillis() - startTime;
           model.put("time" + i, duration);
@@ -351,6 +366,22 @@ public class NavigationController {
 
     // render using index.jsp and the populated model.
     return view;
+  }
+
+  private void logQuery(CloudBridge bridge, Query query) {
+    LOG.info("Executing with headers: " + bridge.getHeaders());
+    LOG.info("Query: " + query.getBridgeJson("****"));
+  }
+
+  private void ensureHeader(CloudBridge bridge, String headerName, String headerValue) {
+    Iterator<Header> iterator = bridge.getHeaders().iterator();
+    while (iterator.hasNext()) {
+      Header header = iterator.next();
+      if (header.getName().equalsIgnoreCase(headerName)) {
+        iterator.remove();
+      }
+    }
+    bridge.getHeaders().add(new BasicHeader(headerName, headerValue));
   }
 
   @SuppressWarnings("unchecked")
