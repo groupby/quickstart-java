@@ -302,7 +302,7 @@ public class NavigationController {
     String skipSemantish = getCookie(request, "skipSemantish", "").trim();
     String[] skipSemantishStrings = skipSemantish.split(",", -1);
     model.put("skipSemantish", skipSemantishStrings);
-    if (skipSemantishStrings.length != skipSemantishStrings.length) {
+    if (skipSemantishStrings.length != biasingProfiles.length) {
       skipSemantishStrings = new String[biasingProfiles.length];
       for (int i = 0; i < skipSemantishStrings.length; i++) {
         skipSemantishStrings[i] = "false";
@@ -557,5 +557,9 @@ public class NavigationController {
       }
     }
     return pDefault;
+  }
+
+  public void populateImages(HttpServletRequest request, List<Record> records) {
+    // todo
   }
 }
