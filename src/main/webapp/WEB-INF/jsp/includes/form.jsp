@@ -60,6 +60,7 @@
           <input type="hidden" name="biasingProfile" id="biasingProfile">
           <input type="hidden" name="matchStrategy" id="matchStrategy">
           <input type="hidden" name="skipSemantish" id="skipSemantish">
+          <input type="text" name="wildcard" id="wildcard">
           <c:forEach begin="0" end="4" varStatus="i">
             <input type="hidden" name="colSort${i.count}" id="colSort${i.count}">
             <input type="hidden" name="colDir${i.count}" id="colDir${i.count}">

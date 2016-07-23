@@ -310,6 +310,17 @@ public class NavigationController {
         skipSemantishStrings[i] = "false";
       }
     }
+    
+    // If wildcard is on.
+    String wildcard = getCookie(request, "wildcard", "").trim();
+    String[] wildcardStrings = wildcard.split(",", -1);
+    model.put("wildcard", wildcardStrings);
+    if (wildcardStrings.length != biasingProfiles.length) {
+      wildcardStrings = new String[biasingProfiles.length];
+      for (int i = 0; i < wildcardStrings.length; i++) {
+        wildcardStrings[i] = "false";
+      }
+    }
 
     // deal with column sorts.
     List<Sort> originalSorts = new ArrayList<>(query.getSort());
@@ -318,10 +329,12 @@ public class NavigationController {
     for (int i = 0; i < biasingProfiles.length; i++) {
       String profile = biasingProfiles[i].trim();
       String strategy = matchStrategies[i].trim();
+      String wild = wildcardStrings[i];
       query.getSort().clear();
       query.getSort().addAll(originalSorts);
       query.setBiasingProfile(null);
       query.setMatchStrategy(null);
+      query.setWildcardSearchEnabled("true".equals(wild));
       if (StringUtils.isNotBlank(profile)) {
         query.setBiasingProfile(profile);
       }
