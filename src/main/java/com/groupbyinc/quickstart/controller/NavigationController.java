@@ -340,11 +340,12 @@ public class NavigationController {
         // execute the query
         Results results = new Results();
         if (StringUtils.isNotBlank(clientKey)) {
-          long startTime = System.currentTimeMillis();
           ensureHeader(bridge, "Skip-Semantish", skipSemantishStrings[i]);
           logQuery(bridge, query);
+          long startTime = System.currentTimeMillis();
           results = bridge.search(query);
           long duration = System.currentTimeMillis() - startTime;
+          populateImages(request, results.getRecords());
           model.put("time" + i, duration);
 
           blipClient.send("customerId", customerId.toLowerCase(),
@@ -566,20 +567,19 @@ public class NavigationController {
     if (StringUtils.isBlank(imageField)) {
       return;
     }
-
     for (Record record : records) {
       ObjectMapper MAPPER = new ObjectMapper();
-
       try {
-        JsonQuery q = JsonQuery.compile("{ids:[.ids|split(\",\")[]|tonumber|.+100],name}");
-
+        JsonQuery q = JsonQuery.compile(".allMeta." + imageField);
         JsonNode in = MAPPER.readTree(MAPPER.writeValueAsString(record));
-        System.out.println(in);
-
         List<JsonNode> result = q.apply(in);
-        System.out.println(result);
+        if (result != null && !result.isEmpty()) {
+          record.getAllMeta().put("gbiInjectedImage", result.get(0).asText());
+        }
       } catch (IOException e) {
-        e.printStackTrace();
+        String msg = "Could not find image with jq query: " + imageField + " error: " + e.getMessage();
+        record.getAllMeta().put("gbiInjectedImageError", msg);
+        LOG.warning(msg);
       }
     }
 

@@ -16,10 +16,23 @@ import static org.junit.Assert.assertEquals;
 public class NavigationControllerTest {
 
   @Test
+  public void testBadJqCookie() {
+    NavigationController test = new NavigationController(BlipClient.EMPTY);
+    MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+    mockRequest.setCookies(new Cookie("imageField", "varian#$%22#$%22^#$%22&^ts[0].image"));
+    List<Record> records = new ArrayList<>();
+    Record record = new Record();
+    record.setAllMeta(new HashMap<>());
+    records.add(record);
+    test.populateImages(mockRequest, records);
+    assertEquals("Could not find image with jq query: varian#$\"#$\"^#$\"&^ts[0].image error: N/A", records.get(0).getAllMeta().get("gbiInjectedImageError"));
+  }
+
+  @Test
   public void testImageCookie() {
     NavigationController test = new NavigationController(BlipClient.EMPTY);
     MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-    mockRequest.setCookies(new Cookie("imageField", "variants.[0].image"));
+    mockRequest.setCookies(new Cookie("imageField", "variants[0].image"));
     List<Record> records = new ArrayList<>();
     Record record = new Record();
     record.setAllMeta(new HashMap<>());
@@ -35,7 +48,7 @@ public class NavigationControllerTest {
     record.getAllMeta().put("variants", variants);
     test.populateImages(mockRequest, records);
     assertEquals(1, records.size());
-    assertEquals("", records.get(0).getAllMeta().get("gbiInjectedImage"));
+    assertEquals("variant1ImageUrl", records.get(0).getAllMeta().get("gbiInjectedImage"));
   }
 
 }

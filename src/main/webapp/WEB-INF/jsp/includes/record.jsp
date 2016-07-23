@@ -30,7 +30,7 @@
                 </c:forEach>
             </c:if>
             <c:if test="${!empty record.allMeta['gbiInjectedImage']}">
-              <div class="keyValue"><span class="key">${cookie.imageField.value}</span>:
+              <div class="keyValue"><span class="key">${URLDecoder.decode(cookie.imageField.value)}</span>:
               <span class="value"><c:out value="${record.allMeta['gbiInjectedImage']}"/></span></div>
               <img style="display: inline-block; max-width: 200px; max-height: 200px; margin: 5px;" src="${URLDecoder.decode(cookie.imagePrefix.value)}<c:out value="${record.allMeta['gbiInjectedImage']}"/>${URLDecoder.decode(cookie.imageSuffix.value)}"/>
             </c:if>
