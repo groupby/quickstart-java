@@ -29,6 +29,7 @@
     <%@include file="matchStrategy.jsp"%>
     <%@include file="sort.jsp"%>
     <%@include file="semantish.jsp"%>
+    <%@include file="wildcard.jsp"%>
     </fieldset>
     </div>
 
@@ -102,6 +103,16 @@
       skipSemantishes = skipSemantishes.substring(0, skipSemantishes.length-1);
       $('#skipSemantish').val(skipSemantishes);
       $('#skipSemantish').trigger('change');
+    });
+
+    $('.wildcardInput').change(function(){
+      var wildcards = '';
+      $('.wildcardInput').each(function(){
+          wildcards += $(this).is(':checked') +  ","
+      });
+      wildcards = wildcards.substring(0, wildcards.length-1);
+      $('#wildcard').val(wildcards);
+      $('#wildcard').trigger('change');
     });
 
     $('.biasingInput').change(function(e){
