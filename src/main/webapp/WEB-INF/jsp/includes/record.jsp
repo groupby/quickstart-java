@@ -29,23 +29,10 @@
                     </c:if>
                 </c:forEach>
             </c:if>
-            <c:if test="${!empty cookie.imageField.value}">
-                <c:set var="imageSrc" value="${record.allMeta}"/>
-                <c:forEach items="${fn:split(cookie.imageField.value, '.')}" var="piece">
-                  <c:set var="imageSrc" value="${imageSrc[piece]}"/>
-                </c:forEach>
-                <c:if test="${imageSrc.getClass().simpleName != 'ArrayList'}">
-                  <div class="keyValue"><span class="key">${cookie.imageField.value}</span>: <span class="value">${URLDecoder.decode(cookie.imagePrefix.value)}${imageSrc}${URLDecoder.decode(cookie.imageSuffix.value)}</span></div>
-                  <img style="display: inline-block; max-width: 200px; max-height: 200px; margin: 5px;" src="${URLDecoder.decode(cookie.imagePrefix.value)}${imageSrc}${URLDecoder.decode(cookie.imageSuffix.value)}"/>
-                </c:if>
-                <c:if test="${imageSrc.getClass().simpleName == 'ArrayList'}">
-                  <c:set var="imageSrcs" value="${imageSrc}"/>
-                   <c:forEach items="${imageSrcs}" var="imageSrc">
-                     <div class="keyValue"><span class="key">${cookie.imageField.value}</span>: <span class="value">${URLDecoder.decode(cookie.imagePrefix.value)}${imageSrc}${URLDecoder.decode(cookie.imageSuffix.value)}</span></div>
-                      <img style="display: inline-block; max-width: 200px; max-height: 200px; margin: 5px;" src="${URLDecoder.decode(cookie.imagePrefix.value)}${imageSrc}${URLDecoder.decode(cookie.imageSuffix.value)}"/>
-                   </c:forEach>
-                </c:if>
-
+            <c:if test="${!empty record.allMeta['gbiInjectedImage']}">
+              <div class="keyValue"><span class="key">${URLDecoder.decode(cookie.imageField.value)}</span>:
+              <span class="value"><c:out value="${record.allMeta['gbiInjectedImage']}"/></span></div>
+              <img style="display: inline-block; max-width: 200px; max-height: 200px; margin: 5px;" src="${URLDecoder.decode(cookie.imagePrefix.value)}<c:out value="${record.allMeta['gbiInjectedImage']}"/>${URLDecoder.decode(cookie.imageSuffix.value)}"/>
             </c:if>
         </div>
     </li>

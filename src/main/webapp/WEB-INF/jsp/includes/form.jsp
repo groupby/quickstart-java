@@ -46,7 +46,7 @@
           <legend>Result Display</legend>
           <label for="raw"><input type="checkbox" name="raw" id="raw">Show Raw</label><br>
           <label for="collapse"><input type="checkbox" name="collapse" id="collapse">Collapse JSON</label><br>
-          <input type="text" name="imageField" id="imageField" placeholder="Image Attribute" style="width:120px"><br>
+          <input title="Supports JQ syntax" type="text" name="imageField" id="imageField" placeholder="Image Attribute" style="width:120px"><br>
           <input type="text" name="imagePrefix" id="imagePrefix" placeholder="Image Prefix" style="width:120px"><br>
           <input type="text" name="imageSuffix" id="imageSuffix" placeholder="Image Suffix" style="width:120px"><br>
       </fieldset>

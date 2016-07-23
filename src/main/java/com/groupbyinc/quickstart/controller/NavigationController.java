@@ -1,5 +1,8 @@
 package com.groupbyinc.quickstart.controller;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.groupbyinc.api.CloudBridge;
 import com.groupbyinc.api.Query;
 import com.groupbyinc.api.model.*;
@@ -16,9 +19,9 @@ import com.groupbyinc.common.apache.http.impl.client.HttpClients;
 import com.groupbyinc.common.apache.http.message.BasicHeader;
 import com.groupbyinc.common.blip.BlipClient;
 import com.groupbyinc.common.jackson.Mappers;
-import com.groupbyinc.common.jackson.databind.DeserializationFeature;
-import com.groupbyinc.common.jackson.databind.ObjectMapper;
+import com.groupbyinc.common.jackson.core.JsonParser;
 import com.groupbyinc.util.UrlBeautifier;
+import net.thisptr.jackson.jq.JsonQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -36,7 +39,6 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import static com.groupbyinc.common.jackson.core.JsonParser.Feature.ALLOW_SINGLE_QUOTES;
-import static com.groupbyinc.common.jackson.core.JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES;
 import static java.util.Collections.singletonList;
 
 /**
@@ -50,7 +52,7 @@ public class NavigationController {
   private static final transient Logger LOG = Logger.getLogger(NavigationController.class.getSimpleName());
 
   private static final ObjectMapper OM = new ObjectMapper();
-  private static final ObjectMapper OM_MATCH_STRATEGY = new ObjectMapper();
+  private static final com.groupbyinc.common.jackson.databind.ObjectMapper OM_MATCH_STRATEGY = new com.groupbyinc.common.jackson.databind.ObjectMapper();
 
 
   // The UrlBeautifier deconstructs a URL into a query object.  You can create as many url
@@ -61,7 +63,7 @@ public class NavigationController {
 
   static {
     OM.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    OM_MATCH_STRATEGY.enable(ALLOW_UNQUOTED_FIELD_NAMES).enable(ALLOW_SINGLE_QUOTES);
+    OM_MATCH_STRATEGY.enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES).enable(ALLOW_SINGLE_QUOTES);
     UrlBeautifier.createUrlBeautifier("default");
     defaultUrlBeautifier = UrlBeautifier.getUrlBeautifiers().get("default");
     defaultUrlBeautifier.addRefinementMapping('s', "size");
@@ -338,11 +340,12 @@ public class NavigationController {
         // execute the query
         Results results = new Results();
         if (StringUtils.isNotBlank(clientKey)) {
-          long startTime = System.currentTimeMillis();
           ensureHeader(bridge, "Skip-Semantish", skipSemantishStrings[i]);
           logQuery(bridge, query);
+          long startTime = System.currentTimeMillis();
           results = bridge.search(query);
           long duration = System.currentTimeMillis() - startTime;
+          populateImages(request, results.getRecords());
           model.put("time" + i, duration);
 
           blipClient.send("customerId", customerId.toLowerCase(),
@@ -560,6 +563,25 @@ public class NavigationController {
   }
 
   public void populateImages(HttpServletRequest request, List<Record> records) {
-    // todo
+    String imageField = getCookie(request, "imageField", null);
+    if (StringUtils.isBlank(imageField)) {
+      return;
+    }
+    for (Record record : records) {
+      ObjectMapper MAPPER = new ObjectMapper();
+      try {
+        JsonQuery q = JsonQuery.compile(".allMeta." + imageField);
+        JsonNode in = MAPPER.readTree(MAPPER.writeValueAsString(record));
+        List<JsonNode> result = q.apply(in);
+        if (result != null && !result.isEmpty()) {
+          record.getAllMeta().put("gbiInjectedImage", result.get(0).asText());
+        }
+      } catch (IOException e) {
+        String msg = "Could not find image with jq query: " + imageField + " error: " + e.getMessage();
+        record.getAllMeta().put("gbiInjectedImageError", msg);
+        LOG.warning(msg);
+      }
+    }
+
   }
 }
