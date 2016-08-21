@@ -46,9 +46,9 @@
           <legend>Result Display</legend>
           <label for="raw"><input type="checkbox" name="raw" id="raw">Show Raw</label><br>
           <label for="collapse"><input type="checkbox" name="collapse" id="collapse">Collapse JSON</label><br>
-          <input title="Supports JQ syntax" type="text" name="imageField" id="imageField" placeholder="Image Attribute" style="width:120px"><br>
-          <input type="text" name="imagePrefix" id="imagePrefix" placeholder="Image Prefix" style="width:120px"><br>
-          <input type="text" name="imageSuffix" id="imageSuffix" placeholder="Image Suffix" style="width:120px"><br>
+          <input title="Supports JQ syntax" type="text" name="imageField" id="imageField" placeholder="Image Attribute" style="width:227px"><br>
+          <input type="text" name="imagePrefix" id="imagePrefix" placeholder="Image Prefix" style="width:227px"><br>
+          <input type="text" name="imageSuffix" id="imageSuffix" placeholder="Image Suffix" style="width:227px"><br>
       </fieldset>
   </td><td>
       <fieldset>
@@ -60,7 +60,7 @@
           <input type="hidden" name="biasingProfile" id="biasingProfile">
           <input type="hidden" name="matchStrategy" id="matchStrategy">
           <input type="hidden" name="skipSemantish" id="skipSemantish">
-          <input type="text" name="wildcard" id="wildcard">
+          <input type="hidden" name="wildcard" id="wildcard">
           <c:forEach begin="0" end="4" varStatus="i">
             <input type="hidden" name="colSort${i.count}" id="colSort${i.count}">
             <input type="hidden" name="colDir${i.count}" id="colDir${i.count}">
@@ -69,7 +69,8 @@
 
       <fieldset>
           <legend>Navigation Control</legend>
-          <input type="text" name="includedNavigations" id="includedNavigations" placeholder="Included Navigations" style="width:125px"><br>
+          <input type="text" name="includedNavigations" id="includedNavigations" placeholder="Included Navigations" style="width:130px">
+          <input type="text" name="excludedNavigations" id="excludedNavigations" placeholder="Excluded Navigations" style="width:130px"><br>
           <input type="text" name="restrictNavigationName" id="restrictNavigationName" placeholder="Restrict by Navigation" style="width:135px">
           <input type="text" name="restrictNavigationCount" id="restrictNavigationCount" placeholder="Count" style="width:55px"><br>
           <label for="dontPruneRefinements"><input type="checkbox" name="dontPruneRefinements" id="dontPruneRefinements">Do not Prune Refinements</label><br>
