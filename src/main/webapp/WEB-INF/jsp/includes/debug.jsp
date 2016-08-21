@@ -39,7 +39,12 @@ Cause: ${cause}
         ${time}</span> ms:
     <a href="javascript:;" onclick="showRawQuery()">show curl >></a>
   <pre id="expandedQuery${index}" class="rawQuery" style="display:${cookie.showRawQuery.value ? 'block' : 'none'}">
-curl -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pretty"
+<c:set var="bridgeHeaderName" value="bridgeHeaders${index}"/><br>
+<c:set var="bridgeHeaders"><c:forEach var="bridgeHeader" items="${model[bridgeHeaderName]}"> -H "${bridgeHeader}"</c:forEach></c:set>
+curl ${bridgeHeaders} -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pretty"
+
+
+
   </pre>
     <br>
     JSON Response (<span

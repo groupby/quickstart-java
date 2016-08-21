@@ -369,6 +369,7 @@ public class NavigationController {
         // pass the results into the view.
         model.put("results" + i, results);
         model.put("resultsJson" + i, Mappers.writeValueAsString(results));
+        model.put("bridgeHeaders" + i, bridge.getHeaders());
       } catch (Exception e) {
         blipClient.send("customerId", customerId.toLowerCase(),
             "eventType", "error",
