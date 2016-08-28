@@ -142,7 +142,7 @@ function generateHash() {
     $('#cookieForm input').each(function(){
         var myId = $(this).attr('id');
         if ($.cookie(myId)) {
-            hashLocation += myId + '=' + $.cookie($(this).attr('id')) + '&';
+            hashLocation += myId + '=' + escape($.cookie($(this).attr('id'))) + '&';
         }
     });
     location.hash = hashLocation;
