@@ -310,7 +310,7 @@ public class NavigationController {
         skipSemantishStrings[i] = "false";
       }
     }
-    
+
     // If wildcard is on.
     String wildcard = getCookie(request, "wildcard", "").trim();
     String[] wildcardStrings = wildcard.split(",", -1);
@@ -507,7 +507,7 @@ public class NavigationController {
        */
       CloudBridge bridge = getCloudBridge(clientKey, customerId, skipCache);
 
-      Query query = OM.readValue(originalQuery, Query.class);
+      Query query = Mappers.readValue(originalQuery.getBytes(), Query.class, false);
       navigationName = navigationName.trim();
       Navigation availableNavigation = new Navigation().setName(navigationName);
 
