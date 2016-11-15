@@ -5,7 +5,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.groupbyinc.api.CloudBridge;
 import com.groupbyinc.api.Query;
-import com.groupbyinc.api.model.*;
+import com.groupbyinc.api.model.MatchStrategy;
+import com.groupbyinc.api.model.Navigation;
+import com.groupbyinc.api.model.PartialMatchRule;
+import com.groupbyinc.api.model.Record;
+import com.groupbyinc.api.model.Refinement;
+import com.groupbyinc.api.model.RefinementsResult;
+import com.groupbyinc.api.model.Results;
+import com.groupbyinc.api.model.Sort;
 import com.groupbyinc.api.request.RestrictNavigation;
 import com.groupbyinc.common.apache.commons.io.IOUtils;
 import com.groupbyinc.common.apache.commons.lang3.StringUtils;
@@ -35,7 +42,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import static com.groupbyinc.common.jackson.core.JsonParser.Feature.ALLOW_SINGLE_QUOTES;
@@ -53,8 +65,11 @@ public class NavigationController {
 
   private static final ObjectMapper OM = new ObjectMapper();
   private static final com.groupbyinc.common.jackson.databind.ObjectMapper OM_MATCH_STRATEGY = new com.groupbyinc.common.jackson.databind.ObjectMapper();
-
-
+  /**
+   * We hold all the bridges in a map so we're not creating a new one for each request.
+   * Ideally, there should only be one bridge per jvm and they are expensive to create but thread safe.
+   */
+  private static final Map<String, CloudBridge> BRIDGES = new HashMap<>();
   // The UrlBeautifier deconstructs a URL into a query object.  You can create as many url
   // beautifiers as you want which may correspond to different kinds of urls that you want
   // to generate.  Here we construct one called 'default' that we use for every search and
@@ -73,12 +88,6 @@ public class NavigationController {
     defaultUrlBeautifier.addReplacementRule('\\', ' ');
   }
 
-  /**
-   * We hold all the bridges in a map so we're not creating a new one for each request.
-   * Ideally, there should only be one bridge per jvm and they are expensive to create but thread safe.
-   */
-  private static final Map<String, CloudBridge> BRIDGES = new HashMap<>();
-
   private final BlipClient blipClient;
 
   @Autowired
@@ -86,13 +95,11 @@ public class NavigationController {
     this.blipClient = blipClient;
   }
 
-
   @RequestMapping({"**/index.html"})
   public String handleSearch(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     // Get the action from the request.
     String action = ServletRequestUtils.getStringParameter(request, "action", null);
-
 
     // Create the query object from the beautifier
     Query query = defaultUrlBeautifier.fromUrl(request.getRequestURI(), new Query());
@@ -258,8 +265,7 @@ public class NavigationController {
     // If the query is supposed to be beautified, and it was in fact in the URL params
     // send a redirect command to the browser to redirect to the beautified URL.
     String incoming = request.getRequestURI();
-    String beautified = request.getContextPath() + defaultUrlBeautifier.toUrl(
-        query.getQuery(), query.getNavigations());
+    String beautified = request.getContextPath() + defaultUrlBeautifier.toUrl(query.getQuery(), query.getNavigations());
     if (!beautified.startsWith(incoming)) {
       response.sendRedirect(beautified);
       return null;
@@ -283,7 +289,6 @@ public class NavigationController {
       biasingProfiles = new String[]{""};
     }
     model.put("biasingProfileCount", biasingProfiles.length);
-
 
     // If a specific match strategy is set.
     String matchStrategy = getCookie(request, "matchStrategy", "").trim();
@@ -361,20 +366,14 @@ public class NavigationController {
           populateImages(request, results.getRecords());
           model.put("time" + i, duration);
 
-          blipClient.send("customerId", customerId.toLowerCase(),
-              "eventType", "query",
-              "columns", String.valueOf(biasingProfiles.length),
-              "durationMillis", String.valueOf(duration));
+          blipClient.send("customerId", customerId.toLowerCase(), "eventType", "query", "columns", String.valueOf(biasingProfiles.length), "durationMillis", String.valueOf(duration));
         }
         // pass the results into the view.
         model.put("results" + i, results);
         model.put("resultsJson" + i, Mappers.writeValueAsString(results));
         model.put("bridgeHeaders" + i, bridge.getHeaders());
       } catch (Exception e) {
-        blipClient.send("customerId", customerId.toLowerCase(),
-            "eventType", "error",
-            "errorType", "searchError",
-            "message", e.getMessage());
+        blipClient.send("customerId", customerId.toLowerCase(), "eventType", "error", "errorType", "searchError", "message", e.getMessage());
         LOG.warning(e.getMessage());
         model.put("error" + i, e.getMessage());
         model.put("cause" + i, e.getCause());
@@ -414,7 +413,6 @@ public class NavigationController {
       model.put("sort" + columns + "Direction", cd.get("colDirs" + columns));
     }
 
-
     List<List<Sort>> colSorts = new ArrayList<>();
     for (int column = 0; column < length; column++) {
       List<Sort> sorts = null;
@@ -427,8 +425,7 @@ public class NavigationController {
             }
             Sort sort = new Sort();
             sort.setField(cs.get("colSorts" + row)[column]);
-            if (StringUtils.isNotBlank(cd.get("colDirs" + row)[column])
-                && cd.get("colDirs" + row)[column].toLowerCase().startsWith("d")) {
+            if (StringUtils.isNotBlank(cd.get("colDirs" + row)[column]) && cd.get("colDirs" + row)[column].toLowerCase().startsWith("d")) {
               sort.setOrder(Sort.Order.Descending);
             } else {
               sort.setOrder(Sort.Order.Ascending);
@@ -471,7 +468,7 @@ public class NavigationController {
         HttpEntity responseEntity = response.getEntity();
         LOG.info(response.getStatusLine().toString());
         if (response.getStatusLine().getStatusCode() == 200) {
-          String serverResponse = IOUtils.toString(responseEntity.getContent());
+          String serverResponse = IOUtils.toString(responseEntity.getContent(), "UTF-8");
           LOG.info(serverResponse);
           Map collectionsMap = Mappers.readValue(serverResponse.getBytes("UTF-8"), Map.class, false);
           Map collectionMap = (Map) collectionsMap.get("collections");
@@ -493,8 +490,7 @@ public class NavigationController {
   }
 
   @RequestMapping(method = RequestMethod.POST, value = "**/moreRefinements.html")
-  public String getMoreNavigations(Map<String, Object> model,
-                                   HttpServletRequest request) throws ServletException {
+  public String getMoreNavigations(Map<String, Object> model, HttpServletRequest request) throws ServletException {
     String customerId = getCookie(request, "customerId", "").trim();
     try {
       String clientKey = getCookie(request, "clientKey", "").trim();
@@ -516,10 +512,7 @@ public class NavigationController {
       long start = System.currentTimeMillis();
       RefinementsResult refinementsResults = bridge.refinements(query, navigationName);
       long duration = System.currentTimeMillis() - start;
-      blipClient.send("eventType", "moreRefinements",
-          "customerId", customerId.toLowerCase(),
-          "navigationName", navigationName,
-          "durationMillis", String.valueOf(duration));
+      blipClient.send("eventType", "moreRefinements", "customerId", customerId.toLowerCase(), "navigationName", navigationName, "durationMillis", String.valueOf(duration));
 
       if (refinementsResults != null && refinementsResults.getNavigation() != null) {
         List<Refinement> refinementList = refinementsResults.getNavigation().getRefinements();
@@ -535,10 +528,7 @@ public class NavigationController {
       model.put("nav", availableNavigation);
       return "/includes/navLink";
     } catch (IOException e) {
-      blipClient.send("customerId", customerId.toLowerCase(),
-          "eventType", "error",
-          "errorType", "moreRefinements",
-          "message", e.getMessage());
+      blipClient.send("customerId", customerId.toLowerCase(), "eventType", "error", "errorType", "moreRefinements", "message", e.getMessage());
       throw new ServletException(e);
     }
   }
@@ -554,7 +544,6 @@ public class NavigationController {
     }
     return BRIDGES.get(key);
   }
-
 
   /**
    * Helper method to get cookie values.  We use this for storing the clientKey and customerId, though
@@ -596,6 +585,5 @@ public class NavigationController {
         LOG.warning(msg);
       }
     }
-
   }
 }
