@@ -330,7 +330,6 @@ public class NavigationController {
     // deal with column sorts.
     List<Sort> originalSorts = new ArrayList<>(query.getSort());
     List<List<Sort>> colSorts = getColSorts(request, biasingProfiles.length, model);
-    model.put("moreRefinementsQuery", OM.writeValueAsString(query));
     for (int i = 0; i < biasingProfiles.length; i++) {
       String profile = biasingProfiles[i].trim();
       String strategy = matchStrategies[i].trim();
@@ -351,6 +350,9 @@ public class NavigationController {
         query.getSort().addAll(colSorts.get(i));
       }
       // pass the raw json representation of the query into the view regardless of errors
+      if (i == 0) {
+        model.put("moreRefinementsQuery", Mappers.writeValueAsString(query));
+      }
       model.put("rawQuery" + i, query.setReturnBinary(false).getBridgeJson(clientKey));
       model.put("originalQuery" + i, query);
       query.setReturnBinary(true);
