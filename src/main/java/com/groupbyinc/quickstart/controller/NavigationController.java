@@ -155,6 +155,11 @@ public class NavigationController {
       query.setVisitorId(visitorId);
     }
 
+    String sessionId = getCookie(request, "sessionId", "").trim();
+    if (StringUtils.isNotBlank(sessionId)) {
+      query.setSessionId(sessionId);
+    }
+
     // Restrict Navigation (this performs two queries so may be slow)
     String restrictNavigationName = getCookie(request, "restrictNavigationName", "").trim();
     if (StringUtils.isNotBlank(restrictNavigationName)) {
