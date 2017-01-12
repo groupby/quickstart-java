@@ -3,7 +3,7 @@
 <div class="customerToolbar">
 <span>Customer:</span> ${empty cookie.customerId.value ? 'not set' : cookie.customerId.value}
 <span>Area:</span> ${empty cookie.area.value ? 'Production' : cookie.area.value}
-<span>Collection:</span> ${empty cookie.collection.value ? 'default' : cookie.collection.value}</a>
+<span>Collection:</span> <a>${empty cookie.collection.value ? 'default' : cookie.collection.value}</a>
 </div>
 <a href="javascript:;" onclick="showForm()">Show form >></a>
 <div id="settings" style="display: ${cookie.showForm.value or empty cookie.clientKey.value or empty cookie.customerId.value ? 'block' : 'none'}">
@@ -13,7 +13,12 @@
       <legend>Connection</legend>
       <input type="text" name="customerId" id="customerId" placeholder="Customer ID / Domain" style="width:160px">
       <input type="text" name="clientKey" id="clientKey" placeholder="Client Key" style="width:260px;"><br>
-      <input type="text" name="collection" id="collection" placeholder="Collection" style="width:180px">
+    <span style="position: relative">
+        <input type="text" name="collection" id="collection" placeholder="Collection" style="width:180px">
+        <c:if test="${collectionCount > 0}">
+          <div style="display: inline; position: absolute; right: 2px; top: 1px; color: black">(${collectionCount})</div>
+        </c:if>
+      </span>
   </fieldset>
   </td><td>
   <fieldset>
