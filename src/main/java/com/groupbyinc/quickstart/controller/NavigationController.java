@@ -27,6 +27,8 @@ import com.groupbyinc.common.apache.http.message.BasicHeader;
 import com.groupbyinc.common.blip.BlipClient;
 import com.groupbyinc.common.jackson.Mappers;
 import com.groupbyinc.common.jackson.core.JsonParser;
+import com.groupbyinc.quickstart.controller.model.Collection;
+import com.groupbyinc.quickstart.controller.model.CollectionsResult;
 import com.groupbyinc.util.UrlBeautifier;
 import net.thisptr.jackson.jq.JsonQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import static com.groupbyinc.common.jackson.core.JsonParser.Feature.ALLOW_SINGLE_QUOTES;
@@ -283,7 +284,14 @@ public class NavigationController {
     // put back the customerId
     model.put("customerId", customerId);
 
-    model.put("collections", getCollections(customerId, clientKey));
+    List<Collection> collections = getCollections(customerId, clientKey);
+    model.put("collections", collections);
+    int currentCollectionCount = collections.stream()
+        .filter(d -> StringUtils.equals(d.getValue(), collection))
+        .map(Collection::getCount)
+        .findFirst()
+        .orElse(-1);
+    model.put("collectionCount", currentCollectionCount);
 
     // If a specific biasing profile is set in the url params set it on the query.
     String biasingProfile = getCookie(request, "biasingProfile", "").trim();
@@ -464,8 +472,8 @@ public class NavigationController {
   }
 
   @SuppressWarnings("unchecked")
-  public static List<String> getCollections(String customerId, String clientKey) {
-    List<String> collections = new ArrayList<>();
+  public static List<Collection> getCollections(String customerId, String clientKey) {
+    List<Collection> collections = new ArrayList<>();
     if (!StringUtils.isBlank(customerId) && !StringUtils.isBlank(clientKey)) {
       try {
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -477,18 +485,19 @@ public class NavigationController {
         if (response.getStatusLine().getStatusCode() == 200) {
           String serverResponse = IOUtils.toString(responseEntity.getContent(), "UTF-8");
           LOG.info(serverResponse);
-          Map collectionsMap = Mappers.readValue(serverResponse.getBytes("UTF-8"), Map.class, false);
-          Map collectionMap = (Map) collectionsMap.get("collections");
-          if (collectionMap != null) {
-            Set<String> set = collectionMap.keySet();
-            for (String collection : set) {
-              if (!collection.endsWith("-variants")) {
-                collections.add(collection);
+          CollectionsResult collectionsResult = Mappers.readValue(serverResponse.getBytes("UTF-8"), CollectionsResult.class, false);
+          Map<String, Integer> collectionsMap = collectionsResult.getCollections();
+          if (collectionsMap != null) {
+            for (Map.Entry<String, Integer> entry : collectionsMap.entrySet()) {
+              if (!entry.getKey()
+                  .endsWith("-variants")) {
+                collections.add(new Collection().setLabel(entry.getKey() + " (" + entry.getValue() + ")")
+                                    .setValue(entry.getKey())
+                                    .setCount(entry.getValue()));
               }
             }
           }
         }
-        return collections;
       } catch (IOException e) {
         LOG.warning("Couldn't load collections: " + e.getMessage());
       }
