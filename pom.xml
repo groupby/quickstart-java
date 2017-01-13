@@ -17,7 +17,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
-    <groupbyinc.api.version>2.3.68</groupbyinc.api.version>
+    <groupbyinc.api.version>2.3.87</groupbyinc.api.version>
+    <groupbyinc.common.api.version>82</groupbyinc.common.api.version>
     <groupbyinc.docker.base.version>1.8</groupbyinc.docker.base.version>
     <groupbyinc.docker.repo>docker.groupbyinc.com</groupbyinc.docker.repo>
     <groupbyinc.docker.image.name>docker.groupbyinc.com/${project.artifactId}</groupbyinc.docker.image.name>
@@ -39,7 +40,7 @@
     <dependency>
       <groupId>com.groupbyinc</groupId>
       <artifactId>common-blip-client</artifactId>
-      <version>63</version>
+      <version>${groupbyinc.common.api.version}</version>
     </dependency>
 
     <dependency>
