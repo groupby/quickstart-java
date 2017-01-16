@@ -384,6 +384,7 @@ public class NavigationController {
           blipClient.send("customerId", customerId.toLowerCase(), "eventType", "query", "columns", String.valueOf(biasingProfiles.length), "durationMillis", String.valueOf(duration));
         }
         // pass the results into the view.
+        model.put("recordLimitReached", results.getMetadata().isRecordLimitReached());
         model.put("results" + i, results);
         model.put("resultsJson" + i, Mappers.writeValueAsString(results));
         model.put("bridgeHeaders" + i, bridge.getHeaders());
