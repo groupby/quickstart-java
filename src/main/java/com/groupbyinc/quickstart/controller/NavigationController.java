@@ -52,8 +52,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static com.groupbyinc.api.config.ConnectionConfiguration.DEFAULT_CONNECTION_REQUEST_TIMEOUT;
 import static com.groupbyinc.api.config.ConnectionConfiguration.DEFAULT_CONNECT_TIMEOUT;
-import static com.groupbyinc.api.config.ConnectionConfiguration.DEFAULT_SOCKET_TIMEOUT;
 import static com.groupbyinc.common.jackson.core.JsonParser.Feature.ALLOW_SINGLE_QUOTES;
 import static java.util.Collections.singletonList;
 
@@ -74,6 +74,7 @@ public class NavigationController {
    * Ideally, there should only be one bridge per jvm and they are expensive to create but thread safe.
    */
   private static final Map<String, CloudBridge> BRIDGES = new HashMap<>();
+  private static final int NAV_CONTROLLER_SOCKET_TIMEOUT = 30000;
   // The UrlBeautifier deconstructs a URL into a query object.  You can create as many url
   // beautifiers as you want which may correspond to different kinds of urls that you want
   // to generate.  Here we construct one called 'default' that we use for every search and
@@ -556,7 +557,8 @@ public class NavigationController {
   private CloudBridge getCloudBridge(String clientKey, String customerId, boolean skipCache) {
     String key = customerId + clientKey + String.valueOf(skipCache);
     if (!BRIDGES.containsKey(key)) {
-      CloudBridge cb = new CloudBridge(clientKey, customerId, new ConnectionConfiguration(DEFAULT_CONNECT_TIMEOUT, 30000, DEFAULT_SOCKET_TIMEOUT));
+      ConnectionConfiguration config = new ConnectionConfiguration(DEFAULT_CONNECT_TIMEOUT, DEFAULT_CONNECTION_REQUEST_TIMEOUT, NAV_CONTROLLER_SOCKET_TIMEOUT);
+      CloudBridge cb = new CloudBridge(clientKey, customerId, config);
       if (skipCache) {
         cb.setCachingEnabled(false);
       }
