@@ -556,7 +556,7 @@ public class NavigationController {
   private CloudBridge getCloudBridge(String clientKey, String customerId, boolean skipCache) {
     String key = customerId + clientKey + String.valueOf(skipCache);
     if (!BRIDGES.containsKey(key)) {
-      CloudBridge cb = new CloudBridge(clientKey, customerId, new ConnectionConfiguration(DEFAULT_CONNECT_TIMEOUT, 10000, DEFAULT_SOCKET_TIMEOUT));
+      CloudBridge cb = new CloudBridge(clientKey, customerId, new ConnectionConfiguration(DEFAULT_CONNECT_TIMEOUT, 30000, DEFAULT_SOCKET_TIMEOUT));
       if (skipCache) {
         cb.setCachingEnabled(false);
       }
