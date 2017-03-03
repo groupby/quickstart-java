@@ -135,8 +135,9 @@
                 <cmd>
                   <exec>
                     <arg>java</arg>
-                    <arg>-Xmx196m</arg>
-                    <arg>-Xms196m</arg>
+                    <arg>-Xmx1g</arg>
+                    <arg>-Xms1g</arg>
+                    <arg>-XX:+ExitOnOutOfMemoryError</arg>
                     <arg>-Djava.security.egd=file:/dev/./urandom</arg>
                     <arg>-jar</arg>
                     <arg>/${project.build.finalName}.war</arg>
