@@ -31,6 +31,10 @@
     <%@include file="semantish.jsp"%>
     <%@include file="wildcard.jsp"%>
     </fieldset>
+    <fieldset style="display:${cookie.showColumnSpecifics.value ? 'block' : 'none'}">
+    <legend>Personalized Relevance</legend>
+    <%@include file="sessionId.jsp"%>
+    </fieldset>
     </div>
 
     <ol id="replacementRow${b.index}" style="display: none">
@@ -93,6 +97,16 @@
         strategy = strategy.substring(0, strategy.length-1);
         $('#matchStrategy').val(strategy);
         $('#matchStrategy').trigger('change');
+    });
+
+    $('.sessionIdInput').change(function(e){
+      var sessionId = '';
+      $('.sessionIdInput').each(function(){
+        sessionId += $(this).val() +  "|"
+      });
+      sessionId = sessionId.substring(0, sessionId.length-1);
+      $('#sessionId').val(sessionId);
+      $('#sessionId').trigger('change');
     });
 
     $('.skipSemantishInput').change(function(){

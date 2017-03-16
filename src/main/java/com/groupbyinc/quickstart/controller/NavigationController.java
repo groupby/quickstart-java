@@ -83,9 +83,11 @@ public class NavigationController {
 
   static {
     OM.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    OM_MATCH_STRATEGY.enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES).enable(ALLOW_SINGLE_QUOTES);
+    OM_MATCH_STRATEGY.enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
+        .enable(ALLOW_SINGLE_QUOTES);
     UrlBeautifier.createUrlBeautifier("default");
-    defaultUrlBeautifier = UrlBeautifier.getUrlBeautifiers().get("default");
+    defaultUrlBeautifier = UrlBeautifier.getUrlBeautifiers()
+        .get("default");
     defaultUrlBeautifier.addRefinementMapping('s', "size");
     defaultUrlBeautifier.setSearchMapping('q');
     defaultUrlBeautifier.setAppend("/index.html");
@@ -158,11 +160,6 @@ public class NavigationController {
     String visitorId = getCookie(request, "visitorId", "").trim();
     if (StringUtils.isNotBlank(visitorId)) {
       query.setVisitorId(visitorId);
-    }
-
-    String sessionId = getCookie(request, "sessionId", "").trim();
-    if (StringUtils.isNotBlank(sessionId)) {
-      query.setSessionId(sessionId);
     }
 
     // Restrict Navigation (this performs two queries so may be slow)
@@ -344,6 +341,17 @@ public class NavigationController {
       }
     }
 
+    // If session ID(s) are set.
+    String sessionIds = getCookie(request, "sessionId", "").trim();
+    String[] sessionIdStrings = sessionIds.split("\\|", -1);
+    if (sessionIdStrings.length != biasingProfiles.length) {
+      sessionIdStrings = new String[biasingProfiles.length];
+      for (int i = 0; i < sessionIdStrings.length; i++) {
+        sessionIdStrings[i] = "";
+      }
+    }
+    model.put("sessionId", sessionIdStrings);
+
     // deal with column sorts.
     List<Sort> originalSorts = new ArrayList<>(query.getSort());
     List<List<Sort>> colSorts = getColSorts(request, biasingProfiles.length, model);
@@ -351,11 +359,16 @@ public class NavigationController {
       String profile = biasingProfiles[i].trim();
       String strategy = matchStrategies[i].trim();
       String wild = wildcardStrings[i];
-      query.getSort().clear();
-      query.getSort().addAll(originalSorts);
+      query.getSort()
+          .clear();
+      query.getSort()
+          .addAll(originalSorts);
       query.setBiasingProfile(null);
       query.setMatchStrategy(null);
       query.setWildcardSearchEnabled("true".equals(wild));
+      if (StringUtils.isNotBlank(sessionIdStrings[i])) {
+        query.setSessionId(sessionIdStrings[i]);
+      }
       if (StringUtils.isNotBlank(profile)) {
         query.setBiasingProfile(profile);
       }
@@ -363,14 +376,17 @@ public class NavigationController {
         query.setMatchStrategy(createMatchStrategy(matchStrategyErrors, strategy));
       }
       if (colSorts.get(i) != null) {
-        query.getSort().clear();
-        query.getSort().addAll(colSorts.get(i));
+        query.getSort()
+            .clear();
+        query.getSort()
+            .addAll(colSorts.get(i));
       }
       // pass the raw json representation of the query into the view regardless of errors
       if (i == 0) {
         model.put("moreRefinementsQuery", Mappers.writeValueAsString(query));
       }
-      model.put("rawQuery" + i, query.setReturnBinary(false).getBridgeJson(clientKey));
+      model.put("rawQuery" + i, query.setReturnBinary(false)
+          .getBridgeJson(clientKey));
       model.put("originalQuery" + i, query);
       query.setReturnBinary(true);
       try {
@@ -388,7 +404,8 @@ public class NavigationController {
           blipClient.send("customerId", customerId.toLowerCase(), "eventType", "query", "columns", String.valueOf(biasingProfiles.length), "durationMillis", String.valueOf(duration));
         }
         // pass the results into the view.
-        model.put("recordLimitReached", results.getMetadata().isRecordLimitReached());
+        model.put("recordLimitReached", results.getMetadata()
+            .isRecordLimitReached());
         model.put("results" + i, results);
         model.put("resultsJson" + i, Mappers.writeValueAsString(results));
         model.put("bridgeHeaders" + i, bridge.getHeaders());
@@ -410,14 +427,17 @@ public class NavigationController {
   }
 
   private void ensureHeader(CloudBridge bridge, String headerName, String headerValue) {
-    Iterator<Header> iterator = bridge.getHeaders().iterator();
+    Iterator<Header> iterator = bridge.getHeaders()
+        .iterator();
     while (iterator.hasNext()) {
       Header header = iterator.next();
-      if (header.getName().equalsIgnoreCase(headerName)) {
+      if (header.getName()
+          .equalsIgnoreCase(headerName)) {
         iterator.remove();
       }
     }
-    bridge.getHeaders().add(new BasicHeader(headerName, headerValue));
+    bridge.getHeaders()
+        .add(new BasicHeader(headerName, headerValue));
   }
 
   @SuppressWarnings("unchecked")
@@ -445,7 +465,8 @@ public class NavigationController {
             }
             Sort sort = new Sort();
             sort.setField(cs.get("colSorts" + row)[column]);
-            if (StringUtils.isNotBlank(cd.get("colDirs" + row)[column]) && cd.get("colDirs" + row)[column].toLowerCase().startsWith("d")) {
+            if (StringUtils.isNotBlank(cd.get("colDirs" + row)[column]) && cd.get("colDirs" + row)[column].toLowerCase()
+                .startsWith("d")) {
               sort.setOrder(Sort.Order.Descending);
             } else {
               sort.setOrder(Sort.Order.Ascending);
@@ -465,7 +486,8 @@ public class NavigationController {
       MatchStrategy matchStrategy = new MatchStrategy();
       List rules = (List) ms.get("rules");
       for (Object rule : rules) {
-        matchStrategy.getRules().add(OM_MATCH_STRATEGY.readValue(OM_MATCH_STRATEGY.writeValueAsString(rule), PartialMatchRule.class));
+        matchStrategy.getRules()
+            .add(OM_MATCH_STRATEGY.readValue(OM_MATCH_STRATEGY.writeValueAsString(rule), PartialMatchRule.class));
       }
       matchStrategyErrors.add("");
       return matchStrategy;
@@ -486,8 +508,10 @@ public class NavigationController {
         getCollections.setEntity(new StringEntity("{clientKey: '" + clientKey + "'}", "UTF-8"));
         CloseableHttpResponse response = httpClient.execute(getCollections);
         HttpEntity responseEntity = response.getEntity();
-        LOG.info(response.getStatusLine().toString());
-        if (response.getStatusLine().getStatusCode() == 200) {
+        LOG.info(response.getStatusLine()
+                     .toString());
+        if (response.getStatusLine()
+                .getStatusCode() == 200) {
           String serverResponse = IOUtils.toString(responseEntity.getContent(), "UTF-8");
           LOG.info(serverResponse);
           CollectionsResult collectionsResult = Mappers.readValue(serverResponse.getBytes("UTF-8"), CollectionsResult.class, false);
@@ -529,18 +553,22 @@ public class NavigationController {
       Navigation availableNavigation = new Navigation().setName(navigationName);
 
       Results results = new Results();
-      results.setSelectedNavigation(new ArrayList<>(query.getNavigations().values()));
+      results.setSelectedNavigation(new ArrayList<>(query.getNavigations()
+                                                        .values()));
       long start = System.currentTimeMillis();
       RefinementsResult refinementsResults = bridge.refinements(query, navigationName);
       long duration = System.currentTimeMillis() - start;
       blipClient.send("eventType", "moreRefinements", "customerId", customerId.toLowerCase(), "navigationName", navigationName, "durationMillis", String.valueOf(duration));
 
       if (refinementsResults != null && refinementsResults.getNavigation() != null) {
-        List<Refinement> refinementList = refinementsResults.getNavigation().getRefinements();
-        if (refinementsResults.getNavigation().isOr()) {
+        List<Refinement> refinementList = refinementsResults.getNavigation()
+            .getRefinements();
+        if (refinementsResults.getNavigation()
+            .isOr()) {
           availableNavigation.setOr(true);
         }
-        availableNavigation.setDisplayName(refinementsResults.getNavigation().getDisplayName());
+        availableNavigation.setDisplayName(refinementsResults.getNavigation()
+                                               .getDisplayName());
         availableNavigation.setRefinements(refinementList);
       }
       results.setQuery(query.getQuery());
@@ -575,7 +603,8 @@ public class NavigationController {
     Cookie[] cookies = pRequest.getCookies();
     if (pRequest.getCookies() != null) {
       for (Cookie cookie : cookies) {
-        if (cookie.getName().equals(pName)) {
+        if (cookie.getName()
+            .equals(pName)) {
           try {
             return URLDecoder.decode(cookie.getValue(), "UTF-8");
           } catch (UnsupportedEncodingException e) {
@@ -599,11 +628,15 @@ public class NavigationController {
         JsonNode in = MAPPER.readTree(MAPPER.writeValueAsString(record));
         List<JsonNode> result = q.apply(in);
         if (result != null && !result.isEmpty()) {
-          record.getAllMeta().put("gbiInjectedImage", result.get(0).asText());
+          record.getAllMeta()
+              .put(
+                  "gbiInjectedImage", result.get(0)
+                      .asText());
         }
       } catch (IOException e) {
         String msg = "Could not find image with jq query: " + imageField + " error: " + e.getMessage();
-        record.getAllMeta().put("gbiInjectedImageError", msg);
+        record.getAllMeta()
+            .put("gbiInjectedImageError", msg);
         LOG.warning(msg);
       }
     }
