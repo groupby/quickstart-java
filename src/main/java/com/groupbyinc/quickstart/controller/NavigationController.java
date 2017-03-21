@@ -286,6 +286,7 @@ public class NavigationController {
     model.put("customerId", customerId);
 
     List<Collection> collections = getCollections(customerId, clientKey);
+    LOG.info(collections.toString());
     model.put("collections", collections);
     int currentCollectionCount = collections.stream()
         .filter(d -> StringUtils.equals(d.getValue(), collection))
@@ -505,7 +506,7 @@ public class NavigationController {
       try {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost getCollections = new HttpPost("https://" + customerId + ".groupbycloud.com/api/v1/collections");
-        getCollections.setEntity(new StringEntity("{clientKey: '" + clientKey + "'}", "UTF-8"));
+        getCollections.setEntity(new StringEntity("{\"clientKey\": \"" + clientKey + "\"}", "UTF-8"));
         CloseableHttpResponse response = httpClient.execute(getCollections);
         HttpEntity responseEntity = response.getEntity();
         LOG.info(response.getStatusLine()
