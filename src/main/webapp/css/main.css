@@ -382,6 +382,10 @@ fieldset {
 }
 .error {
     color:yellow;
+    font-weight:bold;
+}
+.warnings {
+    color:yellow;
 }
 .columnControls a {
     margin-left:10px;
