@@ -1,6 +1,3 @@
-<c:set var="name" value="error${index}"/>
-<c:set var="error" value="${model[name]}"/>
-
 <c:set var="name" value="resultsJson${index}"/>
 <c:set var="resultsJson" value="${model[name]}"/>
 
@@ -12,14 +9,7 @@
 
 <c:set var="name" value="time${index}"/>
 <c:set var="time" value="${model[name]}"/>
-    <c:if test="${!empty error or !empty results.errors}">
-        <span class="error">
-            <pre style="white-space:normal">
-            ${error}
-            ${results.errors}
-            </pre>
-        </span>
-    </c:if>
+
 <fieldset style="display:${cookie.showColumnSpecifics.value ? 'block' : 'none'}">
 <legend>Query Inspection</legend>
 <div id="debug${index}">
