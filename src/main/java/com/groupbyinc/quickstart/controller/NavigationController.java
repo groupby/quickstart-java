@@ -15,6 +15,7 @@ import com.groupbyinc.api.model.RefinementsResult;
 import com.groupbyinc.api.model.Results;
 import com.groupbyinc.api.model.Sort;
 import com.groupbyinc.api.request.RestrictNavigation;
+import com.groupbyinc.common.apache.commons.collections4.CollectionUtils;
 import com.groupbyinc.common.apache.commons.io.IOUtils;
 import com.groupbyinc.common.apache.commons.lang3.StringUtils;
 import com.groupbyinc.common.apache.http.Header;
@@ -410,6 +411,9 @@ public class NavigationController {
         model.put("results" + i, results);
         model.put("resultsJson" + i, Mappers.writeValueAsString(results));
         model.put("bridgeHeaders" + i, bridge.getHeaders());
+        if (CollectionUtils.isNotEmpty(results.getWarnings())) {
+          model.put("warnings" + i, results.getWarnings());
+        }
       } catch (Exception e) {
         blipClient.send("customerId", customerId.toLowerCase(), "eventType", "error", "errorType", "searchError", "message", e.getMessage());
         LOG.warning(e.getMessage());
