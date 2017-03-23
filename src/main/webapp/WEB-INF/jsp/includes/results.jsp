@@ -6,6 +6,9 @@
   <tr>
 
     <c:forEach begin="0" end="${biasingProfileCount -1}" varStatus="b">
+    <c:set var="name" value="error${b.index}"/>
+    <c:set var="error" value="${model[name]}"/>
+
     <c:set var="name" value="results${b.index}"/>
     <c:set var="results" value="${model[name]}"/>
     <td class="recordColumn recordColumn${b.index}" style="padding-right:2px;" valign="top" width="width:${width}%">
@@ -19,10 +22,33 @@
           <a href="javascript:;" onclick="addColumn(${b.index})">copy</a>
         </div>
         <a href="javascript:;" onclick="showColumnSpecifics()">Show Column Specifics >></a><br>
-        <span class="error"><pre>${matchStrategyErrors[b.index]}</pre></span>
-        <c:forEach items="${results.warnings}" var="warning">
-          <span class="warnings"><pre>Warning: ${warning}</pre></span>
-        </c:forEach>
+
+        <%--Only show error/warning box if there are some--%>
+        <c:if test="${!empty matchStrategyErrors[b.index] or !empty results.warnings or (!empty error or !empty results.errors)}">
+          <fieldset><legend>Errors & Warnings</legend>
+          <c:if test="${!empty matchStrategyErrors[b.index]}">
+            <div class="error">
+              <pre>${matchStrategyErrors[b.index]}</pre>
+            </div>
+          </c:if>
+          <c:if test="${!empty results.warnings}">
+            <div class="warnings">
+              <c:forEach items="${results.warnings}" var="warning">
+                <pre>Warning: ${warning}</pre>
+              </c:forEach>
+            </div>
+          </c:if>
+          <c:if test="${!empty error or !empty results.errors}">
+            <div class="error">
+              <pre style="white-space:normal">
+              ${error}
+              ${results.errors}
+              </pre>
+            </div>
+          </c:if>
+          </fieldset>
+        </c:if>
+
         <%@include file="debug.jsp" %>
 
         <fieldset style="display:${cookie.showColumnSpecifics.value ? 'block' : 'none'}">
@@ -62,7 +88,7 @@
     $('.highlightCorresponding').removeClass('highlight');
   });
 
-  $('.strategyInput, .biasingInput, .sortInput, .sortDir').keyup(function (e) {
+  $('.strategyInput, .biasingInput, .sortInput, .sortDir, .sessionIdInput').keyup(function (e) {
     var code = (e.keyCode ? e.keyCode : e.which);
 
     if (code == 13 && !$(this).hasClass('strategyInput')) {
