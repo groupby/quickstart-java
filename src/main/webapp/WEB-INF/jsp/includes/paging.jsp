@@ -1,4 +1,4 @@
-<div class="page">
+<div class="page _50">
  	<c:if test="${results.totalRecordCount>=0 && results.pageInfo.recordStart > 1}">
 		<c:set var="page_to_go_back">
 		<c:if test="${!empty cookie.pageSize.value}">
@@ -9,13 +9,13 @@
 		</c:if>
 		</c:set>
 			<c:if test="${page_to_go_back>0}">
-				<a href="javascript:;" onclick="$('#p').val('${page_to_go_back}');$('#form').submit()">Prev Page</a>
+				<a href="javascript:;" onclick="$('#p').val('${page_to_go_back}');$('#form').submit()" title="Previous Page" class="prev-page"><span>>Previous Page</span></a>
 			</c:if>
 			<c:if test="${page_to_go_back<=0}">
-				<a href="javascript:;" onclick="$('#p').val('0');$('#form').submit()">Prev Page</a>
+				<a href="javascript:;" onclick="$('#p').val('0');$('#form').submit()" title="Previous Page" class="prev-page"><span>>Previous Page</span></a>
 			</c:if>
 	</c:if>
  	<c:if test="${results.totalRecordCount>0 && results.pageInfo.recordEnd < results.totalRecordCount}">
-		<a href="javascript:;" onclick="$('#p').val('${results.pageInfo.recordEnd}');$('#form').submit()">Next Page</a>
+		<a href="javascript:;" onclick="$('#p').val('${results.pageInfo.recordEnd}');$('#form').submit()" title="Next Page" class="next-page"><span>Next Page</span></a>
 	</c:if>
 </div>

@@ -1,5 +1,8 @@
 <c:if test="${results.totalRecordCount > 0 }">
-  <div>Records ${results.pageInfo['recordStart']} - ${results.pageInfo['recordEnd']} of <fmt:formatNumber pattern="#,###">${results.totalRecordCount}</fmt:formatNumber><c:if test="${recordLimitReached}">+</c:if></div>
+  <div class="record-count _50">
+    Showing Records ${results.pageInfo['recordStart']} - ${results.pageInfo['recordEnd']} of <fmt:formatNumber pattern="#,###">${results.totalRecordCount}</fmt:formatNumber><c:if test="${recordLimitReached}">+</c:if>
+    <a href="javascript:;" onclick="showColumnSpecifics()" class="btn sml">Column Details</a>
+  </div>
 </c:if>
 
 <c:if test="${results.totalRecordCount == 0 }">

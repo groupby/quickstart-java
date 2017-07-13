@@ -1,31 +1,24 @@
-<%@include file="tags.jsp" %>
-<c:set var="biasingProfileCount" value="${model.biasingProfileCount}"/>
-<c:set var="width" value="${100/biasingProfileCount}"/>
-<div id="scratchArea" style="display: none;"></div>
-<table width="100%">
-  <tr>
 
-    <c:forEach begin="0" end="${biasingProfileCount -1}" varStatus="b">
+
+<%@include file="tags.jsp" %>
+
+<c:set var="biasingProfileCount" value="${model.biasingProfileCount}"/>
+
+<fmt:formatNumber var="formattedWidth" type="number" minFractionDigits="0" maxFractionDigits="0" value="${100/biasingProfileCount}" />
+<c:set var="width" value="${formattedWidth}" />
+
+<div id="scratchArea" style="display: none;"></div>
+<div class="row">
+  <c:forEach begin="0" end="${biasingProfileCount -1}" varStatus="b">
     <c:set var="name" value="error${b.index}"/>
     <c:set var="error" value="${model[name]}"/>
-
     <c:set var="name" value="results${b.index}"/>
     <c:set var="results" value="${model[name]}"/>
-    <td class="recordColumn recordColumn${b.index}" style="padding-right:2px;" valign="top" width="width:${width}%">
-
+    <div class="recordColumn recordColumn${b.index} _${width}">
       <c:set var="index" value="${b.index}"/>
-      <div class="columnSpecifics">
-        <div class="columnControls">
-          <c:if test="${b.index > 0}">
-            <a href="javascript:;" onclick="removeColumn(${b.index});">delete</a>
-          </c:if>
-          <a href="javascript:;" onclick="addColumn(${b.index})">copy</a>
-        </div>
-        <a href="javascript:;" onclick="showColumnSpecifics()">Show Column Specifics >></a><br>
-
-        <%--Only show error/warning box if there are some--%>
+      <%--Only show error/warning box if there are some--%>
         <c:if test="${!empty matchStrategyErrors[b.index] or !empty results.warnings or (!empty error or !empty results.errors)}">
-          <fieldset><legend>Errors & Warnings</legend>
+          
           <c:if test="${!empty matchStrategyErrors[b.index]}">
             <div class="error">
               <pre>${matchStrategyErrors[b.index]}</pre>
@@ -46,39 +39,79 @@
               </pre>
             </div>
           </c:if>
-          </fieldset>
+          
         </c:if>
+      <div class="columnSpecifics row" style="display:${cookie.showColumnSpecifics.value ? 'block' : 'none'}">
+        <div class="row">
+          <%@include file="debug.jsp" %>
 
-        <%@include file="debug.jsp" %>
+          <fieldset>
+            <legend><span>Relevance &amp; Recall</span></legend>
+            <input type="text" id="biasing${b.index}" class="biasingInput" value="${results.biasingProfile}" placeholder="Biasing Profile" style="width:220px;">
+            <br>
+            <%@include file="matchStrategy.jsp" %>
+            <%@include file="sort.jsp" %>
+            <%@include file="semantish.jsp" %>
+            <%@include file="wildcard.jsp" %>
+            <div class="fieldset__section-header">
+                <label>Personalized Relevance</label>
+            </div>
+            <%@include file="sessionId.jsp" %>
+          </fieldset>
+          <div class="columnControls">
 
-        <fieldset style="display:${cookie.showColumnSpecifics.value ? 'block' : 'none'}">
-          <legend>Relevance &amp; Recall</legend>
-          <input type="text" id="biasing${b.index}" class="biasingInput" value="${results.biasingProfile}" placeholder="Biasing Profile" style="width:220px;">
-          <br>
-          <%@include file="matchStrategy.jsp" %>
-          <%@include file="sort.jsp" %>
-          <%@include file="semantish.jsp" %>
-          <%@include file="wildcard.jsp" %>
-        </fieldset>
-        <fieldset style="display:${cookie.showColumnSpecifics.value ? 'block' : 'none'}">
-          <legend>Personalized Relevance</legend>
-          <%@include file="sessionId.jsp" %>
-        </fieldset>
+            <a href="javascript:;" onclick="addColumn(${b.index})" class="btn scnd icon-only" title="Copy Set">
+              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="24px"  viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+                <g><path d="M255,990c-40.8,0-40.8-40.8-40.8-40.8V173.3c0,0,0-40.8,40.8-40.8h612.5c40.8,0,40.8,40.8,40.8,40.8v530.8L622.5,990H255L255,990z M255,949.2h367.5l245-245V173.3H255V949.2L255,949.2z M618.4,983.9c-1.6,0-3.2-0.3-4.7-0.9c-4.6-1.9-32.1-28.8-32.1-33.8v-245c0,0,0-40.8,40.8-40.8h285.8c0,0-29.2,29.1-32.7,32.7L627,980.3C624.7,982.7,621.6,983.9,618.4,983.9L618.4,983.9z M622.5,704.2v245l245-245H622.5z M785.8,336.7H336.7v-40.8h449.2V336.7z M785.8,459.2H336.7v-40.8h449.2V459.2z M785.8,581.7H336.7v-40.8h449.2V581.7z M173.3,785.8h-40.8v-735h571.7v40.8H745V50.8c0,0,0-40.8-40.8-40.8H132.5c-40.8,0-40.8,40.8-40.8,40.8v735c0,0,0,40.8,40.8,40.8h40.8V785.8L173.3,785.8z"/></g>
+              </svg>
+            </a>
+            <c:if test="${b.index > 0}">
+              <a href="javascript:;" onclick="removeColumn(${b.index});" class="btn scnd del" title="Delete Set">
+                <svg
+                  xmlns:dc="http://purl.org/dc/elements/1.1/"
+                  xmlns:cc="http://creativecommons.org/ns#"
+                  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                  xmlns:svg="http://www.w3.org/2000/svg"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                  xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                  viewBox="0 -256 1792 1792"
+                  id="svg3741"
+                  version="1.1"
+                  inkscape:version="0.48.3.1 r9886"
+                  width="25px" height="25px" 
+                  sodipodi:docname="trash_font_awesome.svg">
+
+                  <g
+                    transform="matrix(1,0,0,-1,197.42373,1255.0508)"
+                    id="g3743">
+                    <path
+                      d="M 512,800 V 224 q 0,-14 -9,-23 -9,-9 -23,-9 h -64 q -14,0 -23,9 -9,9 -9,23 v 576 q 0,14 9,23 9,9 23,9 h 64 q 14,0 23,-9 9,-9 9,-23 z m 256,0 V 224 q 0,-14 -9,-23 -9,-9 -23,-9 h -64 q -14,0 -23,9 -9,9 -9,23 v 576 q 0,14 9,23 9,9 23,9 h 64 q 14,0 23,-9 9,-9 9,-23 z m 256,0 V 224 q 0,-14 -9,-23 -9,-9 -23,-9 h -64 q -14,0 -23,9 -9,9 -9,23 v 576 q 0,14 9,23 9,9 23,9 h 64 q 14,0 23,-9 9,-9 9,-23 z M 1152,76 v 948 H 256 V 76 Q 256,54 263,35.5 270,17 277.5,8.5 285,0 288,0 h 832 q 3,0 10.5,8.5 7.5,8.5 14.5,27 7,18.5 7,40.5 z M 480,1152 h 448 l -48,117 q -7,9 -17,11 H 546 q -10,-2 -17,-11 z m 928,-32 v -64 q 0,-14 -9,-23 -9,-9 -23,-9 h -96 V 76 q 0,-83 -47,-143.5 -47,-60.5 -113,-60.5 H 288 q -66,0 -113,58.5 Q 128,-11 128,72 v 952 H 32 q -14,0 -23,9 -9,9 -9,23 v 64 q 0,14 9,23 9,9 23,9 h 309 l 70,167 q 15,37 54,63 39,26 79,26 h 320 q 40,0 79,-26 39,-26 54,-63 l 70,-167 h 309 q 14,0 23,-9 9,-9 9,-23 z"
+                      id="path3745"
+                      inkscape:connector-curvature="0"
+                      style="fill:currentColor" />
+                  </g>
+                </svg>
+              </a>
+            </c:if>
+          </div>
+        </div>
+
+       
       </div>
+      
+        <ol id="replacementRow${b.index}" class="" style="display: none">
+        </ol>
 
-      <ol id="replacementRow${b.index}" style="display: none">
-
-      </ol>
-
-
-      <ol id="row${b.index}">
-        <%@include file="record.jsp" %>
-      </ol>
-
-      </c:forEach>
-    </td>
-  </tr>
-</table>
+      
+        <ol id="row${b.index}" class="record-list">
+          <%@include file="record.jsp" %>
+        </ol>
+      
+      
+    </div>
+  </c:forEach>
+</div>
 <script>
 
   $('.highlightCorresponding').hover(function () {

@@ -14,14 +14,18 @@
                 <c:if test="${!gc:isRefinementSelected(results, nav.name, value.value)}">
 
                     <div>
-                        <a style="color:white" href="<c:url value="${b:toUrlAdd('default', results.query, results.selectedNavigation, nav.name, value)}"/>">&#x2610; ${value.value}</a>
-                        <span class="count">(<fmt:formatNumber>${value['count'] }</fmt:formatNumber>)</span>
+                        <a href="<c:url value="${b:toUrlAdd('default', results.query, results.selectedNavigation, nav.name, value)}"/>">&#x2610; ${value.value}
+                            <span class="count">(<fmt:formatNumber>${value['count'] }</fmt:formatNumber>)</span>
+                        </a>
+                        
                     </div>
                 </c:if>
                 <c:if test="${gc:isRefinementSelected(results, nav.name, value.value)}">
                     <div>
-                        <a class="selected"  style="color:white" href="<c:url value="${b:toUrlRemove('default', results.query, results.selectedNavigation, nav.name, value)}"/>">&#x2611; ${value.value}</a>
-                        <span class="count">(<fmt:formatNumber>${value['count'] }</fmt:formatNumber>)</span>
+                        <a class="selected" href="<c:url value="${b:toUrlRemove('default', results.query, results.selectedNavigation, nav.name, value)}"/>">&#x2611; ${value.value}
+                            <span class="count">(<fmt:formatNumber>${value['count'] }</fmt:formatNumber>)</span>
+                        </a>
+                        
                     </div>
                 </c:if>
             </div>
@@ -36,8 +40,10 @@
 		<div class="nav-${nav.name} refinementsHolder">
 			<c:forEach items="${nav.refinements}" var="value">
 				<div>
-					<a style="color:white" href="<c:url value="${b:toUrlAdd('default', results.query, results.selectedNavigation, nav.name, value)}"/>">${value.value} </a>
+					<a href="<c:url value="${b:toUrlAdd('default', results.query, results.selectedNavigation, nav.name, value)}"/>">${value.value} 
                     <span class="count">(<fmt:formatNumber>${value['count'] }</fmt:formatNumber>)</span>
+                    </a>
+                    
 				</div>
 			</c:forEach>
 		</div>

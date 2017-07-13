@@ -10,52 +10,57 @@
 <c:set var="name" value="time${index}"/>
 <c:set var="time" value="${model[name]}"/>
 
-<fieldset style="display:${cookie.showColumnSpecifics.value ? 'block' : 'none'}">
-<legend>Query Inspection</legend>
+<fieldset class="grow">
+<legend><span>Query Inspection</span></legend>
 <div id="debug${index}">
 
 
 <c:if test="${!empty cause}">
     <div id="cause">
-<pre style="white-space:normal;font-family:courier;font-size:12px;color:grey;padding:4px;">
-Cause: ${cause}
-</pre>
+        <pre style="white-space:normal;font-family:courier;font-size:12px;color:grey;padding:4px;">
+        Cause: ${cause}
+        </pre>
     </div>
 </c:if>
 <div id="raw">
-    Query completed in <span
-        title="${time > 600 ? 'Response time is very long and might impact user experience' : time > 400 ? 'Response time is not optimal' : 'Response time nominal'}"
-        class="number ${time > 600 ? 'largeResponse' : time > 400 ? 'mediumResponse' : 'smallResponse'}">
-        ${time}</span> ms:
-    <a href="javascript:;" onclick="showRawQuery()">show curl >></a>
-  <pre id="expandedQuery${index}" class="rawQuery" style="display:${cookie.showRawQuery.value ? 'block' : 'none'}">
-<c:set var="bridgeHeaderName" value="bridgeHeaders${index}"/><br>
-<c:set var="bridgeHeaders"><c:forEach var="bridgeHeader" items="${model[bridgeHeaderName]}"> -H "${bridgeHeader}"</c:forEach></c:set>
-curl ${bridgeHeaders} -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pretty"
+    <ul class="inspection">
+        <li>
+            Query completed in <span
+            title="${time > 600 ? 'Response time is very long and might impact user experience' : time > 400 ? 'Response time is not optimal' : 'Response time nominal'}"
+            class="number ${time > 600 ? 'largeResponse' : time > 400 ? 'mediumResponse' : 'smallResponse'}">
+            ${time}</span> ms
+           
+        </li>
+        <li>
+             <a href="javascript:;" onclick="showRawQuery()" class="btn sml">show curl details</a>
+            <c:set var="bridgeHeaderName" value="bridgeHeaders${index}"/><br>
+            <c:set var="bridgeHeaders"><c:forEach var="bridgeHeader" items="${model[bridgeHeaderName]}"> -H "${bridgeHeader}"</c:forEach></c:set>
+                
+            <pre id="expandedQuery${index}" class="rawQuery" style="display:${cookie.showRawQuery.value ? 'block' : 'none'}">curl ${bridgeHeaders} -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pretty"</pre>
+        </li>
+        <li>
+             JSON Response (<span
+            title="${fn:length(resultsJson) > 50000 ? 'This response is large and could cause network transfer latency.  Try removing the number of fields returned, or reducing the page size' : fn:length(resultsJson) > 25000 ? 'Response size is getting large, might be worth keeping an eye on response times.' : 'Response size nominal.'}"
+            class="number ${fn:length(resultsJson) > 50000 ? 'largeResponse' : fn:length(resultsJson) > 25000 ? 'mediumResponse' : 'smallResponse'}">
+            <fmt:formatNumber>${fn:length(resultsJson)}</fmt:formatNumber></span> bytes)
+            
+        </li>
+        <li>
+            
+            <a href="javascript:;" onclick="showJsonResponse()" class="btn sml">show raw json</a>
+            <div id="rawJsonResponse${index}" class="jsonResponse" style="display: ${cookie.showJsonResponse.value ? 'block' : 'none'}">
+                
+                    <c:out value="${resultsJson}"/>
+                
+            </div>
+        </li>
+        <li>Record count: ${results.totalRecordCount}</li>
+        <li>Original Query: ${results.originalQuery}</li>
+        <li>Corrected Query: ${results.correctedQuery}</li>
+        <li>Did You Means: ${results.didYouMean}</li>
+        <li>Rewrites: ${results.rewrites}</li>
+    </ul>
 
-
-
-  </pre>
-    <br>
-    JSON Response (<span
-        title="${fn:length(resultsJson) > 50000 ? 'This response is large and could cause network transfer latency.  Try removing the number of fields returned, or reducing the page size' : fn:length(resultsJson) > 25000 ? 'Response size is getting large, might be worth keeping an eye on response times.' : 'Response size nominal.'}"
-        class="number ${fn:length(resultsJson) > 50000 ? 'largeResponse' : fn:length(resultsJson) > 25000 ? 'mediumResponse' : 'smallResponse'}">
-        <fmt:formatNumber>${fn:length(resultsJson)}</fmt:formatNumber></span> bytes)
-    <a href="javascript:;" onclick="showJsonResponse()">show json >></a>
-    <div id="rawJsonResponse${index}" class="jsonResponse" style="display: ${cookie.showJsonResponse.value ? 'block' : 'none'}">
-        <c:out value="${resultsJson}"/>
-    </div>
-    <br>
-    Record count: ${results.totalRecordCount}
-    <br>
-    Original Query: ${results.originalQuery}
-    <br>
-    Corrected Query: ${results.correctedQuery}
-    <br>
-    Did You Means: ${results.didYouMean}
-    <br>
-    Rewrites: ${results.rewrites}
-    <br>
     <%@include file="../includes/siteParams.jsp"%>
     <script>
         function sortObject(o) {
