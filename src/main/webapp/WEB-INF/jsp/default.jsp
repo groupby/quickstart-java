@@ -2,10 +2,10 @@
 <%@include file="includes/tags.jsp"%>
 <%@include file="includes/searchBar.jsp"%>
 <div class="results row--solid">
-        <div class="navigation _20">
+        <div class="navigation">
           <%@include file="includes/navigation.jsp"%>
         </div>
-        <div class="state">
+        <div class="state grow">
           <c:if test="${!empty results.redirect}">
             Found redirect: <c:out value="${results.redirect}"/>
           </c:if>

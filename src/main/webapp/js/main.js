@@ -14,7 +14,7 @@ $(document).ready(function () {
    $( "#collection" ).autocomplete({
       source: ${Mappers.writeValueAsString(collections)},
       delay: 20,
-      minLength:0
+      minLength: 0
     });
     if (${biasingProfileCount} > 1) {
       $('.highlightCorresponding').each(function(index, value){
@@ -40,11 +40,7 @@ function addAnyNav(){
     $('#form').submit();
   }
 }
-function showAdvanced(){
-    $('#advanced').slideToggle(function(){
-        $.cookie('showAdvanced', $('#advanced').is(":visible"));
-    });
-}
+
 function redoQuery() {
     if ($.cookie('reload') == 'true') {
         $.cookie('reload', 'false');
@@ -162,9 +158,16 @@ $('#form').submit(function(e){
     saveForm();
 });
 
+// Below are all the show/hide functions 
+
 function showForm(){
     $('.settings-block').slideToggle( function(){
         $.cookie('showForm', $('.settings-block').is(":visible"));
+    });
+}
+function showAdvanced(){
+    $('#advanced').slideToggle(function(){
+        $.cookie('showAdvanced', $('#advanced').is(":visible"));
     });
 }
 function showZones(){
@@ -172,17 +175,12 @@ function showZones(){
         $.cookie('showZones', $('#allZones').is(":visible"));
     });
 }
+function showColumnSpecifics(){
+    $('.columnSpecifics').slideToggle(function(){
+        $.cookie('showColumnSpecifics', $('.columnSpecifics').is(":visible"));
+    });
+}
 
-function showMatchStrategy(){
-    $('.matchStrategyHolder').slideToggle( function(){
-        $.cookie('showMatchStrategy', $('.matchStrategyHolder').is(":visible"));
-    });
-}
-function showSort(){
-    $('.sortHolder').slideToggle( function(){
-        $.cookie('showSort', $('.sortHolder').is(":visible"));
-    });
-}
 function showRawQuery(){
     $('.rawQuery').slideToggle( function(){
         $.cookie('showRawQuery', $('.rawQuery').is(":visible"));
@@ -193,9 +191,14 @@ function showJsonResponse(){
         $.cookie('showJsonResponse', $('.jsonResponse').is(":visible"));
     });
 }
-function showColumnSpecifics(){
-    $('.columnSpecifics').slideToggle(function(){
-        $.cookie('showColumnSpecifics', $('.columnSpecifics').is(":visible"));
+function showMatchStrategy(){
+    $('.matchStrategyHolder').slideToggle( function(){
+        $.cookie('showMatchStrategy', $('.matchStrategyHolder').is(":visible"));
+    });
+}
+function showSort(){
+    $('.sortHolder').slideToggle( function(){
+        $.cookie('showSort', $('.sortHolder').is(":visible"));
     });
 }
 
