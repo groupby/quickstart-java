@@ -1,0 +1,17 @@
+/*** All the RWD custom styling ***/
+
+@media screen and (min-width: 800px) {
+
+}
+
+@media screen and (max-width: 800px) {
+
+}
+
+@media screen and (max-width: 480px) {
+
+  .search-bar__form {
+    margin: 0 1em;
+  }
+
+}

@@ -2,7 +2,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
-    <title>Ref App</title>
+    <title>Groupby: Reference App</title>
     <link href="<c:url value="/css/jquery.jsonview.css"/>" rel="stylesheet" type="text/css" />
     <link href="<c:url value="/css/main.css"/>" media="screen" rel="stylesheet" type="text/css"/>
     <script src="<c:url value="/js/jquery-1.11.2.js"/>"></script>

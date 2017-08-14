@@ -2,10 +2,12 @@
     <c:set var="excludes">
     id, title, ${!empty cookie.imageField.value ? cookie.imageField.value : ''}${!empty cookie.imageField.value ? ',' : ''}</c:set>
     <li class="record highlightCorresponding h${record.id}" data-id="row${b.index}.h${record.id}">
-        <h2 data-id="${i.count}" class="row">
-            <span class="record-name">Record ${i.index + results.pageInfo.recordStart}</span><span class="id">id: <c:out value="${record.allMeta['id']}"/></span><span class="otherColumns">&nbsp;</span>
-        </h2>
-        
+        <div data-id="${i.count}" class="record-title">
+            <span class="record-name">Record ${i.index + results.pageInfo.recordStart}</span>
+            <span class="id">id: <c:out value="${record.allMeta['id']}"/></span>
+            <span class="otherColumns">&nbsp;</span>
+        </div>
+
         <div class="details">
             <div class="keyValue"><span class="key">title</span>: <span class="value">${record.allMeta['title'] }</span></div>
             <c:forEach items="${record.allMeta}" var="entry">
@@ -28,7 +30,7 @@
                     <c:forEach items="${record.allMeta}" var="entry">
                         <c:if test="${fn:contains(entry.key, 'image') or fn:endsWith(fn:toLowerCase(entry.value), '.jpg') or fn:endsWith(fn:toLowerCase(entry.value), '.jpeg') or fn:endsWith(fn:toLowerCase(entry.value), '.png') or fn:endsWith(fn:toLowerCase(entry.value), '.gif')}">
                             <div class="image-holder">
-                            
+
                                 <img src="${entry.value}"/>
                                 <span>${entry.key}</span>
                             </div>

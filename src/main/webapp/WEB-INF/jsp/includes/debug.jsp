@@ -10,7 +10,7 @@
 <c:set var="name" value="time${index}"/>
 <c:set var="time" value="${model[name]}"/>
 
-<fieldset class="grow">
+<fieldset>
 <legend><span>Query Inspection</span></legend>
 <div id="debug${index}">
 
@@ -29,13 +29,13 @@
             title="${time > 600 ? 'Response time is very long and might impact user experience' : time > 400 ? 'Response time is not optimal' : 'Response time nominal'}"
             class="number ${time > 600 ? 'largeResponse' : time > 400 ? 'mediumResponse' : 'smallResponse'}">
             ${time}</span> ms
-           
+
         </li>
         <li>
              <a href="javascript:;" onclick="showRawQuery()" class="btn sml">show curl details</a>
             <c:set var="bridgeHeaderName" value="bridgeHeaders${index}"/><br>
             <c:set var="bridgeHeaders"><c:forEach var="bridgeHeader" items="${model[bridgeHeaderName]}"> -H "${bridgeHeader}"</c:forEach></c:set>
-                
+
             <pre id="expandedQuery${index}" class="rawQuery" style="display:${cookie.showRawQuery.value ? 'block' : 'none'}">curl ${bridgeHeaders} -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pretty"</pre>
         </li>
         <li>
@@ -43,15 +43,15 @@
             title="${fn:length(resultsJson) > 50000 ? 'This response is large and could cause network transfer latency.  Try removing the number of fields returned, or reducing the page size' : fn:length(resultsJson) > 25000 ? 'Response size is getting large, might be worth keeping an eye on response times.' : 'Response size nominal.'}"
             class="number ${fn:length(resultsJson) > 50000 ? 'largeResponse' : fn:length(resultsJson) > 25000 ? 'mediumResponse' : 'smallResponse'}">
             <fmt:formatNumber>${fn:length(resultsJson)}</fmt:formatNumber></span> bytes)
-            
+
         </li>
         <li>
-            
+
             <a href="javascript:;" onclick="showJsonResponse()" class="btn sml">show raw json</a>
             <div id="rawJsonResponse${index}" class="jsonResponse" style="display: ${cookie.showJsonResponse.value ? 'block' : 'none'}">
-                
+
                     <c:out value="${resultsJson}"/>
-                
+
             </div>
         </li>
         <li>Record count: ${results.totalRecordCount}</li>
@@ -82,7 +82,7 @@
         $('#rawJsonResponse${index}').JSONView(obj, { collapsed: false });
 
         var expandedList${index} = $.cookie('maintainExpanded${index}');
-        
+
         if (!expandedList${index}){
             expandedList${index} = '';
         }

@@ -14,11 +14,11 @@
     <c:set var="error" value="${model[name]}"/>
     <c:set var="name" value="results${b.index}"/>
     <c:set var="results" value="${model[name]}"/>
-    <div class="recordColumn recordColumn${b.index} _${width}">
+    <div class="recordColumn recordColumn${b.index}">
       <c:set var="index" value="${b.index}"/>
       <%--Only show error/warning box if there are some--%>
         <c:if test="${!empty matchStrategyErrors[b.index] or !empty results.warnings or (!empty error or !empty results.errors)}">
-          
+
           <c:if test="${!empty matchStrategyErrors[b.index]}">
             <div class="error">
               <pre>${matchStrategyErrors[b.index]}</pre>
@@ -39,9 +39,9 @@
               </pre>
             </div>
           </c:if>
-          
+
         </c:if>
-      <div class="columnSpecifics row" style="display:${cookie.showColumnSpecifics.value ? 'block' : 'none'}">
+      <div class="columnSpecifics" style="display:${cookie.showColumnSpecifics.value ? 'block' : 'none'}">
         <div class="row">
           <%@include file="debug.jsp" %>
 
@@ -79,7 +79,7 @@
                   id="svg3741"
                   version="1.1"
                   inkscape:version="0.48.3.1 r9886"
-                  width="25px" height="25px" 
+                  width="25px" height="25px"
                   sodipodi:docname="trash_font_awesome.svg">
 
                   <g
@@ -97,18 +97,18 @@
           </div>
         </div>
 
-       
+
       </div>
-      
+
         <ol id="replacementRow${b.index}" class="" style="display: none">
         </ol>
 
-      
+
         <ol id="row${b.index}" class="record-list">
           <%@include file="record.jsp" %>
         </ol>
-      
-      
+
+
     </div>
   </c:forEach>
 </div>
