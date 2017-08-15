@@ -4,8 +4,10 @@
 <c:if test="${nav['or']}">
     <div class="nav-heading">
       <div class="nav-name">${nav.displayName}</div>
-      <div class="nav-info" data-tooltip="${nav.name} - (OR)">?</div>
-      <div class="nav-meta"><%@include file="navMetadata.jsp"%></div>
+      <div  class="nav-info"
+            data-tooltip="Data Name: ${nav.name} - (OR)&#13
+            <%@include file="navMetadata.jsp"%>">?</div>
+
     </div>
     <div id="facet-${nav.name}" class="facet-holder">
         <c:forEach items="${nav.refinements}" var="value">
@@ -29,8 +31,9 @@
 <c:if test="${!nav['or']}">
   <div class="nav-heading">
     <span class="nav-name">${nav.displayName}</span>
-    <span class="nav-info" data-tooltip="${nav.name}">?</span>
-    <%@include file="navMetadata.jsp"%>
+    <div  class="nav-info"
+          data-tooltip="Data Name: ${nav.name}
+          <%@include file="navMetadata.jsp"%>">?</div>
   </div>
 		<div id="facet-${nav.name}" class="facet-holder">
 			<c:forEach items="${nav.refinements}" var="value">

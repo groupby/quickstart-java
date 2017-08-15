@@ -16,7 +16,7 @@
       <%@include file="includes/navigation.jsp"%>
 
     </section>
-    <a href="javascript:;" onclick="mobileShowNav()" class="mobile-nav-button">burger</a>
+    <a href="javascript:;" onclick="mobileShowNav()" class="mobile-nav-button"><span>Close</span> Filter Results</a>
     <section class="state grow">
       <c:if test="${!empty results.redirect}">
         Found redirect: <c:out value="${results.redirect}"/>

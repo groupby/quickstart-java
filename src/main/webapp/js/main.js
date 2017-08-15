@@ -182,13 +182,13 @@ function showColumnSpecifics(){
 }
 
 function showRawQuery(){
-    $('.rawQuery').slideToggle( function() {
-        $.cookie('showRawQuery', $('.rawQuery').is(":visible"));
+    $('.raw-query-area').slideToggle( function() {
+        $.cookie('showRawQuery', $('.raw-query-area').is(":visible"));
     });
 }
 function showJsonResponse(){
-    $('.jsonResponse').slideToggle( function() {
-        $.cookie('showJsonResponse', $('.jsonResponse').is(":visible"));
+    $('.json-response-area').slideToggle( function() {
+        $.cookie('showJsonResponse', $('.json-response-area').is(":visible"));
     });
 }
 function showMatchStrategy(){
@@ -203,9 +203,22 @@ function showSort(){
 }
 function mobileShowNav(){
   $('.navigation').slideToggle( function() {
+      $('.mobile-nav-button').toggleClass('mobile-nav-switch');
       $.cookie('mobileShowNav', $('.navigation').is(":visible"));
   });
     // $('.navigation').animate({left: "+=250"}, 500, function(){
     //     $.cookie('mobileShowNav', $('.navigation').is(":visible"));
     // });
 }
+
+function copyContent(copyMe){
+  var copyArea = '.' + copyMe;
+
+    $(copyArea).focus();
+    $(copyArea).select();
+    document.execCommand('copy');
+    // $(copyArea).text('Copied to clipboard').show().fadeOut(1200);
+
+}
+
+new Clipboard('.copy');

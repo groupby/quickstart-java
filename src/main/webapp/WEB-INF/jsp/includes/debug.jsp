@@ -32,11 +32,14 @@
 
         </li>
         <li>
-             <a href="javascript:;" onclick="showRawQuery()" class="btn sml">show curl details</a>
-            <c:set var="bridgeHeaderName" value="bridgeHeaders${index}"/><br>
-            <c:set var="bridgeHeaders"><c:forEach var="bridgeHeader" items="${model[bridgeHeaderName]}"> -H "${bridgeHeader}"</c:forEach></c:set>
+          <a href="javascript:;" onclick="showRawQuery()" class="btn sml">show curl details</a>
 
-            <pre id="expandedQuery${index}" class="rawQuery" style="display:${cookie.showRawQuery.value ? 'block' : 'none'}">curl ${bridgeHeaders} -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pretty"</pre>
+          <c:set var="bridgeHeaderName" value="bridgeHeaders${index}"/><br>
+          <c:set var="bridgeHeaders"><c:forEach var="bridgeHeader" items="${model[bridgeHeaderName]}"> -H "${bridgeHeader}"</c:forEach></c:set>
+          <div class="raw-query-area" style="display:${cookie.showRawQuery.value ? 'block' : 'none'}">
+            <pre id="expandedQuery${index}" class="rawQuery">curl ${bridgeHeaders} -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pretty"</pre>
+            <button class="copy scnd" data-clipboard-target="#expandedQuery${index}">Copy to Clipboard</button>
+          </div>
         </li>
         <li>
              JSON Response (<span
@@ -48,11 +51,13 @@
         <li>
 
             <a href="javascript:;" onclick="showJsonResponse()" class="btn sml">show raw json</a>
-            <div id="rawJsonResponse${index}" class="jsonResponse" style="display: ${cookie.showJsonResponse.value ? 'block' : 'none'}">
-
-                    <c:out value="${resultsJson}"/>
-
+            <div class="json-response-area" style="display: ${cookie.showJsonResponse.value ? 'block' : 'none'}">
+              <div id="rawJsonResponse${index}" class="jsonResponse">
+                <c:out value="${resultsJson}"/>
+              </div>
+              <button class="copy scnd" data-clipboard-target="#rawJsonResponse${index}">Copy to Clipboard</button>
             </div>
+          </div>
         </li>
         <li>Record count: ${results.totalRecordCount}</li>
         <li>Original Query: ${results.originalQuery}</li>
@@ -117,7 +122,7 @@
             $('#expandedQuery${index}').show();
         }
     </script>
-</div>
+</>
 
 </div>
 </fieldset>

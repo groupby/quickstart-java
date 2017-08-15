@@ -29,16 +29,20 @@
               <input type="text" name="customerId" id="customerId" placeholder="Customer ID / Domain" class="input--small">
               <input type="text" name="clientKey" id="clientKey" placeholder="Client Key" class="input--medium"><br/>
               <span class="collection">
-                                <input type="text" name="collection" id="collection" placeholder="Collection" class="input--medium">
-                                <c:if test="${collectionCount > 0}">
-                                    <div class="collection__count">(${collectionCount})</div>
-                                </c:if>
-                            </span>
+                <input type="text" name="collection" id="collection" placeholder="Collection" class="input--medium">
+                <c:if test="${collectionCount > 0}">
+                  <div class="collection__count">(${collectionCount})</div>
+                </c:if>
+              </span>
+              <input type="text" name="area" id="area" placeholder="Area" class="input--medium">
             </fieldset>
             <fieldset>
-              <legend><span>Area</span></legend>
-              <input type="text" name="area" id="area" placeholder="Area" class="input--small">
-              <input type="text" name="fields" id="fields" placeholder="Field List, comma separated" class="input--large">
+              <legend><span>Customization</span></legend>
+              <div class="column">
+                <input type="text" name="fields" id="fields" placeholder="Field List, comma separated" class="input--large">
+                <input title="Custom Parameters, name=value & separated" type="text" name="customUrlParameters" id="customUrlParameters" placeholder="Custom URL Parameters" class="input--large">
+                <input type="text" name="visitorId" id="visitorId" placeholder="Personalized Relevance - Visitor ID" class="input--medium">
+              </div>
             </fieldset>
         </div>
       </section>
@@ -86,6 +90,7 @@
               <input type="text" name="sortField" id="sortField" placeholder="Sort Field">
               <input type="text" name="sortOrder" id="sortOrder" placeholder="Order A/D">
               <input type="text" name="bringToTop" id="bringToTop" placeholder="Bring To Top, comma separated list of Product IDs" class="input--large">
+              <input type="text" name="language" id="language" placeholder="Language" class="input--small">
               <div class="checkbox-area">
                 <label for="disableAutocorrection"><input type="checkbox" name="disableAutocorrection" id="disableAutocorrection">Disable Autocorrection</label>
               </div>
@@ -109,19 +114,6 @@
                 <label title="If checked, the cache will be used.  This means changes to data and rules will not appear until the cache expires" for="cache"><input type="checkbox" name="cache" id="cache">Use Cache</label>
               </div>
             </div>
-          </fieldset>
-          <fieldset>
-            <legend><span>Personalized Relevance</span></legend>
-            <input type="text" name="visitorId" id="visitorId" placeholder="Visitor ID" class="input--medium">
-          </fieldset>
-          <fieldset>
-            <legend><span>Misc</span></legend>
-            <div class="column">
-              <input type="text" name="language" id="language" placeholder="Language" class="input--small">
-              <%-- TODO move to itself  --%>
-              <input title="Custom Parameters, name=value & separated" type="text" name="customUrlParameters" id="customUrlParameters" placeholder="Custom URL Parameters" class="input--large">
-            </div>
-
           </fieldset>
         </div>
       </section>

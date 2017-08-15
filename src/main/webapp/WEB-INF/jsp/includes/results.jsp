@@ -14,7 +14,7 @@
     <c:set var="error" value="${model[name]}"/>
     <c:set var="name" value="results${b.index}"/>
     <c:set var="results" value="${model[name]}"/>
-    <div class="recordColumn recordColumn${b.index}">
+    <div class="recordColumn recordColumn${b.index} _${width}">
       <c:set var="index" value="${b.index}"/>
       <%--Only show error/warning box if there are some--%>
         <c:if test="${!empty matchStrategyErrors[b.index] or !empty results.warnings or (!empty error or !empty results.errors)}">

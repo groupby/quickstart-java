@@ -10,6 +10,8 @@
     <script src="<c:url value="/js/jquery.cookie.js"/>"></script>
     <script src="<c:url value="/js/jquery.jsonview.js"/>" type="text/javascript"></script>
     <script src="<c:url value="/js/jquery.quicksand.js"/>" type="text/javascript"></script>
+    <script src="https://cdn.rawgit.com/zenorocha/clipboard.js/v1.7.1/dist/clipboard.min.js"></script>
+
     <script>
         $.cookie.defaults['path'] = '/';
         $.cookie.defaults['expires'] = 500;
