@@ -963,6 +963,6 @@ input.search-bar__input:focus {
 }
 
 .highlight .record-title {
-  background-color: red;
+  background-color: #49a738;
   color: #fff;
 }
