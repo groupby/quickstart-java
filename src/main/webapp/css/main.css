@@ -959,7 +959,7 @@ input.search-bar__input:focus {
 }
 
 .highlight {
-  background-color: #FFFFCC;
+  background-color: #FFFFCC !important;
 }
 
 .highlight .record-title {
