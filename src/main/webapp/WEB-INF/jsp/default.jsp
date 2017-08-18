@@ -9,7 +9,7 @@
     <%@include file="includes/rules.jsp"%>
   </c:otherwise>
 </c:choose>
-<div class="results row">
+<div class="results row--solid">
 
     <section class="navigation">
 
@@ -21,8 +21,9 @@
       <c:if test="${!empty results.redirect}">
         Found redirect: <c:out value="${results.redirect}"/>
       </c:if>
-        <%@include file="includes/didYouMean.jsp"%>
+
         <%@include file="includes/refinements.jsp"%>
+        <%@include file="includes/didYouMean.jsp"%>
         <div id="recordAndPaging" class="count-paging row">
             <%@include file="includes/recordCount.jsp"%>
 

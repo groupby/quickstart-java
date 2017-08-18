@@ -21,8 +21,8 @@
           </c:when>
           <c:when test="${zoneType == 'RichContentZone'}">
             <div class="zone RichContentZone">
-              < class="zoneName">Zone name: ${zone.key}
-                <a href="javascript:;" onclick="$('.zoneValue${zoneStatus.index}').toggle();" class="btn scnd">toggle html</a>
+              <span class="zoneName">Zone name: ${zone.key}
+                <a href="javascript:;" onclick="$('.zoneValue${zoneStatus.index}').toggle();" class="btn scnd sml">toggle html</a>
               </span>
               <div style="display:none" class="zoneValue zoneValue${zoneStatus.index}">
                 <c:out value="${zone.value.richContent}"/>

@@ -1,4 +1,4 @@
-<a href="javascript:;" onclick="showSort()" class="btn sml">Sort Order</a>
+<a href="javascript:;" onclick="showSort()" class="btn scnd sml">Set Sort Order</a>
 <div style="display:${cookie.showSort.value ? 'block' : 'none'}" class="sortHolder">
     <ul>
         <li>

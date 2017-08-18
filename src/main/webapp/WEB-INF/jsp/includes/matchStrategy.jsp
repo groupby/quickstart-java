@@ -1,4 +1,4 @@
-<a href="javascript:;" onclick="showMatchStrategy()" class="btn sml">Show Match Strategy >></a>
+<a href="javascript:;" onclick="showMatchStrategy()" class="btn scnd sml">View Match Strategy</a>
     <div style="display:${cookie.showMatchStrategy.value or !empty matchStrategyErrors[b.index] ? 'block' : 'none'}" class="matchStrategyHolder">
         <textarea style="width:250px;height:100px;font-size:10px;" id="strategy${b.index}" class="strategyInput" placeholder="Match Strategy"><c:out value="${URLDecoder.decode(matchStrategies[b.index], 'UTF-8')}"/></textarea>
         <br/>

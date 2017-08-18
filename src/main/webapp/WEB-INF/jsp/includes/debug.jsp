@@ -17,7 +17,7 @@
 
 <c:if test="${!empty cause}">
     <div id="cause">
-        <pre style="white-space:normal;font-family:courier;font-size:12px;color:grey;padding:4px;">
+        <pre>
         Cause: ${cause}
         </pre>
     </div>
@@ -28,42 +28,31 @@
             Query completed in <span
             title="${time > 600 ? 'Response time is very long and might impact user experience' : time > 400 ? 'Response time is not optimal' : 'Response time nominal'}"
             class="number ${time > 600 ? 'largeResponse' : time > 400 ? 'mediumResponse' : 'smallResponse'}">
-            ${time}</span> ms
-
+            ${time}</span> ms <a href="javascript:;" onclick="showRawQuery()" class="btn scnd sml">View curl script</a>
+            <c:set var="bridgeHeaderName" value="bridgeHeaders${index}"/><br>
+            <c:set var="bridgeHeaders"><c:forEach var="bridgeHeader" items="${model[bridgeHeaderName]}"> -H "${bridgeHeader}"</c:forEach></c:set>
+            <div class="raw-query-area" style="display:${cookie.showRawQuery.value ? 'block' : 'none'}">
+              <pre id="expandedQuery${index}" class="rawQuery">curl ${bridgeHeaders} -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pretty"</pre>
+              <button class="copy btn scnd sml" data-clipboard-target="#expandedQuery${index}">Copy to Clipboard</button>
+            </div>
         </li>
         <li>
-          <a href="javascript:;" onclick="showRawQuery()" class="btn sml">show curl details</a>
-
-          <c:set var="bridgeHeaderName" value="bridgeHeaders${index}"/><br>
-          <c:set var="bridgeHeaders"><c:forEach var="bridgeHeader" items="${model[bridgeHeaderName]}"> -H "${bridgeHeader}"</c:forEach></c:set>
-          <div class="raw-query-area" style="display:${cookie.showRawQuery.value ? 'block' : 'none'}">
-            <pre id="expandedQuery${index}" class="rawQuery">curl ${bridgeHeaders} -d '${rawQuery}' "https://${customerId}.groupbycloud.com/api/v1/search?pretty"</pre>
-            <button class="copy scnd" data-clipboard-target="#expandedQuery${index}">Copy to Clipboard</button>
-          </div>
-        </li>
-        <li>
-             JSON Response (<span
+            JSON Response Size (<span
             title="${fn:length(resultsJson) > 50000 ? 'This response is large and could cause network transfer latency.  Try removing the number of fields returned, or reducing the page size' : fn:length(resultsJson) > 25000 ? 'Response size is getting large, might be worth keeping an eye on response times.' : 'Response size nominal.'}"
             class="number ${fn:length(resultsJson) > 50000 ? 'largeResponse' : fn:length(resultsJson) > 25000 ? 'mediumResponse' : 'smallResponse'}">
-            <fmt:formatNumber>${fn:length(resultsJson)}</fmt:formatNumber></span> bytes)
-
-        </li>
-        <li>
-
-            <a href="javascript:;" onclick="showJsonResponse()" class="btn sml">show raw json</a>
+            <fmt:formatNumber>${fn:length(resultsJson)}</fmt:formatNumber></span> bytes) <a href="javascript:;" onclick="showJsonResponse()" class="btn scnd sml">view raw json</a>
             <div class="json-response-area" style="display: ${cookie.showJsonResponse.value ? 'block' : 'none'}">
               <div id="rawJsonResponse${index}" class="jsonResponse">
                 <c:out value="${resultsJson}"/>
               </div>
-              <button class="copy scnd" data-clipboard-target="#rawJsonResponse${index}">Copy to Clipboard</button>
+              <button class="copy btn scnd sml" data-clipboard-target="#rawJsonResponse${index}">Copy to Clipboard</button>
             </div>
-          </div>
         </li>
-        <li>Record count: ${results.totalRecordCount}</li>
-        <li>Original Query: ${results.originalQuery}</li>
-        <li>Corrected Query: ${results.correctedQuery}</li>
-        <li>Did You Means: ${results.didYouMean}</li>
-        <li>Rewrites: ${results.rewrites}</li>
+        <li>Record count: <span>${results.totalRecordCount}</span></li>
+        <li>Original Query: <span>${results.originalQuery}</span></li>
+        <li>Corrected Query: <span>${results.correctedQuery}</span></li>
+        <li>Did You Means: <span>${results.didYouMean}</span></li>
+        <li>Rewrites: <span>${results.rewrites}</span></li>
     </ul>
 
     <%@include file="../includes/siteParams.jsp"%>

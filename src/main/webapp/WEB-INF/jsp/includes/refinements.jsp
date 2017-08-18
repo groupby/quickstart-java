@@ -14,8 +14,10 @@
       <div>Refined by:</div>
         <c:if test="${!empty results.query}">
           <div class="refinements__item refinements__item--term">
-              <a class="deleteCheckbox" href="<c:url value="${b:toUrlAdd('default', '', results.selectedNavigation, navigation.name, null)}"/>">x</a>
+            <a href="<c:url value="${b:toUrlAdd('default', '', results.selectedNavigation, navigation.name, null)}"/>">
+              <span class="deleteCheckbox">x</span>
               <c:out value="${results.query}"/>
+            </a>
           </div>
         </c:if>
         <c:forEach items="${results.selectedNavigation}" var="navigation">
@@ -29,6 +31,7 @@
           </c:forEach>
         </c:forEach>
     </div>
+    <a href="javascript:;" onclick="addAnyNav()" title="Add any Navigation" class="btn rnd">+</a>
   </c:if>
-  <a href="javascript:;" onclick="addAnyNav()" title="Add any Navigation" class="btn rnd">+</a>
+
 </div>
