@@ -578,7 +578,6 @@ input.search-bar__input:focus {
   flex-grow: 2;
   font-size: 1.1em;
   line-height: 1.3em;
-  text-transform: uppercase;
 }
 
 .nav-info {
@@ -602,7 +601,6 @@ input.search-bar__input:focus {
   text-decoration: none;
   color: #bdbdbd;
   padding: 0.3em 1em;
-  text-transform: uppercase;
   display: flex;
   line-height: 1em;
   align-items: baseline;
@@ -777,7 +775,6 @@ input.search-bar__input:focus {
 
 .error {
   padding: .5em 1em;
-  text-transform: uppercase;
   background: pink;
   color: #900;
   margin-bottom: .5em;
@@ -785,7 +782,6 @@ input.search-bar__input:focus {
 
 .warning {
   padding: .5em 1em;
-  text-transform: uppercase;
   background: lightyellow;
   color: darkgoldenrod;
   margin-bottom: .5em;

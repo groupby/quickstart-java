@@ -82,9 +82,16 @@
           <div class="row">
             <fieldset>
               <legend>
+                <span>Applied Biasing Profile</span>
+              </legend>
+
+              <input type="text" id="biasing${b.index}" class="biasingInput" value="${results.biasingProfile}" placeholder="Biasing Profile" style="width:220px;">
+            </fieldset>
+            <fieldset>
+              <legend>
                 <span>Relevance &amp; Recall</span>
               </legend>
-              <input type="text" id="biasing${b.index}" class="biasingInput" value="${results.biasingProfile}" placeholder="Biasing Profile" style="width:220px;">
+
                 <%@include file="matchStrategy.jsp" %>
                 <%@include file="sort.jsp" %>
                 <%@include file="semantish.jsp" %>
