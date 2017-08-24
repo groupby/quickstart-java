@@ -2,9 +2,11 @@
 
 <div class="nav-group ">
   <div class="nav-heading">
-    <span class="nav-name">${nav.displayName}</span>
-    <span class="nav-info" data-tooltip="${nav.name}">?</span>
-    <%@include file="navMetadata.jsp"%>
+    <div class="nav-name">${nav.displayName}</div>
+    <div  class="nav-info"
+          data-tooltip="Property Name: ${nav.name}
+          <%@include file="navMetadata.jsp"%>">?</div>
+
   </div>
   <div class="facet-holder">
     <c:forEach items="${nav.refinements}" var="value">

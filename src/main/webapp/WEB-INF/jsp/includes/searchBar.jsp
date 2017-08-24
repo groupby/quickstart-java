@@ -14,12 +14,7 @@
     <input type="hidden" name="refinements" id="refinements" value="<c:out value="${param.refinements }"/>">
     <input type="hidden" name="p" id="p" value="0">
     <button type="submit" class="search-bar__button" title="Execute Query">
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 100 125" enable-background="new 0 0 100 100" xml:space="preserve">
-        <path d="M88.895,11.105c-14.807-14.807-38.812-14.807-53.619,0c-14.807,14.806-14.807,38.812,0,53.619
-        c14.807,14.807,38.812,14.807,53.619,0S103.702,25.912,88.895,11.105z M84.662,60.492c-12.469,12.468-32.684,12.468-45.153,0
-        c-12.468-12.469-12.468-32.685,0-45.153c12.469-12.468,32.685-12.469,45.153,0S97.13,48.022,84.662,60.492z"/>
-        <rect x="12.357" y="61.701" transform="matrix(0.7071 0.7071 -0.7071 0.7071 63.1103 10.9445)" width="11.973" height="39.91"/>
-      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 511.993 511.993"><path d="M501.251 414.845L379.813 313.626a225.987 225.987 0 0 1-66.156 66.188l101.188 121.438c11.25 13.5 30.656 14.406 43.095 1.969l45.28-45.28c12.437-12.44 11.531-31.846-1.969-43.096zM384.001 192c0-106.031-85.969-192-192-192s-192 85.969-192 192c0 106.032 85.969 192 192 192 106.031.001 192-85.968 192-192zM192 336.001c-79.406 0-144-64.594-144-144s64.594-144 144-144c79.407 0 144 64.594 144 144 .001 79.406-64.593 144-144 144z"/></svg>
     </button>
   </form>
   <a id="clear" href="<c:url value="/index.html"/>" class="search-bar__clear">Clear search and navigation state</a>

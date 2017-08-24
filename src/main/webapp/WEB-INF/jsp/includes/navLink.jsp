@@ -5,7 +5,7 @@
       <div class="nav-heading">
         <div class="nav-name">${nav.displayName}</div>
         <div  class="nav-info"
-              data-tooltip="Data Name: ${nav.name} - (OR)&#13
+              data-tooltip="Property Name: ${nav.name} - (OR)&#13
               <%@include file="navMetadata.jsp"%>">?</div>
 
       </div>
@@ -32,7 +32,7 @@
     <div class="nav-heading">
       <span class="nav-name">${nav.displayName}</span>
       <div  class="nav-info"
-            data-tooltip="Data Name: ${nav.name}
+            data-tooltip="Property Name: ${nav.name}
             <%@include file="navMetadata.jsp"%>">?</div>
     </div>
   		<div id="facet-${nav.name}" class="facet-holder">

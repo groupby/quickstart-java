@@ -1,5 +1,6 @@
 <%@include file="tags.jsp"%>
 <div class="refinements">
+  <span>Refined by: </span>
   <c:if test="${fn:length(results.selectedNavigation) > 0 or !empty results.query}">
     <script>
     	function uncheckrefinement(){
@@ -11,7 +12,7 @@
     	}
     </script>
     <div class="refinements__list row">
-      <div>Refined by:</div>
+
         <c:if test="${!empty results.query}">
           <div class="refinements__item refinements__item--term">
             <a href="<c:url value="${b:toUrlAdd('default', '', results.selectedNavigation, navigation.name, null)}"/>">
@@ -31,7 +32,9 @@
           </c:forEach>
         </c:forEach>
     </div>
-    <a href="javascript:;" onclick="addAnyNav()" title="Add any Navigation" class="btn rnd">+</a>
-  </c:if>
 
+  </c:if>
+  <div class="refinements__add">
+    <a href="javascript:;" onclick="addAnyNav()" title="Add any Navigation">+ Add Refinements</a>
+  </div>
 </div>

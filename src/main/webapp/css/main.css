@@ -414,7 +414,7 @@ input.search-bar__input:focus {
 }
 
 .search-bar__button svg {
-  fill: #323d3f;
+  fill: #4F5e61;
 }
 
 .search-bar__button:hover svg {
@@ -701,19 +701,22 @@ input.search-bar__input:focus {
 }
 
 .refinements__list {
-  flex-grow: 2;
-  padding: 0 0 .5em 0;
   align-items: center;
 }
 
-.refinements__item {
+.refinements__item, .refinements__add, .refinements__item--term {
   background: #2e6b21;
   border-radius: .5em;
-  padding: 0 .5em .2em .5em;
-  margin: .25em;
+  padding: 0 .5rem .125rem .5rem;
+  margin: .25rem;
 }
 
-.refinements__item a {
+.refinements__add {
+  background: #555;
+  padding: .125rem .5rem;
+}
+
+.refinements__item a, .refinements__add a {
   font-size: 11px;
   color: #ddd;
   text-decoration: none;
@@ -735,7 +738,12 @@ input.search-bar__input:focus {
   text-decoration: none;
 }
 
+.related-query, .did-you-mean {
+  padding: .5rem 0;
+}
+
 .related-query a, .did-you-mean a {
+  padding: 0 .5rem;
   text-decoration: none;
   color: #49a738;
 }

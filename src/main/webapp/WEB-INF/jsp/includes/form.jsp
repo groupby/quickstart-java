@@ -21,7 +21,7 @@
       </div>
 
     </div>
-    <div class="settings-block">
+    <div class="settings-block" style="display:${cookie.showForm.value ? 'block' : 'none'}">
       <section class="settings-block__basic">
         <div class="row">
             <fieldset>
@@ -48,7 +48,7 @@
       </section>
       <a href="javascript:;" onclick="showAdvanced()" class="btn scnd advanced-btn">Advanced Settings</a>
 
-      <section id="advanced" class="settings-block__advanced">
+      <section id="advanced" class="settings-block__advanced"  style="display:${cookie.showAdvanced.value ? 'block' : 'none'}">
 
         <div class="row">
 
