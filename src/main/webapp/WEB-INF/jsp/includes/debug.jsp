@@ -45,7 +45,8 @@
               <div id="rawJsonResponse${index}" class="jsonResponse">
                 <c:out value="${resultsJson}"/>
               </div>
-              <button class="copy btn scnd sml" data-clipboard-target="#rawJsonResponse${index}">Copy to Clipboard</button>
+              <span id="copyable-json${index}" class="hide-me"><c:out value="${resultsJson}"/></span>
+              <button class="copy btn scnd sml" data-clipboard-target="#copyable-json${index}">Copy to Clipboard</button>
             </div>
         </li>
         <li>Record count: <span>${results.totalRecordCount}</span></li>

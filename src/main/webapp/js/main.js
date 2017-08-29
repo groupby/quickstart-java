@@ -70,6 +70,7 @@ function getMoreNav(navigationName) {
         if (data != '' || data != undefined) {
             var navElement = document.getElementById("nav-"+navigationName);
             $(navElement).html(data);
+            $(navElement).find('.facet-holder').css('max-height', '50vh');
         } else {
             console.log('No data received.');
         }
