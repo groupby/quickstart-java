@@ -685,12 +685,14 @@ input.search-bar__input:focus {
 }
 
 .warning {
+  display: block;
   padding: .5rem 1rem;
   color: #555;
   background: #fcfc77;
 }
 
 .error {
+  display: block;
   padding: .5rem 1rem;
   color: #500;
   background: #fbb;
@@ -951,16 +953,17 @@ input.search-bar__input:focus {
 }
 
 .image-holder {
-  max-width: 200px;
+  /*max-height: 200px;*/
   align-items: center;
   text-align: center;
+  padding: .5rem .5rem .5rem 0;
 }
 
 .image-holder img {
   max-width: 200px;
   max-height: 200px;
-  min-height: 200px;
-  margin: .2em;
+  object-fit: scale-down;
+  padding: 1rem;
 }
 
 .record img {
@@ -968,7 +971,7 @@ input.search-bar__input:focus {
   font-weight: 300;
   line-height: 2;
   text-align: center;
-  background: #efefef;
+  background: #fff;
   border: 1px solid #ccc;
   height: auto;
   display: block;
@@ -978,7 +981,7 @@ input.search-bar__input:focus {
 .record img:before {
   content: "We're sorry, the image below is broken :(";
   display: block;
-  margin-bottom: 10px;
+  padding-bottom: 10px;
 }
 
 .image-holder span {
