@@ -1,10 +1,6 @@
 <c:if test="${!empty nav.metadata}">
- <div class="navigationMetadataTitle">
-  metadata:
+  Metadata:&#13
   <c:forEach items="${nav.metadata}" var="meta">
-   <div class="navigationMetadata">
-    <b>${meta.key}</b> : ${meta.value}
-   </div>
+  ${meta.key} = ${meta.value}&#13
   </c:forEach>
- </div>
 </c:if>

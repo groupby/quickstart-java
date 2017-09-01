@@ -14,7 +14,7 @@ $(document).ready(function () {
    $( "#collection" ).autocomplete({
       source: ${Mappers.writeValueAsString(collections)},
       delay: 20,
-      minLength:0
+      minLength: 0
     });
     if (${biasingProfileCount} > 1) {
       $('.highlightCorresponding').each(function(index, value){
@@ -23,7 +23,7 @@ $(document).ready(function () {
           var matchingRecords = $(this).attr('data-id').substring(5);
           var matchingRow = $('.recordColumn' + i + ' .' + matchingRecords);
           if (matchingRow.length) {
-            text += $('h2', matchingRow).attr('data-id') + '&nbsp;|&nbsp;';
+            text += $('.record-title', matchingRow).attr('data-id') + '&nbsp;|&nbsp;';
           } else {
             text += '&nbsp;&nbsp;|&nbsp;';
           }
@@ -40,11 +40,7 @@ function addAnyNav(){
     $('#form').submit();
   }
 }
-function showAdvanced(){
-    $('#advanced').toggle('slide', function(){
-        $.cookie('showAdvanced', $('#advanced').is(":visible"));
-    });
-}
+
 function redoQuery() {
     if ($.cookie('reload') == 'true') {
         $.cookie('reload', 'false');
@@ -74,6 +70,7 @@ function getMoreNav(navigationName) {
         if (data != '' || data != undefined) {
             var navElement = document.getElementById("nav-"+navigationName);
             $(navElement).html(data);
+            $(navElement).find('.facet-holder').css('max-height', '50vh');
         } else {
             console.log('No data received.');
         }
@@ -162,40 +159,67 @@ $('#form').submit(function(e){
     saveForm();
 });
 
+// Below are all the show/hide functions
+
 function showForm(){
-    $('#settings').toggle('slide', function(){
-        $.cookie('showForm', $('#settings').is(":visible"));
+    $('.settings-block').slideToggle( function() {
+        $.cookie('showForm', $('.settings-block').is(":visible"));
+    });
+}
+function showAdvanced(){
+    $('#advanced').slideToggle(function() {
+        $.cookie('showAdvanced', $('#advanced').is(":visible"));
     });
 }
 function showZones(){
-    $('#allZones').toggle('slide', function(){
+    $('#allZones').slideToggle( function() {
         $.cookie('showZones', $('#allZones').is(":visible"));
     });
 }
+function showColumnSpecifics(){
+    $('.columnSpecifics').slideToggle(function() {
+        $.cookie('showColumnSpecifics', $('.columnSpecifics').is(":visible"));
+    });
+}
 
+function showRawQuery(){
+    $('.raw-query-area').slideToggle( function() {
+        $.cookie('showRawQuery', $('.raw-query-area').is(":visible"));
+    });
+}
+function showJsonResponse(){
+    $('.json-response-area').slideToggle( function() {
+        $.cookie('showJsonResponse', $('.json-response-area').is(":visible"));
+    });
+}
 function showMatchStrategy(){
-    $('.matchStrategyHolder').toggle('slide', function(){
+    $('.matchStrategyHolder').slideToggle( function() {
         $.cookie('showMatchStrategy', $('.matchStrategyHolder').is(":visible"));
     });
 }
 function showSort(){
-    $('.sortHolder').toggle('slide', function(){
+    $('.sortHolder').slideToggle( function() {
         $.cookie('showSort', $('.sortHolder').is(":visible"));
     });
 }
-function showRawQuery(){
-    $('.rawQuery').toggle('slide', function(){
-        $.cookie('showRawQuery', $('.rawQuery').is(":visible"));
-    });
-}
-function showJsonResponse(){
-    $('.jsonResponse').toggle('slide', function(){
-        $.cookie('showJsonResponse', $('.jsonResponse').is(":visible"));
-    });
-}
-function showColumnSpecifics(){
-    $('.columnSpecifics fieldset').toggle('slide', function(){
-        $.cookie('showColumnSpecifics', $('.columnSpecifics fieldset').is(":visible"));
-    });
+function mobileShowNav(){
+  $('.navigation').slideToggle( function() {
+      $('.mobile-nav-button').toggleClass('mobile-nav-switch');
+      $.cookie('mobileShowNav', $('.navigation').is(":visible"));
+  });
+    // $('.navigation').animate({left: "+=250"}, 500, function(){
+    //     $.cookie('mobileShowNav', $('.navigation').is(":visible"));
+    // });
 }
 
+function copyContent(copyMe){
+  var copyArea = '.' + copyMe;
+
+    $(copyArea).focus();
+    $(copyArea).select();
+    document.execCommand('copy');
+    // $(copyArea).text('Copied to clipboard').show().fadeOut(1200);
+
+}
+
+new Clipboard('.copy');

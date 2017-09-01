@@ -10,5 +10,7 @@
   ${navString}
 </c:if>
 <c:if test="${empty navString}">
-  <b>No refinements remain</b>
+  <div class="nav-group">
+    <span class="no-navs">No refinements available</span>
+  </div>
 </c:if>
