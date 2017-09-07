@@ -17,7 +17,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
-    <groupbyinc.api.version>2.3.87</groupbyinc.api.version>
+    <groupbyinc.api.version>2.4.40</groupbyinc.api.version>
     <groupbyinc.common.api.version>82</groupbyinc.common.api.version>
     <groupbyinc.docker.base.version>1.8</groupbyinc.docker.base.version>
     <groupbyinc.docker.repo>docker.groupbyinc.com</groupbyinc.docker.repo>
