@@ -8,5 +8,6 @@
 <c:if test="${results.totalRecordCount == 0 }">
   <div class="no-results">
     <span class="no-results-text">No records found for ${results.query }</span>
+    <a href="javascript:;" onclick="showColumnSpecifics()" class="btn sml">View Details</a>
   </div>
 </c:if>
