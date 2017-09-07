@@ -14,12 +14,9 @@ import org.springframework.http.HttpStatus;
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 
-  @Value("${blip.server}")
-  private String blipServer;
-  @Value("${blip.server.environment}")
-  private String blipEnvironment;
-  @Value("${blip.server.service}")
-  private String blipService;
+  @Value("${blip.server}") private String blipServer;
+  @Value("${blip.server.environment}") private String blipEnvironment;
+  @Value("${blip.server.service}") private String blipService;
 
   @Override
   protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -39,5 +36,4 @@ public class Application extends SpringBootServletInitializer {
   public EmbeddedServletContainerCustomizer containerCustomizer() {
     return container -> container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/404.html"));
   }
-
 }
