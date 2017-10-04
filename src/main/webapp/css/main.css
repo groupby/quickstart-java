@@ -940,6 +940,7 @@ input.search-bar__input:focus {
   font-family: 'Courier New', Courier, monospace;
   color: #777;
   display: inline-block;
+  word-break: break-word;
 }
 
 .jsonValue {
