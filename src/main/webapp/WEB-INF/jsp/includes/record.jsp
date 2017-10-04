@@ -39,7 +39,7 @@
               <c:if test="${!fn:contains(excludes, entryKey)}">
                 <div class="keyValue">
                     <span class="key">${entry.key}:</span>
-                    <c:if test="${!(fn:startsWith(entry.value, '[') || fn:startsWith(entry.value, '{'))}"><span class="value">${entry.value}</span></c:if>
+                    <c:if test="${!(fn:startsWith(entry.value, '[') || fn:startsWith(entry.value, '{'))}"><span class="value"><c:out value="${entry.value}"/></span></c:if>
                     <c:if test="${fn:startsWith(entry.value, '[') || fn:startsWith(entry.value, '{')}"><span class="value jsonValue" style="display:${cookie.raw.value ? 'block' : 'none'}"><c:out value="${Mappers.writeValueAsString(entry.value)}"/></span></c:if>
                 </div>
               </c:if>
