@@ -13,7 +13,7 @@
         <c:choose>
           <c:when test="${zoneType == 'ContentZone'}">
             <div class="zone ContentZone">
-              <span class="zoneName">Zone name: ${zone.key}</span>
+              <span class="zoneName">Template Zone Name: ${zone.key}</span>
               <div class="zoneValue">
                 <c:out value="${zone.value.content}"/>
               </div>
@@ -21,7 +21,7 @@
           </c:when>
           <c:when test="${zoneType == 'RichContentZone'}">
             <div class="zone RichContentZone">
-              <span class="zoneName">Zone name: ${zone.key}
+              <span class="zoneName">Template Zone Name: ${zone.key}
                 <a href="javascript:;" onclick="$('.zoneValue${zoneStatus.index}').toggle();" class="btn scnd sml">toggle html</a>
               </span>
               <div style="display:none" class="zoneValue zoneValue${zoneStatus.index}">
@@ -34,7 +34,7 @@
           </c:when>
           <c:when test="${zoneType == 'RecordZone'}">
             <div class="zone RecordZone">
-              <span class="zoneName">Zone name: ${zone.key}</span>
+              <span class="zoneName">Template Zone Name: ${zone.key}</span>
               <div class="zoneValue jsonValue">
                 <c:out value="${Mappers.writeValueAsString(zone.value.records)}"/>
               </div>
