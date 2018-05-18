@@ -1099,3 +1099,13 @@ input.search-bar__input:focus {
   left: -5000px;
   width: 200px;
 }
+
+
+span.zoneName {
+    display: block;
+    font-size: 1.1em;
+}
+span.zoneName strong {
+    font-weight: bold;
+    font-size: 1.2em;
+}
