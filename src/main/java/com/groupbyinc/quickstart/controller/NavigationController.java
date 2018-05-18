@@ -91,10 +91,10 @@ public class NavigationController {
     defaultUrlBeautifier.addRefinementMapping('c', "categories.1");
     defaultUrlBeautifier.addRefinementMapping('t', "categories.2");
     defaultUrlBeautifier.addRefinementMapping('g', "categories.3");
-    defaultUrlBeautifier.setSearchMapping('q');
-    defaultUrlBeautifier.setAppend("/index.html");
     defaultUrlBeautifier.addReplacementRule('/', '\u002F');
     defaultUrlBeautifier.addReplacementRule('\\', '\u005C\u005C');
+    defaultUrlBeautifier.setSearchMapping('q');
+    defaultUrlBeautifier.setAppend("/index.html");
   }
 
   private final BlipClient blipClient;
