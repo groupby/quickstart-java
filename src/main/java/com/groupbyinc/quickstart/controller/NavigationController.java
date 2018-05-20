@@ -87,10 +87,14 @@ public class NavigationController {
     UrlBeautifier.createUrlBeautifier("default");
     defaultUrlBeautifier = UrlBeautifier.getUrlBeautifiers().get("default");
     defaultUrlBeautifier.addRefinementMapping('s', "size");
+    defaultUrlBeautifier.addRefinementMapping('b', "brand");
+    defaultUrlBeautifier.addRefinementMapping('c', "categories.1");
+    defaultUrlBeautifier.addRefinementMapping('t', "categories.2");
+    defaultUrlBeautifier.addRefinementMapping('g', "categories.3");
+    defaultUrlBeautifier.addReplacementRule('/', '\u002F');
+    defaultUrlBeautifier.addReplacementRule('\\', '\u005C\u005C');
     defaultUrlBeautifier.setSearchMapping('q');
     defaultUrlBeautifier.setAppend("/index.html");
-    defaultUrlBeautifier.addReplacementRule('/', ' ');
-    defaultUrlBeautifier.addReplacementRule('\\', ' ');
   }
 
   private final BlipClient blipClient;
