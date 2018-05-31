@@ -1,6 +1,23 @@
 $(document).ready(function () {
     setInterval(redoQuery, 1000);
     prettyJson();
+
+    // Add event listeners to 'records'.
+    $( '.record' ).click( function( e ) {
+      let attrs = getAttrs( e.target ) || [];
+
+      // Filter, sanitize, and format 'attrs' data.
+      var attrsStr = attrs
+        .filter( ( str ) => ( !!str ) )
+        .filter( ( str, i, arr ) => ( arr.indexOf( str ) === i ) )
+        .map( ( str ) => ( str.replace( /[:;'"]/gmi, '' ) ) )
+        .join( '.' );
+
+      if ( attrsStr ) {
+        window.addAnyNav( null, attrsStr + '=' );
+      }
+    } );
+
     if (!$('#raw').prop('checked')) {
         $('.jsonValue').each(function(index, value){
           try {
@@ -32,6 +49,68 @@ $(document).ready(function () {
       });
     }
 });
+
+/**
+ * Given a DOM node, validate it and extract an array of 'attrs' data.
+ *
+ * @param {HTMLElement} node
+ * @return {Array}
+ */
+function getAttrs( node ) {
+  // Validate args.
+  if (
+    !node
+    || !node.parentNode
+  ) {
+    return;
+  }
+
+  // If the target IS NOT a key or prop, exit early.
+  if (
+    !node.classList.contains( 'prop' )
+    && !node.classList.contains( 'key' )
+  ) {
+    return;
+  }
+
+  return walkJson( node.parentNode );
+}
+
+/**
+ * Extract `attr` data from a given DOM node and recurse.
+ *
+ *
+ * @param {HTMLElement} node
+ * @param {Array<string>} acc
+ * @return {Array}
+ */
+function walkJson( node, acc ) {
+  acc = ( !!acc && Array.isArray( acc ) ) ? acc : [];
+
+  // Top of the DOM? Return accumulated attrs.
+  if ( !node || !node.tagName ) {
+    return acc;
+  }
+
+  // If current node is a list item, attempt to extract prop data from children.
+  if (
+    node.tagName.toLowerCase() === 'li'
+  ) {
+    var el = $( node ).children( '.prop' );
+    acc.unshift( ( el.get( 0 ) || {} ).innerText );
+  }
+
+  // If the current node is a top-level key/value, attempt to extract key data.
+  if (
+    node.classList.contains( 'keyValue' )
+  ) {
+    var el = $( node ).children( '.key' );
+    acc.unshift( ( el.get( 0 ) || {} ).innerText );
+  }
+
+  return walkJson( node.parentNode, acc );
+}
+
 function addAnyNav( message, value ) {
   var defaults = {
     message: "Enter a new refinement to add",
