@@ -32,8 +32,16 @@ $(document).ready(function () {
       });
     }
 });
-function addAnyNav(){
-  var newNav = window.prompt("Enter a new refinement to add","attribute=value or range:20..50");
+function addAnyNav( message, value ) {
+  var defaults = {
+    message: "Enter a new refinement to add",
+    value: "attribute=value or range:20..50"
+  };
+
+  message = ( typeof message === 'string' ) ? message : defaults.message;
+  value = ( typeof value === 'string' ) ? value : defaults.value;
+
+  var newNav = window.prompt( message, value );
   if (newNav != null) {
     var refinements=$('#refinements').val();
     $('#refinements').val(refinements + '~' + newNav);
