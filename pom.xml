@@ -20,15 +20,14 @@
     <groupbyinc.api.version>2.4.40</groupbyinc.api.version>
     <groupbyinc.common.api.version>82</groupbyinc.common.api.version>
     <groupbyinc.docker.base.version>1.8</groupbyinc.docker.base.version>
-    <groupbyinc.docker.repo>docker.groupbyinc.com</groupbyinc.docker.repo>
-    <groupbyinc.docker.image.name>docker.groupbyinc.com/${project.artifactId}</groupbyinc.docker.image.name>
+    <groupbyinc.docker.repo>groupbyinc</groupbyinc.docker.repo>
+    <groupbyinc.docker.image.name>${groupbyinc.docker.repo}/${project.artifactId}</groupbyinc.docker.image.name>
     <groupbyinc.docker.maintainer>"GroupBy Engineering" &lt;eng@groupbyinc.com&gt;</groupbyinc.docker.maintainer>
     <groupbyinc.docker.java.image>${groupbyinc.docker.repo}/java:${groupbyinc.docker.base.version}
     </groupbyinc.docker.java.image>
     <dollar>$</dollar>
     <environmentSetting>${dollar}{springEnvironment}</environmentSetting>
   </properties>
-
 
   <dependencies>
     <dependency>
@@ -171,7 +170,7 @@
         <executions>
           <execution>
             <id>default-deploy</id>
-            <phase></phase>
+            <phase>none</phase>
           </execution>
         </executions>
       </plugin>

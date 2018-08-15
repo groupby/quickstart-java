@@ -1,0 +1,98 @@
+version: 2
+
+defaults: &defaults
+  docker:
+  - image: groupbyinc/circleci-java
+
+main_branch_only: &main_branch_only
+  filters:
+    branches:
+      only:
+      - develop
+
+# common tasks
+workspace_key: &workspace_key
+  key: v1-repo-{{ .Branch }}-{{ .Revision }}
+
+dependency_cache_key: &dependency_cache_key
+  run:
+    name: Generate Dependency Cache Key
+    command: /scripts/checksum.sh /tmp/checksum
+
+cache_key: &cache_key
+  key: v1-dependencies-{{checksum "/tmp/checksum"}}
+
+setup_builder: &setup_builder
+  run:
+    name: Initialize Build Agent
+    command: /scripts/setup.sh
+
+process_test_metadata: &process_test_metadata
+  run:
+    name: Process Test Metadata
+    command: /scripts/process-test-results.sh
+    when: always
+
+store_test_results: &store_test_results
+  store_test_results:
+    path: ~/junit
+
+jobs:
+  build:
+    <<: *defaults
+    steps:
+    - setup_remote_docker
+    - checkout
+    - *dependency_cache_key
+    - restore_cache: *cache_key
+    - *setup_builder
+    - run: /scripts/update-version.sh
+    - run: mvn -B clean test deploy
+    - *process_test_metadata
+    - *store_test_results
+    - run: mvn -B dependency:go-offline
+    - save_cache:
+        <<: *cache_key
+        paths:
+        - ~/.m2
+    - run:
+        name: Save Deploy Settings
+        command: |
+          cd ..
+          git clone git@github.com:groupby/admiral.git
+          mv admiral/refapp deploy
+          mv version.txt deploy/version.txt
+    - save_cache:
+        <<: *workspace_key
+        paths:
+        - ~/.ssh
+        - ~/deploy
+  deploy_qa:
+    <<: *defaults
+    steps:
+    - restore_cache: *workspace_key
+    - *setup_builder
+    - run: cd ~/deploy && ./deploy.sh -pgroupby-development -zus-central1-f search-testing2 "$(cat ./version.txt)"
+  deploy_prod:
+    <<: *defaults
+    steps:
+    - restore_cache: *workspace_key
+    - *setup_builder
+    - run: cd ~/deploy && ./deploy.sh -pgroupby-cloud-1701 -zus-central1-f monitoring-us "$(cat ./version.txt)"
+
+workflows:
+  version: 2
+  build-and-push:
+    jobs:
+    - build:
+        context: org-global
+    - deploy_qa:
+        context: org-global
+        requires:
+        - build
+    - deploy_prod:
+        <<: *main_branch_only
+        context: org-global
+        requires:
+        - deploy_qa
+
