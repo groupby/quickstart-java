@@ -78,7 +78,7 @@ jobs:
     steps:
     - restore_cache: *workspace_key
     - *setup_builder
-    - run: cd ~/deploy && ./deploy.sh -pgroupby-cloud-1701 -zus-central1-f monitoring-us "$(cat ./version.txt)"
+    - run: cd ~/deploy && ./deploy.sh -pgroupby-cloud-1701 -zus-central1-c internal-services "$(cat ./version.txt)"
 
 workflows:
   version: 2
