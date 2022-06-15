@@ -2,7 +2,7 @@
   <form id="cookieForm">
     <div class="info-bar">
       <div class="logo-area">
-        <img src="/images/logo.png" /><span>Reference App</span>
+        <img src="/images/logo.svg" /><span>Reference App</span>
       </div>
       <div class="cac-area grow">
         <span>CUSTOMER: <b>${empty cookie.customerId.value ? 'not set' : cookie.customerId.value}</b></span>
