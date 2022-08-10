@@ -313,8 +313,9 @@ table {
 }
 
 .logo-area img {
-  max-width: 118px;
+  height: 40px;
   border: 0;
+  margin-right: .5em;
   display: inline-block;
 }
 
